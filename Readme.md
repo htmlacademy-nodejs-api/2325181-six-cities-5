@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Ринат Зарипов](https://up.htmlacademy.ru/nodejs-api/5/user/2325181).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Сушко](https://htmlacademy.ru/profile/sashasushko).
 
 ---
 
