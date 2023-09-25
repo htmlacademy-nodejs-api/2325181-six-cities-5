@@ -1,9 +1,10 @@
 import got from 'got';
+import chalk from 'chalk';
 import { MockServerData } from '../../shared/types/mock-server-data.type.js';
 import { Command } from './command.interface.js';
-import { TSVOfferGenerator } from '../../shared/types/libs/file-reader/offer-generator/tsv-offer-generator.js';
-import { appendFile } from 'node:fs/promises';
+import { TSVOfferGenerator } from '../../shared/types/libs/offer-generator/tsv-offer-generator.js';
 import { getErrorMessage } from '../../shared/helpers/common.js';
+import { TSVFileWriter } from '../../shared/types/libs/file-writer/tsv-file-writer.js';
 
 export class GenerateCommand implements Command {
 
@@ -19,12 +20,9 @@ export class GenerateCommand implements Command {
 
   private async write(filePath: string, count: number) {
     const tsvOfferGenerator = new TSVOfferGenerator(this.initialData);
+    const tsvFileWriter = new TSVFileWriter(filePath);
     for(let i = 0; i < count; i++) {
-      await appendFile(
-        filePath,
-        `${tsvOfferGenerator.generate()}\n`,
-        {encoding: 'utf-8'}
-      );
+      await tsvFileWriter.write(tsvOfferGenerator.generate());
     }
   }
 
@@ -39,10 +37,10 @@ export class GenerateCommand implements Command {
     try {
       await this.load(URL);
       await this.write(filePath, offersCount);
-      console.info(`File ${filePath} has been successfully created`);
+      console.info(chalk.greenBright.italic(`File ${filePath} has been successfully created`));
     } catch (err: unknown){
-      console.error('Cannot load data');
-      console.error(getErrorMessage(err));
+      console.error(chalk.bgRed.bold('Cannot load data'));
+      console.error(chalk.red.underline(getErrorMessage(err)));
     }
   }
 }

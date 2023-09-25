@@ -42,3 +42,8 @@ export const EdgePoints = {
     Reviews: 20
   }
 } as const;
+
+export const ChunkSize = {
+  Read: 16384,
+  Write: 65536,
+} as const;
