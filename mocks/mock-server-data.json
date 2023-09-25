@@ -1,0 +1,86 @@
+
+{
+  "api": {
+    "titles": [
+      "Beautiful apartment in city center",
+      "Ancient hotel with fantastic view",
+      "Great accomodation just a minute walk from railway station",
+      "Brand new hotel with a gourmet restaurant",
+      "Ideally located room in modern building",
+      "Quiet cozy place in the city",
+      "Family house with a history",
+      "Perfect room for a student"
+    ],
+    "descriptions": [
+      "Beautifully done hotel with efficient use of space. The property and room were clean and created a relaxed atmosphere in the centre of city.",
+      "The location of the apartment was perfect - close to all of the major attractions, best shopping, and great restaurants. Public transit was easy from the hotel.",
+      "Loved the decor, super clean, great location, had everything we needed, even down to cotton pads in the bathroom. ",
+      "The staff were great, very helpful and seemed to be genuinely lovely people! I really appreciated their kindness.",
+      "It is the perfect room, great location, tastefully modern, not overpriced for what you get.",
+      "The location was great, very close to a metro station but also some of city attractions.",
+      "The house is very cute, clean and tidy. The design is exactly as in the picutres, modern and well refurbished. We really enjoyed the stay and the room was comfortable.",
+      "Beautiful modernised hotel. Friendly staff! We stayed for a week and found this was a good and quiet location in city."
+    ],
+    "cities": [
+      "Amsterdam",
+      "Paris",
+      "Dusseldorf",
+      "Hamburg",
+      "Cologne",
+      "Brussels"
+    ],
+    "images": [
+      "img/house-01.jpg",
+      "img/hotel-02.jpg",
+      "img/room-03.jpg",
+      "img/apartment-04.jpg",
+      "img/house-05.jpg",
+      "img/hotel-06.jpg",
+      "img/room-07.jpg",
+      "img/apartment-08.jpg"
+    ],
+    "previewImageURL": [
+      "https://13.design.pages.academy/static/hotel/01.jpg",
+      "https://13.design.pages.academy/static/house/02.jpg",
+      "https://13.design.pages.academy/static/room/03.jpg",
+      "https://13.design.pages.academy/static/apartment/04.jpg",
+      "https://13.design.pages.academy/static/hotel/05.jpg",
+      "https://13.design.pages.academy/static/house/06.jpg",
+      "https://13.design.pages.academy/static/room/07.jpg",
+      "https://13.design.pages.academy/static/apartment/08.jpg"
+    ],
+    "lodgingTypes": [
+      "Room",
+      "Apartment",
+      "House",
+      "Hotel"
+    ],
+    "goods": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "host": [
+      "Faith Hooper",
+      "Connor Banks",
+      "Victoria Noble",
+      "Alexander Dawson",
+      "Chelsea Sharpe",
+      "Morgan Wade",
+      "Harrison Barrett",
+      "Mohammed Clark"
+    ],
+    "coordinates": [
+      [48.85661, 2.351499],
+      [50.938361, 6.959974],
+      [50.846557, 4.351697],
+      [52.370216, 4.895168],
+      [53.550341, 10.000654],
+      [51.225402, 6.776314]
+    ]
+  }
+}

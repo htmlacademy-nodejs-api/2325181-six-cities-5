@@ -13,7 +13,7 @@ export class CLIApplication {
   public registerCommands(commandList: Command[]): void {
     commandList.forEach((command) => {
       if (Object.hasOwn(this.commands, command.getName())) {
-        throw new Error(`Command $${command.getName} has been registered already`);
+        throw new Error(`Command ${command.getName} has been registered already`);
       }
       this.commands[command.getName()] = command;
     });
