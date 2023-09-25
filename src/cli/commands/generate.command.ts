@@ -3,6 +3,7 @@ import { MockServerData } from '../../shared/types/mock-server-data.type.js';
 import { Command } from './command.interface.js';
 import { TSVOfferGenerator } from '../../shared/types/libs/file-reader/offer-generator/tsv-offer-generator.js';
 import { appendFile } from 'node:fs/promises';
+import { getErrorMessage } from '../../shared/helpers/common.js';
 
 export class GenerateCommand implements Command {
 
@@ -41,11 +42,7 @@ export class GenerateCommand implements Command {
       console.info(`File ${filePath} has been successfully created`);
     } catch (err: unknown){
       console.error('Cannot load data');
-
-      if (err instanceof Error) {
-        console.error(err.message);
-      }
+      console.error(getErrorMessage(err));
     }
-
   }
 }

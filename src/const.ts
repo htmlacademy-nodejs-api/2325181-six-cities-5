@@ -26,7 +26,7 @@ export const Goods = {
 
 export const EdgePoints = {
   Minimal: {
-    Price: 100,
+    Price: 1,
     Rating: 1,
     Weekday: 1,
     Bedrooms: 1,
@@ -34,7 +34,7 @@ export const EdgePoints = {
     Reviews: 0
   },
   Maximal: {
-    Price: 100000,
+    Price: 1000,
     Rating: 5,
     Weekday: 7,
     Bedrooms: 8,

@@ -25,9 +25,10 @@ export class TSVOfferGenerator implements OfferGenerator {
     const type = getRandomItem<LodgingType>(this.mockData.lodgingTypes).toString();
     const bedrooms = generateRandomValue(EdgePoints.Minimal.Bedrooms, EdgePoints.Maximal.Bedrooms).toString();
     const maxAdults = generateRandomValue(EdgePoints.Minimal.Adults, EdgePoints.Maximal.Adults).toString();
-    const price = generateRandomValue(EdgePoints.Minimal.Price, EdgePoints.Maximal.Price).toString();
+    const price = (generateRandomValue(EdgePoints.Minimal.Price, EdgePoints.Maximal.Price) * 100).toString();
     const goods = getRandomItems<GoodsType>(this.mockData.goods).join(';');
     const host = getRandomItem<string>(this.mockData.host);
+    const reviews = generateRandomValue(EdgePoints.Minimal.Reviews, EdgePoints.Maximal.Reviews);
     const coordinates = getRandomItem<number[]>(this.mockData.coordinates).join(';');
 
     return [
@@ -46,6 +47,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       price,
       goods,
       host,
+      reviews,
       coordinates
     ].join('\t');
   }
