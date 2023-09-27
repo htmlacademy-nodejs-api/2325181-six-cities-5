@@ -2,6 +2,8 @@ import { Offer } from '../types/offer.type.js';
 import { LocationType } from '../types/location.type.js';
 import { LodgingType } from '../types/lodging.type.js';
 import { GoodsType } from '../types/goods.type.js';
+import { UserType } from '../types/user.type.js';
+import { UserLevelType } from '../types/user-level.type.js';
 
 export function createOffer(offerData: string): Offer {
 
@@ -20,7 +22,11 @@ export function createOffer(offerData: string): Offer {
     maxAdults,
     price,
     goods,
-    host,
+    hostName,
+    hostEmail,
+    hostAvatar,
+    hostPassword,
+    hostType,
     reviews,
     coordinates
   ] = offerData.replace('\n', '').split('\t');
@@ -40,7 +46,13 @@ export function createOffer(offerData: string): Offer {
     maxAdults: Number(maxAdults),
     price: Number(price),
     goods: goods.split(';') as GoodsType,
-    host,
+    host : {
+      name: hostName,
+      email: hostEmail,
+      avatarURL: hostAvatar,
+      password: hostPassword,
+      userType: hostType as UserLevelType,
+    } as UserType,
     reviews: Number(reviews),
     coordinates: coordinates.split(';')
       .map((coordinate) => Number(coordinate))

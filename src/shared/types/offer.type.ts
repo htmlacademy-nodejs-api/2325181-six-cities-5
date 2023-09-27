@@ -1,6 +1,7 @@
 import { GoodsType } from './goods.type.js';
 import { LocationType } from './location.type.js';
 import { LodgingType } from './lodging.type.js';
+import { UserType } from './user.type.js';
 
 export type Offer = {
   title: string;
@@ -17,7 +18,7 @@ export type Offer = {
   maxAdults: number;
   price: number;
   goods: GoodsType;
-  host: string;
+  host: UserType;
   reviews: number;
   coordinates: number[];
 }

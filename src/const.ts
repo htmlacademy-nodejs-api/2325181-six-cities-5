@@ -47,3 +47,8 @@ export const ChunkSize = {
   Read: 16384,
   Write: 65536,
 } as const;
+
+export const UserLevel = {
+  Pro: 'pro',
+  Standard: 'standard'
+} as const;

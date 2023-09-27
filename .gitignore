@@ -3,7 +3,7 @@
 /build/
 /lib/
 /dist/
-/mocks/
+/mocks/test-data.tsv
 /docs/
 .idea/*
 

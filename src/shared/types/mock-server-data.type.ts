@@ -10,6 +10,9 @@ export type MockServerData = {
   previewImageURL: string[];
   lodgingTypes: LodgingType[];
   goods: GoodsType[];
-  host: string[];
+  hostNames: string[];
+  hostEmails: string[];
+  hostAvatarURLs: string[];
+  hostPasswords: string[];
   coordinates: number[][];
 }

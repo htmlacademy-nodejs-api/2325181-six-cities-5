@@ -1,4 +1,3 @@
-export type UserLevel = {
-  pro: 'pro';
-  standard: 'standard'
-}
+import { UserLevel } from '../../const.js';
+
+export type UserLevelType = typeof UserLevel[keyof typeof UserLevel]
