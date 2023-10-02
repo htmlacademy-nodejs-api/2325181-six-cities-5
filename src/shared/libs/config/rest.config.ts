@@ -1,9 +1,10 @@
-import { DotenvParseOutput, config } from 'dotenv';
+import { config } from 'dotenv';
 import { Logger } from '../logger/logger.interface.js';
 import { Config } from './config.interface.js';
+import { RestSchemaType, configRestSchema } from './rest.schema.js';
 
-export class RestConfig implements Config {
-  private readonly config: NodeJS.ProcessEnv;
+export class RestConfig implements Config<RestSchemaType> {
+  private readonly config: RestSchemaType;
 
   constructor (
     private readonly logger: Logger
@@ -13,11 +14,16 @@ export class RestConfig implements Config {
       throw new Error('Can\'t read .env file.');
     }
 
-    this.config = <DotenvParseOutput>parsedOutput.parsed;
+    configRestSchema.load({});
+    configRestSchema.validate({
+      allowed: 'strict',
+      output: this.logger.info
+    });
+    this.config = configRestSchema.getProperties();
     this.logger.info('.env file found and successfully parsed.');
   }
 
-  public get(key: string): string | undefined {
+  public get<T extends keyof RestSchemaType>(key: T): RestSchemaType[T] {
     return this.config[key];
   }
 }
