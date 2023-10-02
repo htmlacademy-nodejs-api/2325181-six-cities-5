@@ -59,3 +59,8 @@ export const LogTransportLevels = {
   Info: 'info',
   Debug: 'debug'
 } as const;
+
+export const ApplicationMessages = {
+  Info: 'Application has been initialized',
+} as const;
+

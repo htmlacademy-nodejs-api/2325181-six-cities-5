@@ -1,4 +1,5 @@
 import { Logger } from '../shared/libs/logger/logger.interface.js';
+import { ApplicationMessages } from '../const.js';
 
 export class RestApplication {
   constructor(
@@ -6,6 +7,6 @@ export class RestApplication {
   ) {}
 
   public async init() {
-    this.logger.info('Application has been initialized');
+    this.logger.info(ApplicationMessages.Info);
   }
 }
