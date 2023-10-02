@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { readFileSync } from 'node:fs';
 import { Command } from './command.interface.js';
 import { resolve } from 'node:path';
+import { getErrorMessage } from '../../shared/helpers/common.js';
 
 type PackageJSONConfig = {
   version: string;
@@ -39,9 +40,7 @@ export class VersionCommand implements Command {
       console.info(chalk.bgBlue.bold(version));
     } catch (err: unknown) {
       console.error(`${chalk.bgRedBright('Failed to read command version from')} ${chalk.underline.redBright(this.filePath)}`);
-      if (err instanceof Error) {
-        console.error(chalk.bgRed.underline(err.message));
-      }
+      console.error(chalk.bgRed.underline(getErrorMessage(err)));
     }
 
   }

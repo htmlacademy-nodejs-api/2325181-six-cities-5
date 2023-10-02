@@ -26,7 +26,7 @@ export const Goods = {
 
 export const EdgePoints = {
   Minimal: {
-    Price: 100,
+    Price: 1,
     Rating: 1,
     Weekday: 1,
     Bedrooms: 1,
@@ -34,11 +34,21 @@ export const EdgePoints = {
     Reviews: 0
   },
   Maximal: {
-    Price: 100000,
+    Price: 1000,
     Rating: 5,
     Weekday: 7,
     Bedrooms: 8,
     Adults: 10,
     Reviews: 20
   }
+} as const;
+
+export const ChunkSize = {
+  Read: 16384,
+  Write: 65536,
+} as const;
+
+export const UserLevel = {
+  Pro: 'pro',
+  Standard: 'standard'
 } as const;

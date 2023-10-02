@@ -64,15 +64,45 @@
       "Towels",
       "Fridge"
     ],
-    "host": [
-      "Faith Hooper",
-      "Connor Banks",
-      "Victoria Noble",
-      "Alexander Dawson",
-      "Chelsea Sharpe",
-      "Morgan Wade",
-      "Harrison Barrett",
-      "Mohammed Clark"
+    "hostNames": [
+      "Faith",
+      "Connor",
+      "Victoria",
+      "Alexander",
+      "Chelsea",
+      "Morgan",
+      "Harrison",
+      "Mohammed"
+    ],
+    "hostEmails": [
+      "f12th@fakemail.com",
+      "c.brooks@mymail.com",
+      "Vict0r!a@mmmail.com",
+      "Alex1975@fakemail.com",
+      "bbb@fmail.com",
+      "bigDaddy@fml.com",
+      "prince-harry@fake.com",
+      "MohMyMed@fake.com"
+    ],
+    "hostAvatarURLs": [
+      "perfect-avatar.png",
+      "great-avatar.jpg",
+      "myAvatar.png",
+      "photo-1-1.jpg",
+      "photo_avatar_final.png",
+      "av.jpg",
+      "image_avatar.png",
+      "avatar_officia.jpg"
+    ],
+    "hostPasswords": [
+      "123456",
+      "qweerty123",
+      "password",
+      "password1",
+      "password123",
+      "passpass",
+      "kissMyChick123",
+      "000111222A"
     ],
     "coordinates": [
       [48.85661, 2.351499],
