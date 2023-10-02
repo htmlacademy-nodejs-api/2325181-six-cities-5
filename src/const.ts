@@ -52,3 +52,5 @@ export const UserLevel = {
   Pro: 'pro',
   Standard: 'standard'
 } as const;
+
+export const LOG_FILE_PATH = '../../../logs/rest.log';
