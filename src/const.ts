@@ -54,3 +54,8 @@ export const UserLevel = {
 } as const;
 
 export const LOG_FILE_PATH = '../../../logs/rest.log';
+
+export const LogTransportLevels = {
+  Info: 'info',
+  Debug: 'debug'
+} as const;

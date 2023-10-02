@@ -2,20 +2,30 @@ import {pino, Logger as PinoInstance, transport} from 'pino';
 import { Logger } from './logger.interface.js';
 import { getCurrentModuleDirectoryPath } from '../../helpers/file-system.js';
 import { resolve } from 'node:path';
-import { LOG_FILE_PATH } from '../../../const.js';
+import { LOG_FILE_PATH, LogTransportLevels } from '../../../const.js';
+import { TransportOptionsType } from '../../types/transport-options.type.js';
+import { getTransportOptions } from '../../helpers/logger.js';
 
 export class PinoLogger implements Logger {
   private readonly logger: PinoInstance;
+  private transportOptions: TransportOptionsType[] = [];
 
   constructor() {
     const modulePath = getCurrentModuleDirectoryPath();
     const destination = resolve(modulePath, LOG_FILE_PATH);
-    const fileTransport = transport({
-      target: 'pino/file',
-      options: { destination }
+    let option: keyof typeof LogTransportLevels;
+    for (option in LogTransportLevels) {
+      const transportLevel = LogTransportLevels[option];
+      const optionArgs = transportLevel === LogTransportLevels.Debug ?
+        getTransportOptions(LogTransportLevels[option], destination) :
+        getTransportOptions(LogTransportLevels[option]);
+      this.transportOptions.push(optionArgs);
+    }
+    const multiTransport = transport({
+      targets: [...this.transportOptions]
     });
 
-    this.logger = pino({}, fileTransport);
+    this.logger = pino({}, multiTransport);
   }
 
   public info(message: string, ...args: unknown[]): void {
