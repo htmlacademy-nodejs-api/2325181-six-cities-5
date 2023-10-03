@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
 import { RestConfig, Config } from '../shared/libs/config/index.js';
 import { PinoLogger, Logger } from '../shared/libs/logger/index.js';
