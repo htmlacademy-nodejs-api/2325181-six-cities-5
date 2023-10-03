@@ -4,5 +4,7 @@ export * from './review.type.js';
 export * from './location.type.js';
 export * from './mock-server-data.type.js';
 export * from './transport-options.type.js';
-
-
+export * from './component.enum.js';
+export * from './lodging.type.js';
+export * from './goods.type.js';
+export * from './offer.type.js';
