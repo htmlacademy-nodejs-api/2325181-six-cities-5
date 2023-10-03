@@ -26,8 +26,8 @@ export class PinoLogger implements Logger {
     const multiTransport = transport({
       targets: [...this.transportOptions]
     });
-
     this.logger = pino({}, multiTransport);
+    this.logger.info('Logger created...');
   }
 
   public info(message: string, ...args: unknown[]): void {
