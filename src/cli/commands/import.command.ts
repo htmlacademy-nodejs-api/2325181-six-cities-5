@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { TSVFileReader } from '../../shared/types/libs/file-reader/tsv-file-reader.js';
+import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
 import { Command } from './command.interface.js';
 import { getErrorMessage } from '../../shared/helpers/common.js';
 import { createOffer } from '../../shared/helpers/offer.js';
