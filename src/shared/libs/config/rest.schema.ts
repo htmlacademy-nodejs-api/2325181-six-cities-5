@@ -7,6 +7,10 @@ export type RestSchemaType = {
   PORT: number;
   SALT: string;
   DB_HOST: string;
+  DB_USER: string;
+  DB_PASSWORD: string;
+  DB_PORT: string;
+  DB_NAME: string;
 }
 
 export const configRestSchema = convict<RestSchemaType>({
@@ -28,5 +32,29 @@ export const configRestSchema = convict<RestSchemaType>({
     format: 'ipaddress',
     doc: 'Database (Mongo DB) server IP address'
   },
+  DB_USER: {
+    env: 'DB_USER',
+    default: null,
+    format: String,
+    doc: 'Username to connect database'
+  },
+  DB_PASSWORD: {
+    env: 'DB_PASSWORD',
+    default: null,
+    format: String,
+    doc: 'User password to connect database'
+  },
+  DB_NAME: {
+    env: 'DB_NAME',
+    default: 'six-cities',
+    format: String,
+    doc: 'Database name (MongoDB)'
+  },
+  DB_PORT: {
+    env: 'DB_PORT',
+    default: '27017',
+    format: 'port',
+    doc: 'Port to connect the database'
+  }
 
 });
