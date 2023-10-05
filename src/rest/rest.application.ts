@@ -23,21 +23,6 @@ export class RestApplication {
     await this._initDb();
     this.logger.info('Database has been initialized');
 
-    const user = await UserModel.create({
-      email: 'test@email.local',
-      avatarURL: 'keks.jpg',
-      password: 'Keks',
-      userType: 'pro',
-      name: 'Cat'
-    });
-    const user1 = await UserModel.create({
-      email: 'test@email.local',
-      avatarURL: 'keks.jpg',
-      password: 'Keks',
-      userType: 'standard',
-      name: 'Cat'
-    });
-
     const user2 = new UserModel({
       email: 'test@emailru',
       avatarPath: 'keks.jpg',
@@ -45,10 +30,8 @@ export class RestApplication {
       lastname: 'Unknown'
     });
 
-    const error = user.validateSync();
-    console.log(error);
-
-    console.log(user, user1, user2);
+    const error = user2.validateSync();
+    console.log(user2, error);
   }
 
   private async _initDb () {

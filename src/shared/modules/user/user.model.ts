@@ -25,7 +25,6 @@ const userSchema = new Schema ({
     type: String,
     require: true,
     minlength: [6, 'Min length for password is 6']
-
   },
   userType: {
     type: String,
