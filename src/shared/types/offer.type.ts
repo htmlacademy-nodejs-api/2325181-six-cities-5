@@ -3,7 +3,7 @@ import { LocationType } from './location.type.js';
 import { LodgingType } from './lodging.type.js';
 import { UserType } from './user.type.js';
 
-export type Offer = {
+export type OfferType = {
   title: string;
   description: string;
   offerDate: Date;

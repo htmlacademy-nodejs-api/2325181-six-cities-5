@@ -1,11 +1,11 @@
-import { Offer } from '../types/offer.type.js';
+import { OfferType } from '../types/offer.type.js';
 import { LocationType } from '../types/location.type.js';
 import { LodgingType } from '../types/lodging.type.js';
 import { GoodsType } from '../types/goods.type.js';
 import { UserType } from '../types/user.type.js';
 import { UserLevelType } from '../types/user-level.type.js';
 
-export function createOffer(offerData: string): Offer {
+export function createOffer(offerData: string): OfferType {
 
   const [
     title,

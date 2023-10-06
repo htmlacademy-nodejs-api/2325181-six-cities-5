@@ -4,10 +4,10 @@ import { LocationType } from '../types/location.type.js';
 import { LodgingType } from '../types/lodging.type.js';
 import { EdgePoints, UserLevel } from '../../const.js';
 import { GoodsType } from '../types/goods.type.js';
-import { MockServerData } from '../types/mock-server-data.type.js';
+import { MockServerDataType } from '../types/mock-server-data.type.js';
 import { UserLevelType } from '../types/user-level.type.js';
 
-export function generateTSVOffer(mockData: MockServerData):string {
+export function generateTSVOffer(mockData: MockServerDataType):string {
   const title = getRandomItem<string>(mockData.titles);
   const description = getRandomItem<string>(mockData.descriptions);
   const offerDate = dayjs()
