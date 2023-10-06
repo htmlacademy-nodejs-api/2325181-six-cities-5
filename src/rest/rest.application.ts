@@ -5,7 +5,6 @@ import { Config, RestSchemaType } from '../shared/libs/config/index.js';
 import { Component } from '../shared/types/index.js';
 import { getMongoURI } from '../shared/helpers/database.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
-import { UserModel } from '../shared/modules/user/index.js';
 
 
 @injectable()
@@ -23,15 +22,6 @@ export class RestApplication {
     await this._initDb();
     this.logger.info('Database has been initialized');
 
-    const user2 = new UserModel({
-      email: 'test@emailru',
-      avatarPath: 'keks.jpg',
-      firstname: '2',
-      lastname: 'Unknown'
-    });
-
-    const error = user2.validateSync();
-    console.log(user2, error);
   }
 
   private async _initDb () {

@@ -25,7 +25,6 @@ export function createOffer(offerData: string): OfferType {
     hostName,
     hostEmail,
     hostAvatar,
-    hostPassword,
     hostType,
     reviews,
     coordinates
@@ -50,7 +49,6 @@ export function createOffer(offerData: string): OfferType {
       name: hostName,
       email: hostEmail,
       avatarURL: hostAvatar,
-      password: hostPassword,
       userType: hostType as UserLevelType,
     } as UserType,
     reviews: Number(reviews),

@@ -1,21 +1,12 @@
 import chalk from 'chalk';
 import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
-import { Command } from './command.interface.js';
-import { getErrorMessage } from '../../shared/helpers/common.js';
-import { createOffer } from '../../shared/helpers/offer.js';
-import { UserService } from '../../shared/modules/user/user-service.interface.js';
-import { OfferService } from '../../shared/modules/offer/offer-service.interface.js';
-import { DatabaseClient } from '../../shared/libs/database-client/database-client.interface.js';
-import { Logger } from '../../shared/libs/logger/logger.interface.js';
-import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
-import { DefaultOfferService } from '../../shared/modules/offer/default-offer.service.js';
-import { DefaultUserService } from '../../shared/modules/user/default-user.service.js';
-import { OfferModel } from '../../shared/modules/offer/offer.entity.js';
-import { UserModel } from '../../shared/modules/user/user.entity.js';
-import { MongoDatabaseClient } from '../../shared/libs/database-client/mongo.database-client.js';
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './command.constant.js';
+import { Command, DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './index.js';
+import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
+import { Logger, ConsoleLogger } from '../../shared/libs/logger/index.js';
+import { DefaultUserService, UserModel, UserService } from '../../shared/modules/user/index.js';
+import { OfferService, DefaultOfferService, OfferModel } from '../../shared/modules/offer/index.js';
 import { OfferType } from '../../shared/types/offer.type.js';
-import { getMongoURI } from '../../shared/helpers/database.js';
+import { getErrorMessage, createOffer, getMongoURI } from '../../shared/helpers/index.js';
 
 export class ImportCommand implements Command {
   private userService: UserService;

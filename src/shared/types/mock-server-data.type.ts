@@ -13,6 +13,5 @@ export type MockServerDataType = {
   hostNames: string[];
   hostEmails: string[];
   hostAvatarURLs: string[];
-  hostPasswords: string[];
   coordinates: number[][];
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
-import { prop, getModelForClass, defaultClasses, modelOptions, Ref } from '@typegoose/typegoose';
+import { prop, getModelForClass, defaultClasses, modelOptions, Ref, Severity } from '@typegoose/typegoose';
 import { LocationType, LodgingType, GoodsType } from '../../types/index.js';
 import { Goods, Location, LodgingKind } from '../../../const.js';
 import { UserEntity } from '../user/user.entity.js';
@@ -9,6 +9,9 @@ export interface OfferEntity extends defaultClasses.Base {}
 @modelOptions({
   schemaOptions: {
     collection: 'offers'
+  },
+  options: {
+    allowMixed: Severity.ALLOW
   }
 })
 
