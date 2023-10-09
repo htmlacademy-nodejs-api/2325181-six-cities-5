@@ -4,10 +4,10 @@ import { LocationType } from '../types/location.type.js';
 import { LodgingType } from '../types/lodging.type.js';
 import { EdgePoints, UserLevel } from '../../const.js';
 import { GoodsType } from '../types/goods.type.js';
-import { MockServerData } from '../types/mock-server-data.type.js';
+import { MockServerDataType } from '../types/mock-server-data.type.js';
 import { UserLevelType } from '../types/user-level.type.js';
 
-export function generateTSVOffer(mockData: MockServerData):string {
+export function generateTSVOffer(mockData: MockServerDataType):string {
   const title = getRandomItem<string>(mockData.titles);
   const description = getRandomItem<string>(mockData.descriptions);
   const offerDate = dayjs()
@@ -27,7 +27,6 @@ export function generateTSVOffer(mockData: MockServerData):string {
   const hostName = getRandomItem<string>(mockData.hostNames);
   const hostEmail = getRandomItem<string>(mockData.hostEmails);
   const hostAvatarURL = getRandomItem<string>(mockData.hostAvatarURLs);
-  const hostPasssword = getRandomItem<string>(mockData.hostPasswords);
   const hostType = getRandomItem<UserLevelType>(Object.values(UserLevel));
   const reviews = generateRandomValue(EdgePoints.Minimal.Reviews, EdgePoints.Maximal.Reviews);
   const coordinates = getRandomItem<number[]>(mockData.coordinates).join(';');
@@ -50,7 +49,6 @@ export function generateTSVOffer(mockData: MockServerData):string {
     hostName,
     hostEmail,
     hostAvatarURL,
-    hostPasssword,
     hostType,
     reviews,
     coordinates
