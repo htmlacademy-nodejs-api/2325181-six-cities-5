@@ -45,6 +45,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   }) public previewImageURL!: string;
 
   @prop ({
+    type: () => [String],
     required: false,
     default: []
   }) public images!: string[];
@@ -87,7 +88,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop ({
     required: false,
-    type: () => String,
+    type: () => [String],
     enum: Object.values(Goods),
     default: []
   }) public goods!: GoodsType;
@@ -104,6 +105,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   }) public reviews!: number;
 
   @prop ({
+    type: () => [Number],
     required: false,
     default: []
   }) public coordinates!: number[];

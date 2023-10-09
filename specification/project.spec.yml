@@ -1,0 +1,257 @@
+openapi: 3.1.0
+info:
+  title: API сервер для проекта "Шесть городов".
+  description: |-
+    * Список ресурсов и маршрутов сервера "Шесть городов."
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+tags:
+  - name: offers
+    description: Действия с предложениями.
+
+  - name: users
+    description: Действия с пользователем.
+
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  offers:
+    get:
+      tags:
+        - offers
+        summary: Получение списка предложений по аренде
+        description: Получает список предложений по аренде
+
+  offers/{offerId}:
+    post:
+      tags:
+        - offers
+        summary: Создание нового предложения
+        description: Создает новое предложение по аренде
+
+        requestBody:
+        description: Информация для создания нового предложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение создано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "401":
+          description: 'Предложение не может быть создано: пользователь не авторизован.'
+        "400":
+          description: 'Предложение не может быть создано: ощибка запроса.'
+        "409":
+          description: Предложение уже существует.
+
+    patch:
+      tags:
+        - offers
+        summary: Редактирование предложения
+        description: Редактирует предложение по аренде
+
+    delete:
+      tags:
+        - offers
+        summary: Удаление предложения
+        description: Удаляет предложение по аренде
+
+    get:
+      tags:
+        - offers
+        summary: Получение детальной информации о предложении
+        description: Получает детальную информации о предложении по аренде
+
+  users/signin:
+    post:
+      tags:
+        - users
+      summary: Создание нового пользователя.
+      description: Создает нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация нового пользователя.
+      description: Авторизует нового пользователя.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя.
+      description: Возвращает информацию об состоянии авторизации пользователя.
+
+  users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара пользователя.
+      description: Загружает изображение (аватар) пользователя в формате 'png' или 'jpg'.
+
+components:
+  schemas:
+    createUser:
+      type: object
+      properties:
+          email
+            type: string;
+            example: keks@keks.com
+          avatarURL
+            type: string;
+            example: 'https://www.domain.com/image.png'
+          name
+            type: string;
+            example: Keks
+          password
+            type: string;
+            example: 123456
+          userType
+
+    createOffer:
+      type: object
+      properties:
+        title
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        offerDate
+          type: Date
+          example: 01/01/2023T12:23:34.843Z
+        city
+          type: LocationType
+          example: Amsterdam
+        previewImageURL
+          type: string
+          example: 'https://www.domain.com/image.png'
+        images
+          type: string[]
+          example: ['https://www.domain.com/image1.png, 'https://www.domain.com/image.jpg', 'https://www.domain.com/image3.png']
+        isPremium
+          type: boolean
+          example: true
+        isFavorite
+          type: boolean
+          example: false
+        rating
+          type: number
+          example: 3
+        type
+          type: LodgingType
+          example: house
+        bedrooms
+          type: number
+          example: 1
+        maxAdults
+          type: number
+          example: 3
+        price
+          type: number
+          example: 1000
+        goods
+          type: GoodsType
+          example: [Breakfast, Air conditioning]
+        hostId
+          type: string
+          example: sdfsdf2343sdfsdfs
+        reviews
+          type: number
+          example: 12
+        coordinates
+          type: number[]
+          example: [52.370216, 4.895168]
+
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+          example: saldf23lj34ljn67
+        email:
+          type: string
+          example: keks@keks.com
+
+    offer:
+      type: object
+      properties:
+        title
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        offerDate
+          type: Date
+          example: 01/01/2023T12:23:34.843Z
+        city
+          type: LocationType
+          example: Amsterdam
+        previewImageURL
+          type: string
+          example: 'https://www.domain.com/image.png'
+        images
+          type: string[]
+          example: ['https://www.domain.com/image1.png, 'https://www.domain.com/image.jpg', 'https://www.domain.com/image3.png']
+        isPremium
+          type: boolean
+          example: true
+        isFavorite
+          type: boolean
+          example: false
+        rating
+          type: number
+          example: 3
+        type
+          type: LodgingType
+          example: house
+        bedrooms
+          type: number
+          example: 1
+        maxAdults
+          type: number
+          example: 3
+        price
+          type: number
+          example: 1000
+        goods
+          type: GoodsType
+          example: [Breakfast, Air conditioning]
+        hostId
+          type: string
+          example: sdfsdf2343sdfsdfs
+        reviews
+          type: number
+          example: 12
+        coordinates
+          type: number[]
+          example: [52.370216, 4.895168]
