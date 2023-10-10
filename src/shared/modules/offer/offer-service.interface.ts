@@ -4,7 +4,7 @@ import { CreateOfferDTO, OfferEntity, FavoritesOfferDTO, UpdateOfferDTO } from '
 export interface OfferService {
   create(dto: CreateOfferDTO):Promise<DocumentType<OfferEntity>>;
   findById(offerId:string): Promise<DocumentType<OfferEntity> | null>;
-  find():Promise<DocumentType<OfferEntity>[]>;
+  find(count?: number):Promise<DocumentType<OfferEntity>[]>;
   deleteById(offerId:string):Promise<DocumentType<OfferEntity> | null>;
   findFavorites():Promise<DocumentType<OfferEntity>[]>;
   findPremium():Promise<DocumentType<OfferEntity>[]>;

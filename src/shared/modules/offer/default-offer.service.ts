@@ -1,11 +1,14 @@
 import { types } from '@typegoose/typegoose';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { CreateOfferDTO, FavoritesOfferDTO, OfferEntity, OfferService } from './index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { UpdateOfferDTO } from './update-offer.dto.js';
+import { OFFER_COUNT, PREMIUM_OFFER_COUNT, SortOrder } from '../../../const.js';
 
+@injectable()
 export class DefaultOfferService implements OfferService {
+
 
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
@@ -22,8 +25,8 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findById(offerId).populate(['hostId']).exec();
   }
 
-  public async find():Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel.find().populate('hostId').exec();
+  public async find(count: number = OFFER_COUNT):Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel.find().limit(Math.min(count, OFFER_COUNT)).sort({createdAt: SortOrder.Desc}).populate('hostId').exec();
   }
 
   public async deleteById (offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
@@ -37,15 +40,16 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async findFavorites ():Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({isFavorite: true}).populate('hostId').exec();
+    return await this.offerModel.find({isFavorite: true}).populate('hostId').exec();
   }
 
   public async findPremium ():Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({isPremium: true}).populate('hostId').exec();
+    return this.offerModel.find({isPremium: true}).limit(PREMIUM_OFFER_COUNT).sort({createdAt: SortOrder.Desc}).populate('hostId').exec();
   }
 
+
   public async addRemoveFavorites (offerId: string, dto: FavoritesOfferDTO):Promise<types.DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, dto, {new: true})
+    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {isFavorite: !dto.isFavorite}}, {new: true})
       .populate('hostId')
       .exec();
   }
