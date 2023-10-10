@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { UserService } from './user-service.interface.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import { UserEntity } from './user.entity.js';
-import { CreateUserDTO } from './index.js';
+import { CreateUserDTO, UpdateUserDTO, } from './index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
 
@@ -38,5 +38,7 @@ export class DefaultUserService implements UserService {
     return this.create(dto, salt);
   }
 
-
+  public async updateById (userId: string, dto: UpdateUserDTO): Promise<types.DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, dto, {new: true}).exec();
+  }
 }
