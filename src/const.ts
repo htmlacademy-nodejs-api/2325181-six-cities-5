@@ -68,3 +68,12 @@ export const RETRY_COUNT = 5;
 
 export const RETRY_TIMEOUT = 1000;
 
+export const PREMIUM_OFFER_COUNT = 3;
+
+export const OFFER_COUNT = 60;
+
+export const SortOrder = {
+  Asc: 'asc',
+  Desc: 'desc',
+} as const;
+

@@ -34,6 +34,4 @@ export class RestApplication {
     );
     return this.databaseClient.connect(mongoUri);
   }
-
-
 }
