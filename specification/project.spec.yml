@@ -24,11 +24,16 @@ paths:
       summary: Получение списка предложений по аренде
       description: Получает список предложений по аренде
       responses:
-        "201":
+        "200":
           description: Получение списка предложений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offersList'
         "400":
           description: 'Список предложений недоступен: ошибка запроса.'
-  /offers/{offerId}:
+        "404":
+          description: 'Список предложений недоступен: данные не найдены.'
     post:
       tags:
         - offers
@@ -51,39 +56,132 @@ paths:
         "401":
           description: 'Предложение не может быть создано: пользователь не авторизован.'
         "400":
-          description: 'Предложение не может быть создано: ошибка запроса.'
+          description: 'Предложение не может быть создано: ошибка валидации.'
+        "404":
+          description: 'Предложение не может быть создано: данные не найдены.'
         "409":
           description: Предложение уже существует.
-    patch:
+
+  /offers/{offerId}:
+    put:
       tags:
         - offers
       summary: Редактирование предложения
       description: Редактирует предложение по аренде
+      requestBody:
+        description: Информация для редактирования предложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOffer'
+        required: true
       responses:
-        "201":
+        "200":
           description: Предложение успешно отредактировано.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
         "400":
           description: 'Предложение не может быть отредактировано: ошибка запроса.'
+        "403":
+          description: 'Предложение не может быть отредактировано: у пользователя нет права доступа к объекту.'
+        "401":
+          description: 'Предложение не может быть отредактировано: пользователь не авторизован.'
+        "404":
+          description: 'Предложение не может быть отредактировано: данные не найдены.'
     delete:
       tags:
         - offers
       summary: Удаление предложения
       description: Удаляет предложение по аренде
       responses:
-        "201":
+        "204":
           description: Предложение успешно удалено.
         "400":
           description: 'Предложение не может быть удалено: ошибка запроса.'
+        "403":
+          description: 'Предложение не может быть удалено: у пользователя нет прав доступа к объекту.'
+        "401":
+          description: 'Предложение не может быть удалено: пользователь не авторизован.'
+        "404":
+          description: 'Предложение не может быть удалено: данные не найдены.'
     get:
       tags:
         - offers
       summary: Получение детальной информации о предложении
       description: Получает детальную информации о предложении по аренде
       responses:
-        "201":
+        "200":
           description: Получение детальной информации о предложении.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
         "400":
           description: 'Детальная информация о предложении недоступна: ошибка запроса.'
+        "404":
+          description: 'Детальная информация о предложении недоступна: данные не найдены.'
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Вход в закрытую часть приложения.
+      description: Возвращает токен авторизации пользователя.
+      requestBody:
+        description: Информация для входа в закрытую часть приложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+      responses:
+        "200":
+          description: Пользователь авторизован. Токен пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userToken'
+        "400":
+          description: 'Информация об авторизации недоступна: ошибка запроса.'
+        "401":
+          description: 'Информация об авторизации недоступна: логин или пароль неверный или пользователь не существует.'
+        "404":
+          description: 'Информация об авторизации недоступна: данные не найдены.'
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя.
+      description: Возвращает информацию об состоянии авторизации пользователя.
+      responses:
+        "200":
+          description: Получение информациии об авторизации пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "400":
+          description: 'Информация об авторизации недоступна: ошибка запроса.'
+        "404":
+          description: 'Информация об авторизации недоступна: данные не найдены.'
+
+  /users/logout:
+    delete:
+      tags:
+        - users
+      summary: Выход из закрытой части приложения.
+      description: Завершает пользовательский сеанс.
+      responses:
+        "204":
+          description: Пользовательcкий сеанс завершен.
+        "400":
+          description: 'Пользовательский сеанс не может быть завершен: ошибка запроса.'
+        "401":
+          description: 'Пользовательский сеанс не может быть завершен: пользователь не авторизован.'
+        "404":
+          description: 'Пользовательский сеанс не может быть завершен: данные не найдены.'
+
   /users/signin:
     post:
       tags:
@@ -99,34 +197,20 @@ paths:
         required: true
       responses:
         "201":
-          description: Пользователь зарегистрирован. Объект пользователя.
+          description: Новый пользователь создан. Объект пользователя.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
         "409":
-          description: Пользователь с таким email уже существует.
-  /users/login:
-    post:
-      tags:
-        - users
-      summary: Авторизация нового пользователя.
-      description: Авторизует нового пользователя.
-      responses:
-        "201":
-          description: Пользователь успешно авторизован.
+          description: 'Новый пользователь не может быть создан: пользователь с таким email уже существует.'
         "400":
-          description: 'Пользователь не может быть авторизован: ошибка запроса.'
-    get:
-      tags:
-        - users
-      summary: Проверка состояния пользователя.
-      description: Возвращает информацию об состоянии авторизации пользователя.
-      responses:
-        "201":
-          description: Получение информациии об авторизации пользователя.
-        "400":
-          description: 'Информации об авторизации недоступна: ошибка запроса.'
+          description: 'Новый пользователь не может быть создан: ошибка валидации.'
+        "401":
+          description: 'Новый пользователь не может быть создан: пользователь уже авторизован.'
+        "404":
+          description: 'Новый пользователь не может быть создан: данные не найдены.'
+
   /users/{userId}/avatar:
     post:
       tags:
@@ -134,10 +218,55 @@ paths:
       summary: Загрузка аватара пользователя.
       description: Загружает изображение (аватар) пользователя в формате 'png' или 'jpg'.
       responses:
-        "201":
+        "200":
           description: Аватар пользователя успешно загружен.
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев для предложения
+      description: Возвращает список комментариев для предложения
+      responses:
+        "200":
+          description: Получение списка комментариев.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commentsList'
+        "400":
+          description: 'Список предложений недоступен: ошибка запроса.'
+        "404":
+          description: 'Список предложений недоступен: данные не найдены.'
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария для предложения
+      description: Добавляет новый комментарий для предложения
+      requestBody:
+        description: Информация для создания нового комментария
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+        required: true
+      responses:
+        "201":
+          description: Комментарий создан. Объект комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        "401":
+          description: 'Комментарий не может быть создан: пользователь не авторизован.'
+        "400":
+          description: 'Комментарий не может быть создан: ошибка валидации.'
+        "404":
+          description: 'Комментарий не может быть создан: данные не найдены.'
+        "409":
+          description: Комментарий уже существует.
+
 
 components:
   schemas:
@@ -224,6 +353,70 @@ components:
           items:
             type: number
           example: [52.370216, 4.895168]
+    updateOffer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        offerDate:
+          type: string
+          format: date-time
+          example: 01/01/2023T12:23:34.843Z
+        city:
+          type: string
+          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          example: Amsterdam
+        previewImageURL:
+          type: string
+          example: https://www.domain.com/image.png
+        images:
+          type: array
+          items:
+            type: string
+          example: [https://www.domain.com/image1.png, https://www.domain.com/image.jpg', https://www.domain.com/image3.png]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 3
+        type:
+          type: string
+          enum: [apartment, house, room, hotel]
+          example: house
+        bedrooms:
+          type: number
+          example: 1
+        maxAdults:
+          type: number
+          example: 3
+        price:
+          type: number
+          example: 1000
+        goods:
+          type: array
+          items:
+            type: string
+            enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
+          example: [Breakfast, Air conditioning]
+        hostId:
+          type: string
+          example: sdfsdf2343sdfsdfs
+        reviews:
+          type: number
+          example: 12
+        coordinates:
+          type: array
+          items:
+            type: number
+          example: [52.370216, 4.895168]
     user:
       type: object
       properties:
@@ -244,6 +437,7 @@ components:
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         offerDate:
           type: string
+          format: date-time
           example: 01/01/2023T12:23:34.843Z
         city:
           type: string
@@ -296,7 +490,106 @@ components:
           items:
             type: number
           example: [52.370216, 4.895168]
-
+    offersList:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            example: Lorem ipsum dolor sit amet.
+          offerDate:
+            type: string
+            format: date-time
+            example: 01/01/2023T12:23:34.843Z
+          city:
+            type: string
+            enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+            example: Amsterdam
+          previewImageURL:
+            type: string
+            example: 'https://www.domain.com/image.png'
+          isPremium:
+            type: boolean
+            example: true
+          isFavorite:
+            type: boolean
+            example: false
+          rating:
+            type: number
+            example: 3
+          type:
+            type: string
+            enum: [apartment, house, room, hotel]
+            example: house
+          price:
+            type: number
+            example: 1000
+          reviews:
+            type: number
+            example: 12
+    comment:
+      type: object
+      properties:
+        text:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        commentDate:
+          type: string
+          format: date-time
+          example: 01/01/2023T12:23:34.843Z
+        rating:
+          type: number
+          example: 4
+        authorId:
+          type: string
+          example: sdfsdf2343sdfsdfs
+    createComment:
+      type: object
+      properties:
+        text:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        commentDate:
+          type: string
+          format: date-time
+          example: 01/01/2023T12:23:34.843Z
+        rating:
+          type: number
+          example: 4
+        authorId:
+          type: string
+          example: sdfsdf2343sdfsdfs
+    commentsList:
+      type: array
+      items:
+        type: object
+      properties:
+        text:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        commentDate:
+          type: string
+          format: date-time
+          example: 01/01/2023T12:23:34.843Z
+        rating:
+          type: number
+          example: 4
+        authorId:
+          type: string
+          example: sdfsdf2343sdfsdfs
+    loginUser:
+      type: object
+      properties:
+        password:
+          type: string
+          example: saldf23lj34ljn67
+        email:
+          type: string
+          example: keks@keks.com
+    userToken:
+      type: string
+      example: saldf23lj34ljn67
 
 
 
