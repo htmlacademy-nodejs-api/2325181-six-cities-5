@@ -9,5 +9,5 @@ export interface OfferService {
   findFavorites():Promise<DocumentType<OfferEntity>[]>;
   findPremium():Promise<DocumentType<OfferEntity>[]>;
   updateById(offerId:string, dto: UpdateOfferDTO):Promise<DocumentType<OfferEntity> | null>;
-  addRemoveFavorites(offerId: string, dto: FavoritesOfferDTO):Promise<DocumentType<OfferEntity> | null>
+  addRemoveFavorites(offerId: string, dto: FavoritesOfferDTO):Promise<DocumentType<OfferEntity> | null>;
 }

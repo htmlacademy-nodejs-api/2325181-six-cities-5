@@ -53,4 +53,5 @@ export class DefaultOfferService implements OfferService {
       .populate('hostId')
       .exec();
   }
+
 }
