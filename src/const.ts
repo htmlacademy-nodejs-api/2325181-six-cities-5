@@ -77,3 +77,11 @@ export const SortOrder = {
   Desc: 'desc',
 } as const;
 
+export const HttpMethod = {
+  Get: 'get',
+  Post: 'post',
+  Delete: 'delete',
+  Patch: 'patch',
+  Put: 'put',
+} as const;
+

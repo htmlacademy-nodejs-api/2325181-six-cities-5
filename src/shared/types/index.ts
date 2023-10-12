@@ -9,3 +9,4 @@ export * from './lodging.type.js';
 export * from './goods.type.js';
 export * from './offer.type.js';
 export * from './review-statistics.type.js';
+export * from './values.type.js';

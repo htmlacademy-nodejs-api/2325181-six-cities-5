@@ -1,3 +1,4 @@
 import { UserLevel } from '../../const.js';
+import { ValuesType } from './values.type.js';
 
-export type UserLevelType = typeof UserLevel[keyof typeof UserLevel]
+export type UserLevelType = ValuesType<typeof UserLevel>;
