@@ -1,6 +1,6 @@
 import { types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
-import { CreateOfferDTO, FavoritesOfferDTO, OfferEntity, OfferService } from './index.js';
+import { CreateOfferDTO, OfferEntity, OfferService } from './index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { UpdateOfferDTO } from './update-offer.dto.js';
@@ -48,9 +48,10 @@ export class DefaultOfferService implements OfferService {
   }
 
 
-  public async addRemoveFavorites (offerId: string, dto: FavoritesOfferDTO):Promise<types.DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {isFavorite: !dto.isFavorite}}, {new: true})
+  public async addRemoveFavorites (offerId: string, isSetFavorite: boolean):Promise<types.DocumentType<OfferEntity> | null> {
+    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {isFavorite: isSetFavorite}}, {new: true})
       .populate('hostId')
       .exec();
   }
+
 }

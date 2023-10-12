@@ -1,4 +1,4 @@
-import { UserLevelType } from '../../../types/user-level.type.js';
+import { UserLevelType } from '../../types/user-level.type.js';
 
 export class CreateUserDTO {
   public email: string;
