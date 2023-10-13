@@ -6,7 +6,7 @@ import { Config, RestSchemaType } from '../shared/libs/config/index.js';
 import { Component } from '../shared/types/index.js';
 import { getMongoURI } from '../shared/helpers/database.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
-import { ExceptionFilter } from '../shared/libs/rest/index.js';
+import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
 
 
 @injectable()
@@ -18,6 +18,7 @@ export class RestApplication {
     @inject(Component.Config) private readonly config: Config<RestSchemaType>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
+    @inject(Component.UserController) private readonly userController: Controller,
   ) {
     this.server = express();
   }
@@ -64,7 +65,7 @@ export class RestApplication {
   }
 
   private async _initControllers() {
-
+    this.server.use('/users', this.userController.router);
   }
 
   private async _initMiddleware() {

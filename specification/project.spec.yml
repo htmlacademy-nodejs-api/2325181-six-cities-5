@@ -123,6 +123,42 @@ paths:
         "404":
           description: 'Детальная информация о предложении недоступна: данные не найдены.'
 
+  /offers/favorites:
+    get:
+      tags:
+        - offers
+      summary: Получение списка избранных предложений по аренде
+      description: Получает список избранных предложений по аренде
+      responses:
+        "200":
+          description: Получение списка избранных предложений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offersList'
+        "400":
+          description: 'Список избранных предложений недоступен: ошибка запроса.'
+        "404":
+          description: 'Список избранных предложений недоступен: данные не найдены.'
+
+  /offers/premium:
+    get:
+      tags:
+        - offers
+      summary: Получение списка премиальных предложений по аренде
+      description: Получает список премиальных предложений по аренде
+      responses:
+        "200":
+          description: Получение списка премиальных предложений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offersList'
+        "400":
+          description: 'Список премиальных предложений недоступен: ошибка запроса.'
+        "404":
+          description: 'Список премиальных предложений недоступен: данные не найдены.'
+
   /users/login:
     post:
       tags:
@@ -222,6 +258,7 @@ paths:
           description: Аватар пользователя успешно загружен.
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
+
   /comments/{offerId}:
     get:
       tags:
@@ -514,7 +551,7 @@ components:
             example: true
           isFavorite:
             type: boolean
-            example: false
+            example: true
           rating:
             type: number
             example: 3

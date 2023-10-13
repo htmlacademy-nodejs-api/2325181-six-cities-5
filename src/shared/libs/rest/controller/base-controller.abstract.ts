@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { Router, Response } from 'express';
 import { Logger } from '../../logger/index.js';
 import { Controller } from './controller.interface.js';
@@ -5,6 +6,7 @@ import { Route } from '../route/route.interface.js';
 import { DEFAULT_CONTENT_TYPE } from '../../../../const.js';
 import { StatusCodes } from 'http-status-codes';
 
+@injectable()
 export abstract class BaseController implements Controller {
   private readonly _router: Router;
 
