@@ -85,3 +85,5 @@ export const HttpMethod = {
   Put: 'put',
 } as const;
 
+export const DEFAULT_CONTENT_TYPE = 'application/json';
+

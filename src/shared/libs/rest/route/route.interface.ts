@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { HttpMethod } from '../../../const.js';
-import { ValuesType } from '../../types/values.type.js';
+import { HttpMethod } from '../../../../const.js';
+import { ValuesType } from '../../../types/values.type.js';
 
 export interface Route {
   path: string;

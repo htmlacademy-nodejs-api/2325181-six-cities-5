@@ -1,5 +1,5 @@
 import { Goods } from '../../const.js';
 import { ValuesType } from './values.type.js';
 
-export type GoodsTyp = ValuesType<typeof Goods>[];
+export type GoodsType = ValuesType<typeof Goods>[];
 
