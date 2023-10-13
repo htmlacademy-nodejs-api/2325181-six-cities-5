@@ -1,4 +1,4 @@
-import {Response} from 'express';
+import {Response, NextFunction} from 'express';
 import { inject, injectable } from 'inversify';
 import { BaseController } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
@@ -16,10 +16,17 @@ export class UserController extends BaseController {
     this.addRoute({path: '/signin', method: HttpMethod.Post, handler: this.create});
   }
 
-  public create(
+  public async create(
     _req: CreateUserRequest,
-    _res: Response
-  ): void {
-    throw new Error('[UserController] failed');
+    _res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      throw new Error('[UserController] failed');
+    } catch (err) {
+      return next(err);
+
+    }
+
   }
 }
