@@ -1,10 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { UserService } from './user-service.interface.js';
-import { DocumentType, types } from '@typegoose/typegoose';
+import { Ref, types } from '@typegoose/typegoose';
 import { UserEntity } from './user.entity.js';
 import { CreateUserDTO, UpdateUserDTO, } from './index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
+import { OfferEntity } from '../offer/offer.entity.js';
 
 @injectable()
 export class DefaultUserService implements UserService {
@@ -14,7 +15,7 @@ export class DefaultUserService implements UserService {
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
-  public async create (dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>> {
+  public async create (dto: CreateUserDTO, salt: string): Promise<types.DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
     user.setPassword(dto.password, salt);
     const result = await this.userModel.create(user);
@@ -22,15 +23,15 @@ export class DefaultUserService implements UserService {
     return result;
   }
 
-  public async findById(userId: string): Promise<DocumentType<UserEntity> | null> {
+  public async findById(userId: string): Promise<types.DocumentType<UserEntity> | null> {
     return this.userModel.findById(userId).exec();
   }
 
-  public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
+  public async findByEmail(email: string): Promise<types.DocumentType<UserEntity> | null> {
     return this.userModel.findOne({email});
   }
 
-  public async findOrCreate(dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>> {
+  public async findOrCreate(dto: CreateUserDTO, salt: string): Promise<types.DocumentType<UserEntity>> {
     const resultUser = await this.findByEmail(dto.email);
     if (resultUser) {
       return resultUser;
@@ -40,5 +41,26 @@ export class DefaultUserService implements UserService {
 
   public async updateById (userId: string, dto: UpdateUserDTO): Promise<types.DocumentType<UserEntity> | null> {
     return this.userModel.findByIdAndUpdate(userId, dto, {new: true}).exec();
+  }
+
+  public async findFavoritesList (userId: string): Promise<Ref<OfferEntity>[] | undefined> {
+    const user = await this.userModel.findById(userId).populate(['favoritesList']).exec();
+    return user?.favoritesList;
+  }
+
+  public async addRemoveFavorites (userId: string, offer: Ref<OfferEntity>, isSetFavorite: boolean): Promise<types.DocumentType<UserEntity> | null> {
+    const currentUser = await this.userModel.findById(userId).exec();
+    if (currentUser) {
+      const offerId = offer._id.toString();
+      const idList = Boolean(currentUser.favoritesList.filter((favorites) => favorites._id.toString() === offerId).length);
+      if (isSetFavorite && !idList) {
+        currentUser.favoritesList.push(offer);
+      } else if (idList) {
+        currentUser.favoritesList = currentUser.favoritesList.filter((favorites) => favorites._id.toString() !== offerId);
+      }
+      this.userModel.findByIdAndUpdate(currentUser?._id, currentUser, {new: true}).exec();
+      return currentUser;
+    }
+    return null;
   }
 }

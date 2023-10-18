@@ -1,7 +1,8 @@
-import { prop, getModelForClass, defaultClasses, modelOptions } from '@typegoose/typegoose';
+import { Ref, prop, getModelForClass, defaultClasses, modelOptions, Severity } from '@typegoose/typegoose';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserType } from '../../types/user.type.js';
 import { createSHA256 } from '../../helpers/hash.js';
+import { OfferEntity } from '../offer/offer.entity.js';
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -10,6 +11,9 @@ export interface UserEntity extends defaultClasses.Base {}
 @modelOptions({
   schemaOptions: {
     collection: 'users'
+  },
+  options: {
+    allowMixed: Severity.ALLOW
   }
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -39,6 +43,13 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
     require: true,
     default: '',
   }) public userType: UserLevelType;
+
+  @prop({
+    require: true,
+    ref: () => OfferEntity,
+    _id: false,
+    default: [],
+  }) public favoritesList: Ref<OfferEntity>[];
 
   constructor(userData: UserType) {
     super();

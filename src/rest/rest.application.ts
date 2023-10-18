@@ -7,6 +7,7 @@ import { Component } from '../shared/types/index.js';
 import { getMongoURI } from '../shared/helpers/database.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
+import { OfferService } from '../shared/modules/offer/offer-service.interface.js';
 
 
 @injectable()
@@ -19,6 +20,7 @@ export class RestApplication {
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
     @inject(Component.UserController) private readonly userController: Controller,
+    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     this.server = express();
   }
@@ -29,6 +31,9 @@ export class RestApplication {
     this.logger.info('Initialize database...');
     await this._initDb();
     this.logger.info('Database has been initialized');
+    this.logger.info('Init app-level middleware');
+    await this._initMiddleware();
+    this.logger.info('App-level middleware has been initialized');
     this.logger.info('Init controllers');
     await this._initControllers();
     this.logger.info('Controllers have been initialized');
@@ -38,14 +43,15 @@ export class RestApplication {
     this.logger.info('Try to init server...');
     await this._initServer();
     this.logger.info(`Server launched on http://localhost:${this.config.get('PORT')}`);
-    this.logger.info('Init app-level middleware');
-    await this._initMiddleware();
-    this.logger.info('App-level middleware has been initialized');
 
 
     this.server.get('/', (_req, res) => {
       res.send('Hello world');
     });
+
+
+    const offer = await this.offerService.find('c.brooks@mymail.com');
+    console.log(offer);
   }
 
   private async _initServer() {

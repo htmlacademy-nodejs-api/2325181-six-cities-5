@@ -15,7 +15,6 @@ export function createOffer(offerData: string): OfferType {
     previewImageURL,
     images,
     isPremium,
-    isFavorite,
     rating,
     type,
     bedrooms,
@@ -26,7 +25,6 @@ export function createOffer(offerData: string): OfferType {
     hostEmail,
     hostAvatar,
     hostType,
-    reviews,
     coordinates
   ] = offerData.replace('\n', '').split('\t');
 
@@ -38,7 +36,6 @@ export function createOffer(offerData: string): OfferType {
     previewImageURL,
     images: images.split(';'),
     isPremium: Boolean(isPremium),
-    isFavorite: Boolean(isFavorite),
     rating: Number.parseInt(rating, 10),
     type: type as LodgingType,
     bedrooms: Number.parseInt(bedrooms, 10),
@@ -51,7 +48,6 @@ export function createOffer(offerData: string): OfferType {
       avatarURL: hostAvatar,
       userType: hostType as UserLevelType,
     } as UserType,
-    reviews: Number(reviews),
     coordinates: coordinates.split(';')
       .map((coordinate) => Number(coordinate))
   };

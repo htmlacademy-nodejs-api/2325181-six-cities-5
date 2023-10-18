@@ -175,7 +175,7 @@ paths:
           description: 'Информация об авторизации недоступна: пользователь не существует.'
 
   /users/logout:
-    delete:
+    post:
       tags:
         - users
       summary: Выход из закрытой части приложения.

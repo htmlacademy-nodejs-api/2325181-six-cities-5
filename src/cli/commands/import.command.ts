@@ -39,7 +39,8 @@ export class ImportCommand implements Command {
   private async saveOffer(offer: OfferType) {
     const user = await this.userService.findOrCreate({
       ...offer.host,
-      password: DEFAULT_USER_PASSWORD
+      password: DEFAULT_USER_PASSWORD,
+      favoritesList: [],
     }, this.salt);
 
     await this.offerService.create({
@@ -50,7 +51,6 @@ export class ImportCommand implements Command {
       previewImageURL: offer.previewImageURL,
       images: offer.images,
       isPremium: offer.isPremium,
-      isFavorite: offer.isFavorite,
       rating: offer.rating,
       type: offer.type,
       bedrooms: offer.bedrooms,
@@ -58,7 +58,6 @@ export class ImportCommand implements Command {
       price: offer.price,
       goods: offer.goods,
       hostId: user.id,
-      reviews: offer.reviews,
       coordinates: offer.coordinates
     });
 
