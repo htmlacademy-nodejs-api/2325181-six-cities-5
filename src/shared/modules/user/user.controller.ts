@@ -1,4 +1,4 @@
-import { Response} from 'express';
+import { Request, Response} from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { BaseController, HttpError } from '../../libs/rest/index.js';
@@ -11,6 +11,9 @@ import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { UserRdo } from './user.rdo.js';
 import { LoginUserRequestType } from '../../types/login-user-request.type.js';
+import { ParamUserId } from '../../types/param-userid.type.js';
+import { OfferService } from '../offer/offer-service.interface.js';
+import { OfferRdo } from '../offer/offer.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -18,6 +21,7 @@ export class UserController extends BaseController {
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.UserService) private readonly userService: UserService,
     @inject(Component.Config) private readonly configService: Config<RestSchemaType>,
+    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     super(logger);
     this.logger.info('Register routes for UserController...');
@@ -26,7 +30,7 @@ export class UserController extends BaseController {
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.auth});
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({path: '/:userId/avatar', method: HttpMethod.Post, handler: this.loadAvatar});
-    this.addRoute({path: '/:userId/favorites/:offerId/status', method: HttpMethod.Put, handler: this.toggleFavorites});
+    this.addRoute({path: '/:userId/favorites/:offerId/status', method: HttpMethod.Get, handler: this.toggleFavorites});
   }
 
   public async create(
@@ -62,12 +66,36 @@ export class UserController extends BaseController {
     );
   }
 
-  public async toggleFavorites() {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+  public async toggleFavorites({params}: Request<ParamUserId>, res: Response): Promise<void> {
+    const {offerId, userId, status} = params;
+
+    if (!offerId) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Bad request. Offer id not found in query parameters',
+        'UserController'
+      );
+    }
+
+    if (!userId) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Bad request. User id not found in query parameters',
+        'UserController'
+      );
+    }
+
+    if (!status) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Bad request. Status not found in query parameters',
+        'UserController'
+      );
+    }
+    const isSetFavorite = !!status;
+    await this.userService.addRemoveFavorites(userId, offerId, isSetFavorite);
+    const offer = await this.offerService.findById('', offerId);
+    this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   public async login(

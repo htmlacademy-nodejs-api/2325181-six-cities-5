@@ -243,8 +243,8 @@ paths:
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
 
-  /users/{userId}/favorites/{offerId}/status:
-    put:
+  /users/{userId}/favorites/{offerId}/{status}:
+    get:
       tags:
         - offers
         - users
