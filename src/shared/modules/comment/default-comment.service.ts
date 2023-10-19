@@ -15,30 +15,28 @@ export class DefaultCommentService implements CommentService {
 
   public async create(dto: CreateCommentDTO): Promise<DocumentType<CommentEntity>> {
     const result = (await this.commentModel.create(dto)).populate('authorId');
-    const {rating, reviews} = await this.calculateAverageRatingByOfferId(dto.offerId);
+    const {rating} = await this.calculateAverageRatingByOfferId(dto.offerId);
     this.offerModel
       .findByIdAndUpdate(dto.offerId, {
-        '$set': {rating, reviews}
+        '$set': {rating}
       }, {new: true}).exec();
     return result;
   }
 
   public async calculateAverageRatingByOfferId(offerId: string): Promise<ReviewStatisticsType> {
     const objectOffer = new mongoose.Types.ObjectId(offerId);
-    const averageRatingReviewsCountList: ReviewStatisticsType[] = await this.commentModel.aggregate([
+    const averageRatingList: ReviewStatisticsType[] = await this.commentModel.aggregate([
       {$match: { offerId: objectOffer}},
       {$group: {
         _id: '$offerId',
         averageRating: {$avg: '$rating'},
-        reviewsCount: {$sum: 1}
       }},
       {$project: {
         rating: {$round: ['$averageRating', 1]},
-        reviews: '$reviewsCount'
       }},
       {$unset: '_id'}
     ]);
-    return averageRatingReviewsCountList[0];
+    return averageRatingList[0];
   }
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {

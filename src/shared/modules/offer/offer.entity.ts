@@ -57,11 +57,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop ({
     required: false,
-    default: false
-  }) public isFavorite!: boolean;
-
-  @prop ({
-    required: false,
     default: 0
   }) public rating!: number;
 
@@ -95,14 +90,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop ({
     required: true,
-    ref: UserEntity,
+    ref: 'UserEntity',
     _id: false,
   }) public hostId!: Ref<UserEntity>;
-
-  @prop ({
-    required: false,
-    default: 0
-  }) public reviews!: number;
 
   @prop ({
     type: () => [Number],

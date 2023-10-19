@@ -8,7 +8,6 @@ export class CreateOfferDTO {
   public previewImageURL: string;
   public images: string[];
   public isPremium: boolean;
-  public isFavorite: boolean;
   public rating: number;
   public type: LodgingType;
   public bedrooms: number;
@@ -16,6 +15,5 @@ export class CreateOfferDTO {
   public price: number;
   public goods: GoodsType;
   public hostId: string;
-  public reviews: number;
   public coordinates: number[];
 }

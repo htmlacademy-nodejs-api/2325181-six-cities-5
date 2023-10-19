@@ -1,7 +1,6 @@
 import { DocumentType } from '@typegoose/typegoose';
 import { CreateCommentDTO } from './create-comment.dto.js';
 import { CommentEntity } from './comment.entity.js';
-import { OfferEntity } from '../offer/offer.entity.js';
 import { ReviewStatisticsType } from '../../types/review-statistics.type.js';
 
 export interface CommentService {

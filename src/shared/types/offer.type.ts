@@ -11,7 +11,6 @@ export type OfferType = {
   previewImageURL: string;
   images: string[];
   isPremium: boolean;
-  isFavorite: boolean;
   rating: number;
   type: LodgingType;
   bedrooms: number;
@@ -19,6 +18,5 @@ export type OfferType = {
   price: number;
   goods: GoodsType;
   host: UserType;
-  reviews: number;
   coordinates: number[];
 }

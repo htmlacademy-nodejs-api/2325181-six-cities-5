@@ -1,0 +1,53 @@
+# Пользователи
+
+## Создать нового пользователя.
+
+POST http://localhost:4000/users/signin HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "mail@mail.com",
+  "avatarURL": "string.jpg",
+  "name": "Hello",
+  "password": "World",
+  "userType": "standard"
+}
+
+###
+
+## Войти в закрытую часть приложения.
+
+POST http://localhost:4000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "mail@mail.com",
+  "password": "World"
+}
+
+###
+
+## Проверить информацию об состоянии авторизации пользователя.
+
+GET http://localhost:4000/users/login HTTP/1.1
+
+###
+
+## Завершить пользовательский сеанс.
+
+POST http://localhost:4000/users/logout HTTP/1.1
+
+
+###
+
+## Загрузить изображение (аватар) пользователя в формате 'png' или 'jpg'.
+
+POST http://localhost:4000/users/{userId}/avatar HTTP/1.1
+
+###
+
+## Добавить/удалить предложения в/из избранное.
+
+GET http://localhost:4000/users/{userId}/favorites/{offerId}/{status} HTTP/1.1
+
+

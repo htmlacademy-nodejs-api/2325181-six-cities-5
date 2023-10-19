@@ -9,3 +9,8 @@ export * from './lodging.type.js';
 export * from './goods.type.js';
 export * from './offer.type.js';
 export * from './review-statistics.type.js';
+export * from './values.type.js';
+export * from './request-body.type.js';
+export * from './request-params.type.js';
+export * from './create-user-request.type.js';
+

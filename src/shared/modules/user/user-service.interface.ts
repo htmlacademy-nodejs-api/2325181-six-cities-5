@@ -6,5 +6,6 @@ export interface UserService {
   findById (userId: string): Promise<DocumentType<UserEntity> | null>;
   findByEmail (email: string): Promise<DocumentType<UserEntity> | null>;
   findOrCreate (dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>>;
-  updateById (userId: string, dto: UpdateUserDTO): Promise<DocumentType<UserEntity> | null>
+  updateById (userId: string, dto: UpdateUserDTO): Promise<DocumentType<UserEntity> | null>;
+  addRemoveFavorites (userId: string, offerId: string, isSetFavorite: boolean): Promise<void>
 }

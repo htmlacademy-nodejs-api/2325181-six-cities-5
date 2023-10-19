@@ -17,7 +17,6 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
   const previewImageURL = getRandomItem<string>(mockData.previewImageURL);
   const images = getRandomItems<string>(mockData.images).join(';');
   const isPremium = getRandomBoolean().toString();
-  const isFavorite = getRandomBoolean().toString();
   const rating = generateRandomValue(EdgePoints.Minimal.Rating, EdgePoints.Maximal.Rating, 1).toString();
   const type = getRandomItem<LodgingType>(mockData.lodgingTypes).toString();
   const bedrooms = generateRandomValue(EdgePoints.Minimal.Bedrooms, EdgePoints.Maximal.Bedrooms).toString();
@@ -28,7 +27,6 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
   const hostEmail = getRandomItem<string>(mockData.hostEmails);
   const hostAvatarURL = getRandomItem<string>(mockData.hostAvatarURLs);
   const hostType = getRandomItem<UserLevelType>(Object.values(UserLevel));
-  const reviews = generateRandomValue(EdgePoints.Minimal.Reviews, EdgePoints.Maximal.Reviews);
   const coordinates = getRandomItem<number[]>(mockData.coordinates).join(';');
 
   return [
@@ -39,7 +37,6 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
     previewImageURL,
     images,
     isPremium,
-    isFavorite,
     rating,
     type,
     bedrooms,
@@ -50,7 +47,6 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
     hostEmail,
     hostAvatarURL,
     hostType,
-    reviews,
     coordinates
   ].join('\t');
 }

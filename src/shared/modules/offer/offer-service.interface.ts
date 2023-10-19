@@ -3,11 +3,10 @@ import { CreateOfferDTO, OfferEntity, UpdateOfferDTO } from './index.js';
 
 export interface OfferService {
   create(dto: CreateOfferDTO):Promise<DocumentType<OfferEntity>>;
-  findById(offerId:string): Promise<DocumentType<OfferEntity> | null>;
-  find(count?: number):Promise<DocumentType<OfferEntity>[]>;
+  findById(token: string, offerId:string): Promise<DocumentType<OfferEntity> | null>;
+  find(token: string, count?: number):Promise<DocumentType<OfferEntity>[]>;
   deleteById(offerId:string):Promise<DocumentType<OfferEntity> | null>;
-  findFavorites():Promise<DocumentType<OfferEntity>[]>;
-  findPremium():Promise<DocumentType<OfferEntity>[]>;
+  findPremium(city: string):Promise<DocumentType<OfferEntity>[]>;
   updateById(offerId:string, dto: UpdateOfferDTO):Promise<DocumentType<OfferEntity> | null>;
-  addRemoveFavorites(offerId: string, isSetFavorite: boolean):Promise<DocumentType<OfferEntity> | null>;
+  findFavorites(token: string):Promise<DocumentType<OfferEntity>[]>;
 }

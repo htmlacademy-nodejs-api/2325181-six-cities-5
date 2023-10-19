@@ -8,10 +8,10 @@ export const Location = {
 } as const;
 
 export const LodgingKind = {
-  Room: 'Room',
-  Apartment: 'Apartment',
-  House: 'House',
-  Hotel: 'Hotel'
+  Room: 'room',
+  Apartment: 'apartment',
+  House: 'house',
+  Hotel: 'hotel'
 } as const;
 
 export const Goods = {
@@ -31,7 +31,6 @@ export const EdgePoints = {
     Weekday: 1,
     Bedrooms: 1,
     Adults: 1,
-    Reviews: 0
   },
   Maximal: {
     Price: 1000,
@@ -39,7 +38,6 @@ export const EdgePoints = {
     Weekday: 7,
     Bedrooms: 8,
     Adults: 10,
-    Reviews: 20
   }
 } as const;
 
@@ -73,7 +71,17 @@ export const PREMIUM_OFFER_COUNT = 3;
 export const OFFER_COUNT = 60;
 
 export const SortOrder = {
-  Asc: 'asc',
-  Desc: 'desc',
+  Asc: 1,
+  Desc: -1
 } as const;
+
+export const HttpMethod = {
+  Get: 'get',
+  Post: 'post',
+  Delete: 'delete',
+  Patch: 'patch',
+  Put: 'put',
+} as const;
+
+export const DEFAULT_CONTENT_TYPE = 'application/json';
 
