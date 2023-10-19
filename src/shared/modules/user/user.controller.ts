@@ -23,7 +23,10 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for UserController...');
     this.addRoute({path: '/signin', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
+    this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.auth});
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
+    this.addRoute({path: '/:userId/avatar', method: HttpMethod.Post, handler: this.loadAvatar});
+    this.addRoute({path: '/:userId/favorites/:offerId/status', method: HttpMethod.Put, handler: this.toggleFavorites});
   }
 
   public async create(
@@ -41,6 +44,30 @@ export class UserController extends BaseController {
 
     const result = await this.userService.create(body, this.configService.get('SALT'));
     this.created(res, fillDTO(UserRdo, result));
+  }
+
+  public async auth() {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController'
+    );
+  }
+
+  public async loadAvatar() {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController'
+    );
+  }
+
+  public async toggleFavorites() {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController'
+    );
   }
 
   public async login(
@@ -63,5 +90,11 @@ export class UserController extends BaseController {
     );
   }
 
-  public async logout() {}
+  public async logout() {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController'
+    );
+  }
 }

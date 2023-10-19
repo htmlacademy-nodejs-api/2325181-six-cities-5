@@ -1,9 +1,13 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { LocationType } from '../../types/location.type.js';
 import { LodgingType } from '../../types/lodging.type.js';
 import { GoodsType } from '../../types/goods.type.js';
+import { UserRdo } from '../user/user.rdo.js';
 
 export class OfferRdo {
+  @Expose()
+  public id: string;
+
   @Expose()
   public title: string;
 
@@ -46,8 +50,9 @@ export class OfferRdo {
   @Expose()
   public goods: GoodsType;
 
-  @Expose()
-  public hostId: string;
+  @Expose({name: 'hostId'})
+  @Type(() => UserRdo)
+  public host: UserRdo;
 
   @Expose()
   public coordinates: number[];
