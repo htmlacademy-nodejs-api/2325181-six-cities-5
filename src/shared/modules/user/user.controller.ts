@@ -1,4 +1,4 @@
-import {Response} from 'express';
+import { Response} from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { BaseController, HttpError } from '../../libs/rest/index.js';
@@ -23,6 +23,7 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for UserController...');
     this.addRoute({path: '/signin', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
+    this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
   }
 
   public async create(
@@ -61,4 +62,6 @@ export class UserController extends BaseController {
       'UserController',
     );
   }
+
+  public async logout() {}
 }

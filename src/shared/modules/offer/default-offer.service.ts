@@ -23,7 +23,7 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async findById(token: string, offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
-    const aggregatedOffer = await this.offerModel.aggregate([
+    const aggregatedOffers = await this.offerModel.aggregate([
       {$match: {_id: new Types.ObjectId(offerId)}},
       {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
       {$addFields: {id: {$toString:'$_id'}}},
@@ -38,21 +38,35 @@ export class DefaultOfferService implements OfferService {
       {$unset: ['currentUser', 'id', 'favorites']},
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
-    return aggregatedOffer[0];
+    return aggregatedOffers[0];
   }
 
   public async find(token: string, count: number = OFFER_COUNT):Promise<types.DocumentType<OfferEntity>[]> {
     return this.offerModel.aggregate([
       {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
-      {$addFields: {id: {$toString:'$_id'}}},
       {$set: {reviews: {$size: '$comments'}}},
       {$unset: 'comments'},
       {$lookup: {from: 'users', pipeline: [{$match: {email: token}}], as: 'currentUser'}},
       {$addFields: {favorites: '$currentUser.favoritesList'}},
       {$unwind: '$favorites'},
       {$set: {isFavorite: {$in: ['$_id','$favorites']}}},
-      {$unset: ['currentUser', 'id', 'favorites', 'description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
+      {$unset: ['currentUser', 'favorites', 'description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
       {$limit: count },
+      {$sort: {createdAt: SortOrder.Desc}},
+    ]).exec();
+  }
+
+  public async findFavorites(token: string):Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel.aggregate([
+      {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
+      {$set: {reviews: {$size: '$comments'}}},
+      {$unset: 'comments'},
+      {$lookup: {from: 'users', pipeline: [{$match: {email: token}}], as: 'currentUser'}},
+      {$addFields: {favorites: '$currentUser.favoritesList'}},
+      {$unwind: '$favorites'},
+      {$set: {isFavorite: {$in: ['$_id','$favorites']}}},
+      {$match: {isFavorite: true}},
+      {$unset: ['currentUser', 'favorites', 'description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
   }

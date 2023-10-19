@@ -43,11 +43,6 @@ export class DefaultUserService implements UserService {
     return this.userModel.findByIdAndUpdate(userId, dto, {new: true}).exec();
   }
 
-  public async findFavoritesList (userId: string): Promise<Ref<OfferEntity>[] | undefined> {
-    const user = await this.userModel.findById(userId).populate(['favoritesList']).exec();
-    return user?.favoritesList;
-  }
-
   public async addRemoveFavorites (userId: string, offer: Ref<OfferEntity>, isSetFavorite: boolean): Promise<types.DocumentType<UserEntity> | null> {
     const currentUser = await this.userModel.findById(userId).exec();
     if (currentUser) {

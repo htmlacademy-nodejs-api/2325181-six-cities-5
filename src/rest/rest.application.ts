@@ -7,7 +7,6 @@ import { Component } from '../shared/types/index.js';
 import { getMongoURI } from '../shared/helpers/database.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
-import { OfferService } from '../shared/modules/offer/offer-service.interface.js';
 
 
 @injectable()
@@ -20,7 +19,7 @@ export class RestApplication {
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
     @inject(Component.UserController) private readonly userController: Controller,
-    @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.OfferController) private readonly offerController: Controller,
   ) {
     this.server = express();
   }
@@ -44,14 +43,10 @@ export class RestApplication {
     await this._initServer();
     this.logger.info(`Server launched on http://localhost:${this.config.get('PORT')}`);
 
-
     this.server.get('/', (_req, res) => {
       res.send('Hello world');
     });
 
-
-    const offer = await this.offerService.find('c.brooks@mymail.com');
-    console.log(offer);
   }
 
   private async _initServer() {
@@ -72,6 +67,7 @@ export class RestApplication {
 
   private async _initControllers() {
     this.server.use('/users', this.userController.router);
+    this.server.use('/offers', this.offerController.router);
   }
 
   private async _initMiddleware() {

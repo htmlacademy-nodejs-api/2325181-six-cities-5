@@ -133,6 +133,22 @@ paths:
         "400":
           description: 'Список премиальных предложений недоступен: ошибка запроса.'
 
+  /offers/favorites:
+    get:
+      tags:
+        - offers
+      summary: Получение списка избранных предложений по аренде
+      description: Получает список избранных предложений по аренде
+      responses:
+        "200":
+          description: Получение списка избранных предложений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offersList'
+        "400":
+          description: 'Список избранных предложений недоступен: ошибка запроса.'
+
   /users/login:
     post:
       tags:
@@ -226,23 +242,6 @@ paths:
           description: Аватар пользователя успешно загружен.
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
-
-  /users/{userId}/favorites:
-    get:
-      tags:
-        - offers
-        - users
-      summary: Получение списка избранных предложений по аренде для текущего пользователя
-      description: Получает список избранных предложений по аренде для текущего пользователя
-      responses:
-        "200":
-          description: Получение списка избранных предложений.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/offersList'
-        "400":
-          description: 'Список избранных предложений недоступен: ошибка запроса.'
 
   /users/{userId}/favorites/{offerId}/status:
     put:
