@@ -23,7 +23,12 @@ export class OfferController extends BaseController {
     this.logger.info('Register routes for OfferController...');
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Patch, handler: this.update});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
     this.addRoute({
       path: '/:offerId',
@@ -31,8 +36,8 @@ export class OfferController extends BaseController {
       handler: this.show,
       middlewares: [new ValidateObjectIdMiddleware('offerId')]
     });
-    this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium});
-    this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.indexFavorites});
+    this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
+    this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavorites});
 
   }
 
@@ -128,7 +133,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
-  public async indexPremium({params}: Request<ParamOfferType>, res: Response): Promise<void> {
+  public async getPremium({params}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {city} = params;
 
     if (!city) {
@@ -151,7 +156,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, premiumOffers));
   }
 
-  public async indexFavorites(_req: Request, res: Response): Promise<void> {
+  public async getFavorites(_req: Request, res: Response): Promise<void> {
     const favoriteOffers = await this.offerService.findFavorites('c.brooks@mymail.com');
 
     if (!favoriteOffers) {

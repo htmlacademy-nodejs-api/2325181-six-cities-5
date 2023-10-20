@@ -14,6 +14,7 @@ import { LoginUserRequestType } from '../../types/login-user-request.type.js';
 import { ParamUserType } from '../../types/param-user.type.js';
 import { OfferService } from '../offer/offer-service.interface.js';
 import { OfferRdo } from '../offer/offer.rdo.js';
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -29,8 +30,18 @@ export class UserController extends BaseController {
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.auth});
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
-    this.addRoute({path: '/:userId/avatar', method: HttpMethod.Post, handler: this.loadAvatar});
-    this.addRoute({path: '/:userId/favorites/:offerId/status', method: HttpMethod.Get, handler: this.toggleFavorites});
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.loadAvatar,
+      middlewares: [new ValidateObjectIdMiddleware('userId')]
+    });
+    this.addRoute({
+      path: '/:userId/favorites/:offerId/status',
+      method: HttpMethod.Get,
+      handler: this.toggleFavorites,
+      middlewares: [new ValidateObjectIdMiddleware('userId'), new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async create(

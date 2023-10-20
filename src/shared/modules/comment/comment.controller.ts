@@ -12,6 +12,7 @@ import { Request, Response } from 'express';
 import { fillDTO } from '../../helpers/common.js';
 import { CommentRdo } from './comment.rdo.js';
 import { ParamCommentType } from '../../types/param-comment.type.js';
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 
 
 @injectable()
@@ -24,7 +25,12 @@ export default class CommentController extends BaseController {
     super(logger);
     this.logger.info('Register routes for CommentController...');
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async create({body}: CreateCommentRequestType, res: Response): Promise<void> {
