@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { CreateOfferRequestType } from '../../types/create-offer-request.type.js';
 import { fillDTO } from '../../helpers/common.js';
 import { OfferRdo } from './offer.rdo.js';
-import { ParamOfferId } from '../../types/param-offerid.type.js';
+import { ParamOfferType } from '../../types/param-offer.type.js';
 import { UpdateOfferDTO } from './update-offer.dto.js';
 
 @injectable()
@@ -49,7 +49,7 @@ export class OfferController extends BaseController {
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
-  public async update({body, params}: Request<ParamOfferId, unknown, UpdateOfferDTO>, res: Response): Promise<void> {
+  public async update({body, params}: Request<ParamOfferType, unknown, UpdateOfferDTO>, res: Response): Promise<void> {
     const {offerId} = params;
     if (!offerId) {
       throw new HttpError(
@@ -72,7 +72,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, updateOffer));
   }
 
-  public async delete({params}: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async delete({params}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {offerId} = params;
 
     if (!offerId) {
@@ -98,7 +98,7 @@ export class OfferController extends BaseController {
     this.noContent(res, offer);
   }
 
-  public async read({params}: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async read({params}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {offerId} = params;
 
     if (!offerId) {
@@ -122,7 +122,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
-  public async indexPremium({params}: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async indexPremium({params}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {city} = params;
 
     if (!city) {

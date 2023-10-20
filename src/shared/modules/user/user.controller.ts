@@ -11,7 +11,7 @@ import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { UserRdo } from './user.rdo.js';
 import { LoginUserRequestType } from '../../types/login-user-request.type.js';
-import { ParamUserId } from '../../types/param-userid.type.js';
+import { ParamUserType } from '../../types/param-user.type.js';
 import { OfferService } from '../offer/offer-service.interface.js';
 import { OfferRdo } from '../offer/offer.rdo.js';
 
@@ -66,7 +66,7 @@ export class UserController extends BaseController {
     );
   }
 
-  public async toggleFavorites({params}: Request<ParamUserId>, res: Response): Promise<void> {
+  public async toggleFavorites({params}: Request<ParamUserType>, res: Response): Promise<void> {
     const {offerId, userId, status} = params;
 
     if (!offerId) {
