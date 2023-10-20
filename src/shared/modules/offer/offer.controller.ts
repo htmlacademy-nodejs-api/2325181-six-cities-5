@@ -11,6 +11,7 @@ import { fillDTO } from '../../helpers/common.js';
 import { OfferRdo } from './offer.rdo.js';
 import { ParamOfferType } from '../../types/param-offer.type.js';
 import { UpdateOfferDTO } from './update-offer.dto.js';
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -24,7 +25,12 @@ export class OfferController extends BaseController {
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/:offerId', method: HttpMethod.Patch, handler: this.update});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.read});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium});
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.indexFavorites});
 
@@ -98,7 +104,7 @@ export class OfferController extends BaseController {
     this.noContent(res, offer);
   }
 
-  public async read({params}: Request<ParamOfferType>, res: Response): Promise<void> {
+  public async show({params}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {offerId} = params;
 
     if (!offerId) {
