@@ -1,19 +1,14 @@
 import { Request, Response} from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
-import { BaseController, HttpError } from '../../libs/rest/index.js';
-import { Component } from '../../types/component.enum.js';
+import { BaseController, HttpError, ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import { Component, CreateUserRequestType, LoginUserRequestType, ParamUserType } from '../../types/index.js';
 import { HttpMethod } from '../../../const.js';
-import { CreateUserRequestType } from '../../types/create-user-request.type.js';
 import { Logger } from '../../libs/logger/index.js';
-import { UserService } from './user-service.interface.js';
+import { UserService, UserRdo, CreateUserDTO } from './index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
-import { UserRdo } from './user.rdo.js';
-import { LoginUserRequestType } from '../../types/login-user-request.type.js';
-import { ParamUserType } from '../../types/param-user.type.js';
-import { OfferService } from '../offer/offer-service.interface.js';
-import { OfferRdo } from '../offer/offer.rdo.js';
+import { OfferService, OfferRdo } from '../offer/index.js';
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 
 @injectable()
@@ -26,7 +21,12 @@ export class UserController extends BaseController {
   ) {
     super(logger);
     this.logger.info('Register routes for UserController...');
-    this.addRoute({path: '/signin', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/signin',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDTO)]
+    });
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.auth});
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});

@@ -1,17 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
-import { BaseController, HttpError } from '../../libs/rest/index.js';
-import { Component } from '../../types/component.enum.js';
-import { OfferService } from './offer-service.interface.js';
+import { Request, Response } from 'express';
+import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
-import { Request, Response } from 'express';
-import { CreateOfferRequestType } from '../../types/create-offer-request.type.js';
 import { fillDTO } from '../../helpers/common.js';
-import { OfferRdo } from './offer.rdo.js';
-import { ParamOfferType } from '../../types/param-offer.type.js';
-import { UpdateOfferDTO } from './update-offer.dto.js';
-import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { UpdateOfferDTO, CreateOfferDTO, OfferRdo, OfferService } from './index.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -22,7 +17,12 @@ export class OfferController extends BaseController {
     super(logger);
     this.logger.info('Register routes for OfferController...');
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Patch,
