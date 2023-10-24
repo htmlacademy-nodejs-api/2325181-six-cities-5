@@ -1,5 +1,5 @@
 import multer, { diskStorage } from 'multer';
-import { randomUUID } from 'node:crypto';
+import { nanoid } from 'nanoid';
 import { extension } from 'mime-types';
 import { Request, Response, NextFunction } from 'express';
 import { Middleware } from './middleware.interface.js';
@@ -15,7 +15,8 @@ export class UploadFileMiddleware implements Middleware {
       destination: this.uploadDirectory,
       filename: (_req, file, callback) => {
         const fileExtension = extension(file.mimetype);
-        const filename = randomUUID();
+        console.log(fileExtension);
+        const filename = nanoid();
         callback(null, `${filename}.${fileExtension}`);
       }
     });

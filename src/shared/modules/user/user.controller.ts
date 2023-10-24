@@ -9,6 +9,7 @@ import { UserService, UserRdo, CreateUserDTO, LoginUserDTO } from './index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { OfferService, OfferRdo } from '../offer/index.js';
+import { UploadFileMiddleware } from '../../libs/rest/middleware/upload-file.middleware.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -38,7 +39,10 @@ export class UserController extends BaseController {
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.loadAvatar,
-      middlewares: [new ValidateObjectIdMiddleware('userId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
+      ]
     });
     this.addRoute({
       path: '/:userId/favorites/:offerId/status',
@@ -73,12 +77,10 @@ export class UserController extends BaseController {
     );
   }
 
-  public async loadAvatar() {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+  public async loadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
   }
 
   public async toggleFavorites({params}: Request<ParamUserType>, res: Response): Promise<void> {
