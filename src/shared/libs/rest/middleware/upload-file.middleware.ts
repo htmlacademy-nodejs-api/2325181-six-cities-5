@@ -15,7 +15,6 @@ export class UploadFileMiddleware implements Middleware {
       destination: this.uploadDirectory,
       filename: (_req, file, callback) => {
         const fileExtension = extension(file.mimetype);
-        console.log(fileExtension);
         const filename = nanoid();
         callback(null, `${filename}.${fileExtension}`);
       }
