@@ -85,10 +85,9 @@ export const HttpMethod = {
 
 export const DEFAULT_CONTENT_TYPE = 'application/json';
 
-export const CreateOfferValidationMessage = {
+export const OfferValidationMessage = {
   title: {
-    minLength: 'Minimum title length must be 10,',
-    maxLength: 'Maximum title length must be 100,'
+    invalidLength: 'The field length must be at least 10 up to 100 signs'
   },
   description: {
     minLength: 'Minimum description length must be 20,',
@@ -100,11 +99,11 @@ export const CreateOfferValidationMessage = {
   city: {
     invalidValue: 'Value must be one of 6 cities: Amsterdam, Dusseldorf, Paris, Hamburg, Brussels, Cologne'
   },
-  previewImageURL: {
-
-  },
   images: {
     invalidCount: 'Quantity of image photo should exaclty 6 items',
+  },
+  isPremium: {
+    invalidFormat: 'The field value must be true or false'
   },
   rating: {
     invalidValue: 'Rating value must be in range from 1 to 5'
@@ -132,7 +131,7 @@ export const CreateOfferValidationMessage = {
   },
 } as const;
 
-export const CreateUserValidationMessage = {
+export const UserValidationMessage = {
   email: {
     invalidFormat: 'Email must be a valid format: mail@example.com'
   },
@@ -154,5 +153,22 @@ export const CreateUserValidationMessage = {
   },
   favoritesList: {
     invalidValue: 'The value must be a list of zero or more offer IDs'
+  }
+} as const;
+
+export const CommentValidationMessage = {
+  text: {
+    invalidFormat: 'The field value must be the string format',
+    invalidLength: 'The field length must be at least 5 up to 1024 symbols'
+  },
+  rating: {
+    invalidFormat: 'The field value must be the number format',
+    invalidValue: 'The field value must be in range from 1 up to 5'
+  },
+  authorId: {
+    invalidValue: 'The hostId value must be a valid id'
+  },
+  offerId: {
+    invalidValue: 'The hostId value must be a valid id'
   }
 } as const;
