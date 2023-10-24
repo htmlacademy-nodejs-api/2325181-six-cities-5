@@ -13,4 +13,10 @@ export * from './values.type.js';
 export * from './request-body.type.js';
 export * from './request-params.type.js';
 export * from './create-user-request.type.js';
+export * from './create-comment-request.type.js';
+export * from './create-offer-request.type.js';
+export * from './login-user-request.type.js';
+export * from './param-comment.type.js';
+export * from './param-offer.type.js';
+export * from './param-user.type.js';
 

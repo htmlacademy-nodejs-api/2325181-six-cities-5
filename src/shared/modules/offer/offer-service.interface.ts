@@ -9,4 +9,5 @@ export interface OfferService {
   findPremium(city: string):Promise<DocumentType<OfferEntity>[]>;
   updateById(offerId:string, dto: UpdateOfferDTO):Promise<DocumentType<OfferEntity> | null>;
   findFavorites(token: string):Promise<DocumentType<OfferEntity>[]>;
+  exists(offerId: string): Promise<boolean>;
 }

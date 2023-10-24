@@ -278,6 +278,7 @@ paths:
         "400":
           description: 'Список предложений недоступен: ошибка запроса.'
 
+  /comments:
     post:
       tags:
         - comments

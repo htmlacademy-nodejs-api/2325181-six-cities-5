@@ -85,3 +85,74 @@ export const HttpMethod = {
 
 export const DEFAULT_CONTENT_TYPE = 'application/json';
 
+export const CreateOfferValidationMessage = {
+  title: {
+    minLength: 'Minimum title length must be 10,',
+    maxLength: 'Maximum title length must be 100,'
+  },
+  description: {
+    minLength: 'Minimum description length must be 20,',
+    maxLength: 'Maximum description length must be 1024,'
+  },
+  offerDate: {
+    invalidFormat: 'postDate must be a valid ISO date',
+  },
+  city: {
+    invalidValue: 'Value must be one of 6 cities: Amsterdam, Dusseldorf, Paris, Hamburg, Brussels, Cologne'
+  },
+  previewImageURL: {
+
+  },
+  images: {
+    invalidCount: 'Quantity of image photo should exaclty 6 items',
+  },
+  rating: {
+    invalidValue: 'Rating value must be in range from 1 to 5'
+  },
+  type: {
+    invalidValue: 'Value must be one of 4 type: "apartment", "house", "room", "hotel"'
+  },
+  bedrooms: {
+    invalidValue: 'Bedrooms quantity value must be in range from 1 to 8'
+  },
+  maxAdults: {
+    invalidValue: 'Maximum adults quantity value must be in range from 1 to 10'
+  },
+  price: {
+    invalidValue: 'Price value must be in range from 100 to 100000'
+  },
+  goods: {
+    invalidValue: 'The goods value must be a list of one or more of the following options: "Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"'
+  },
+  hostId: {
+    invalidValue: 'The hostId value must be a valid id'
+  },
+  coordinates: {
+    invalidValue: 'The coordinate must be a list of 2 numbered values, representing latitude and longitude'
+  },
+} as const;
+
+export const CreateUserValidationMessage = {
+  email: {
+    invalidFormat: 'Email must be a valid format: mail@example.com'
+  },
+  avatarURL: {
+    invalidFormat: 'Avatar URL must be a string format',
+    invalidExtension: 'File extension must be .png or .jpg'
+  },
+  name: {
+    invalidFormat:'The field must be a string format',
+    invalidLength: 'The field length must be from 1 to 15 symbols',
+  },
+  password: {
+    invalidFormat: 'The field must be a string format',
+    invalidLength: 'The field length must be from 1 to 15 symbols',
+
+  },
+  userType: {
+    invalideValue: 'The value must be one of the following type: pro or standard'
+  },
+  favoritesList: {
+    invalidValue: 'The value must be a list of zero or more offer IDs'
+  }
+} as const;
