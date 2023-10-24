@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
@@ -27,14 +27,28 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Patch,
       handler: this.update,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDTO),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
     });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
     });
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
     this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavorites});
@@ -55,6 +69,15 @@ export class OfferController extends BaseController {
   }
 
   public async create({body}: CreateOfferRequestType, res: Response): Promise<void> {
+
+    if (!body) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Bad request. Offer object not found in request body',
+        'OfferController'
+      );
+    }
+
     const result = await this.offerService.create(body);
     const offer = await this.offerService.findById('c.brooks@mymail.com', result.id);
     this.created(res, fillDTO(OfferRdo, offer));
@@ -72,14 +95,6 @@ export class OfferController extends BaseController {
 
     const updateOffer = await this.offerService.updateById(offerId, body);
 
-    if (!updateOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${params.offerId} not found`,
-        'OfferController'
-      );
-    }
-
     this.ok(res, fillDTO(OfferRdo, updateOffer));
   }
 
@@ -96,16 +111,6 @@ export class OfferController extends BaseController {
 
     const offer = await this.offerService.deleteById(offerId);
 
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found`,
-        'OfferController'
-      );
-
-    }
-
     this.noContent(res, offer);
   }
 
@@ -121,14 +126,6 @@ export class OfferController extends BaseController {
     }
 
     const offer = await this.offerService.findById('c.brooks@mymail.com', offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found`,
-        'OfferController'
-      );
-    }
 
     this.ok(res, fillDTO(OfferRdo, offer));
   }

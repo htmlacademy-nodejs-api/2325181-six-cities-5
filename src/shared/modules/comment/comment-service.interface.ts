@@ -8,5 +8,4 @@ export interface CommentService {
   findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]>;
   deleteByOfferId(offerId: string):Promise<number | null>;
   calculateAverageRatingByOfferId(offerId: string): Promise<ReviewStatisticsType>
-
 }

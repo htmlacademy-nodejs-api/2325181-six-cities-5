@@ -1,18 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
-import { BaseController } from '../../libs/rest/index.js';
-import { Component } from '../../types/component.enum.js';
+import { Request, Response } from 'express';
+import { BaseController, ValidateDtoMiddleware, HttpError, ValidateObjectIdMiddleware, DocumentExistsMiddleware } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
-import { CommentService } from './comment-service.interface.js';
 import { OfferService } from '../offer/index.js';
 import { HttpMethod } from '../../../const.js';
-import { HttpError } from '../../libs/rest/index.js';
-import { CreateCommentRequestType } from '../../types/create-comment-request.type.js';
-import { Request, Response } from 'express';
+import { CreateCommentRequestType, ParamCommentType, Component } from '../../types/index.js';
 import { fillDTO } from '../../helpers/common.js';
-import { CommentRdo } from './comment.rdo.js';
-import { ParamCommentType } from '../../types/param-comment.type.js';
-import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { CommentRdo, CreateCommentDTO, CommentService } from './index.js';
 
 
 @injectable()
@@ -24,20 +19,32 @@ export default class CommentController extends BaseController {
   ) {
     super(logger);
     this.logger.info('Register routes for CommentController...');
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [
+        new ValidateDtoMiddleware(CreateCommentDTO),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
     });
   }
 
   public async create({body}: CreateCommentRequestType, res: Response): Promise<void> {
-    if (!await this.offerService.exists(body.offerId)) {
+
+    if (!body) {
       throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offers with id ${body.offerId} not found.`,
+        StatusCodes.BAD_REQUEST,
+        'Bad request. Comment object not found in request body.',
         'CommentController'
       );
     }
@@ -54,14 +61,6 @@ export default class CommentController extends BaseController {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
         'Bad request. OfferId not found in query parameters',
-        'CommentController'
-      );
-    }
-
-    if (!await this.offerService.exists(offerId)) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offers with id ${offerId} not found.`,
         'CommentController'
       );
     }

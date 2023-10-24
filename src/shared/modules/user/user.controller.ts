@@ -1,15 +1,15 @@
 import { Request, Response} from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
-import { BaseController, HttpError, ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component, CreateUserRequestType, LoginUserRequestType, ParamUserType } from '../../types/index.js';
 import { HttpMethod } from '../../../const.js';
 import { Logger } from '../../libs/logger/index.js';
-import { UserService, UserRdo, CreateUserDTO } from './index.js';
+import { UserService, UserRdo, CreateUserDTO, LoginUserDTO } from './index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { OfferService, OfferRdo } from '../offer/index.js';
-import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { UploadFileMiddleware } from '../../libs/rest/middleware/upload-file.middleware.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -27,14 +27,22 @@ export class UserController extends BaseController {
       handler: this.create,
       middlewares: [new ValidateDtoMiddleware(CreateUserDTO)]
     });
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+      middlewares: [new ValidateDtoMiddleware(LoginUserDTO)]
+    });
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.auth});
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.loadAvatar,
-      middlewares: [new ValidateObjectIdMiddleware('userId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
+      ]
     });
     this.addRoute({
       path: '/:userId/favorites/:offerId/status',
@@ -69,40 +77,25 @@ export class UserController extends BaseController {
     );
   }
 
-  public async loadAvatar() {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+  public async loadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
   }
 
   public async toggleFavorites({params}: Request<ParamUserType>, res: Response): Promise<void> {
     const {offerId, userId, status} = params;
 
-    if (!offerId) {
+
+    if (!offerId || !userId || !status) {
+      const missingKey = Object.entries(params).filter((param) => param[1] === 'undefined')[0];
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
-        'Bad request. Offer id not found in query parameters',
+        `Bad request. ${missingKey} not found in query parameters`,
         'UserController'
       );
     }
 
-    if (!userId) {
-      throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        'Bad request. User id not found in query parameters',
-        'UserController'
-      );
-    }
-
-    if (!status) {
-      throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        'Bad request. Status not found in query parameters',
-        'UserController'
-      );
-    }
     const isSetFavorite = !!status;
     await this.userService.addRemoveFavorites(userId, offerId, isSetFavorite);
     const offer = await this.offerService.findById('', offerId);
