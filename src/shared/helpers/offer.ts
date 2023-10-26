@@ -4,6 +4,7 @@ import { LodgingType } from '../types/lodging.type.js';
 import { GoodsType } from '../types/goods.type.js';
 import { UserType } from '../types/user.type.js';
 import { UserLevelType } from '../types/user-level.type.js';
+import { CoordinatesType } from '../types/coordinates.type.js';
 
 export function createOffer(offerData: string): OfferType {
 
@@ -25,7 +26,8 @@ export function createOffer(offerData: string): OfferType {
     hostEmail,
     hostAvatar,
     hostType,
-    coordinates
+    latitude,
+    longitude
   ] = offerData.replace('\n', '').split('\t');
 
   return {
@@ -48,7 +50,9 @@ export function createOffer(offerData: string): OfferType {
       avatarURL: hostAvatar,
       userType: hostType as UserLevelType,
     } as UserType,
-    coordinates: coordinates.split(';')
-      .map((coordinate) => Number(coordinate))
+    coordinates: {
+      latitude: Number(latitude),
+      longitude: Number(longitude)
+    } as CoordinatesType
   };
 }
