@@ -27,7 +27,7 @@ Content-Type: application/json
   "price": "11111",
   "goods": ["Towels", "Fridge"],
   "hostId": "652ce627380c9eb83344c7ab",
-  "coordinates": [51.225402, 6.776314]
+  "coordinates": {"latitude": "51.225402", "longitude": "6.776314"}
 }
 
 ###

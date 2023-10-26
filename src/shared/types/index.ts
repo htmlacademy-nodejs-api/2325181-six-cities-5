@@ -19,4 +19,5 @@ export * from './login-user-request.type.js';
 export * from './param-comment.type.js';
 export * from './param-offer.type.js';
 export * from './param-user.type.js';
+export * from './coordinates.type.js';
 
