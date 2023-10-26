@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import { prop, getModelForClass, defaultClasses, modelOptions, Ref, Severity } from '@typegoose/typegoose';
-import { LocationType, LodgingType, GoodsType } from '../../types/index.js';
+import { LocationType, LodgingType, GoodsType, CoordinatesType } from '../../types/index.js';
 import { Goods, Location, LodgingKind } from '../../../const.js';
 import { UserEntity } from '../user/user.entity.js';
 
@@ -98,7 +98,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     type: () => [Number],
     required: false,
     default: []
-  }) public coordinates!: number[];
+  }) public coordinates!: CoordinatesType;
 
 }
 

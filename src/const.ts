@@ -99,35 +99,51 @@ export const OfferValidationMessage = {
   city: {
     invalidValue: 'Value must be one of 6 cities: Amsterdam, Dusseldorf, Paris, Hamburg, Brussels, Cologne'
   },
+  previewImageURL: {
+    invalidFormat: 'The value must be a valid MIME type file'
+  },
   images: {
     invalidCount: 'Quantity of image photo should exaclty 6 items',
+    invalidFormat: 'The values must be a valid MIME type file'
   },
   isPremium: {
     invalidFormat: 'The field value must be true or false'
   },
   rating: {
-    invalidValue: 'Rating value must be in range from 1 to 5'
+    invalidValue: 'Rating value must be in range from 1 to 5',
+    invalidFormat: 'Rating must be a number'
   },
   type: {
     invalidValue: 'Value must be one of 4 type: "apartment", "house", "room", "hotel"'
   },
   bedrooms: {
-    invalidValue: 'Bedrooms quantity value must be in range from 1 to 8'
+    invalidValue: 'Bedrooms quantity value must be in range from 1 to 8',
+    invalidFormat: 'The value must be a valid number',
   },
   maxAdults: {
-    invalidValue: 'Maximum adults quantity value must be in range from 1 to 10'
+    invalidValue: 'Maximum adults quantity value must be in range from 1 to 10',
+    invalidFormat: 'The value must be a valid number',
   },
   price: {
+    invalidFormat: 'The value must be a valid number',
     invalidValue: 'Price value must be in range from 100 to 100000'
   },
   goods: {
-    invalidValue: 'The goods value must be a list of one or more of the following options: "Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"'
+    invalidValue: 'The goods value must be a list of one or more of the following options: "Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"',
+    emptyArray: 'The list must contain at least one value',
+    uniqueValues: 'The values in list may not repeat',
   },
   hostId: {
     invalidValue: 'The hostId value must be a valid id'
   },
   coordinates: {
-    invalidValue: 'The coordinate must be a list of 2 numbered values, representing latitude and longitude'
+    invalidValue: 'The coordinate must be an object with 2 keys, representing latitude and longitude'
+  },
+  latitude: {
+    invalidFormat: 'The latitude must be a number representing offer latitude'
+  },
+  longitude: {
+    invalidFormat: 'The longitude must be a number representing offer longitude'
   },
 } as const;
 
@@ -162,8 +178,8 @@ export const CommentValidationMessage = {
     invalidLength: 'The field length must be at least 5 up to 1024 symbols'
   },
   rating: {
-    invalidFormat: 'The field value must be the number format',
-    invalidValue: 'The field value must be in range from 1 up to 5'
+    invalidFormat: 'The field value must be the integer number format',
+    invalidValue: 'The field value must be in range from 1 up to 5',
   },
   authorId: {
     invalidValue: 'The hostId value must be a valid id'

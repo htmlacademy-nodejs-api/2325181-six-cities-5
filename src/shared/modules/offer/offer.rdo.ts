@@ -3,6 +3,7 @@ import { LocationType } from '../../types/location.type.js';
 import { LodgingType } from '../../types/lodging.type.js';
 import { GoodsType } from '../../types/goods.type.js';
 import { UserRdo } from '../user/user.rdo.js';
+import { CoordinatesType } from '../../types/coordinates.type.js';
 
 export class OfferRdo {
   @Expose()
@@ -55,7 +56,7 @@ export class OfferRdo {
   public host: UserRdo;
 
   @Expose()
-  public coordinates: number[];
+  public coordinates: CoordinatesType;
 
   @Expose()
   public reviews: number;
