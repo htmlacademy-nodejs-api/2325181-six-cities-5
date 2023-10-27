@@ -188,3 +188,7 @@ export const CommentValidationMessage = {
     invalidValue: 'The hostId value must be a valid id'
   }
 } as const;
+
+export const JWT_ALGORITHM = 'HS256';
+
+export const JWT_EXPIRED = '2d';
