@@ -10,6 +10,8 @@ import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { OfferService, OfferRdo } from '../offer/index.js';
 import { UploadFileMiddleware } from '../../libs/rest/middleware/upload-file.middleware.js';
+import { AuthService } from '../auth/auth-service.interface.js';
+import { LoggedUserRdo } from './logged-user.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -18,6 +20,7 @@ export class UserController extends BaseController {
     @inject(Component.UserService) private readonly userService: UserService,
     @inject(Component.Config) private readonly configService: Config<RestSchemaType>,
     @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.AuthService) private readonly authService: AuthService,
   ) {
     super(logger);
     this.logger.info('Register routes for UserController...');
@@ -103,23 +106,16 @@ export class UserController extends BaseController {
   }
 
   public async login(
-    {body}: LoginUserRequestType, _res: Response,
+    {body}: LoginUserRequestType, res: Response,
   ): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
+    const user = await this.authService.verify(body);
+    const token = await this.authService.authenticate(user);
+    const responseData = fillDTO(LoggedUserRdo, {
+      email: user.email,
+      token,
+    });
+    this.ok(res, responseData);
 
-    if (!existsUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
-        'UserController',
-      );
-    }
-
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
   }
 
   public async logout() {
