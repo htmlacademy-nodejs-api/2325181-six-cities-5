@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { BaseController, ValidateDtoMiddleware, HttpError, ValidateObjectIdMiddleware, DocumentExistsMiddleware } from '../../libs/rest/index.js';
+import { BaseController, ValidateDtoMiddleware, HttpError, ValidateObjectIdMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { OfferService } from '../offer/index.js';
 import { HttpMethod } from '../../../const.js';
@@ -24,6 +24,7 @@ export default class CommentController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateDtoMiddleware(CreateCommentDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
