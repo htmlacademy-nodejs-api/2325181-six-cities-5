@@ -6,7 +6,7 @@ import { Component } from '../../types/component.enum.js';
 import { UserService, UserEntity, LoginUserDTO } from '../user/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
-import { TokenPayload } from '../../types/tokenPayload.type.js';
+import { TokenPayloadType } from '../../types/tokenPayload.type.js';
 import { JWT_ALGORITHM, JWT_EXPIRED } from '../../../const.js';
 import { UserNotFoundException, UserPasswordIncorrectException } from '../../libs/rest/errors/index.js';
 
@@ -21,7 +21,7 @@ export class DefaultAuthService implements AuthService {
   public async authenticate(user: UserEntity): Promise<string> {
     const jwtSecret = this.config.get('JWT_SECRET');
     const secretKey = crypto.createSecretKey(jwtSecret, 'utf-8');
-    const tokenPayload: TokenPayload = {
+    const tokenPayload: TokenPayloadType = {
       email: user.email,
       name: user.name,
       id: user.id
