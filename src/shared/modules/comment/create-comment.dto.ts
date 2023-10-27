@@ -13,7 +13,6 @@ export class CreateCommentDTO {
   @Max(5, {message: CommentValidationMessage.rating.invalidValue})
   public rating!: number;
 
-  @IsMongoId({message: CommentValidationMessage.authorId.invalidValue})
   public authorId!: string;
 
   @IsMongoId({message: CommentValidationMessage.offerId.invalidValue})
