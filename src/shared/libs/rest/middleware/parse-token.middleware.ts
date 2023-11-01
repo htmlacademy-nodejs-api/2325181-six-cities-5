@@ -20,16 +20,13 @@ export class ParseTokenMiddleware implements Middleware {
 
   public async execute(req: Request, _res: Response, next: NextFunction): Promise<void> {
     const authorizationHeader = req.headers?.authorization?.split(' ');
-
     if(!authorizationHeader) {
       return next();
     }
 
-    const [ , token] = authorizationHeader;
-
+    const [,token] = authorizationHeader;
     try {
       const {payload} = await jwtVerify(token, createSecretKey(this.jwtSecret, 'utf-8'));
-
       if (isTokenPayload(payload)) {
         req.tokenPayload = {...payload};
         return next();
