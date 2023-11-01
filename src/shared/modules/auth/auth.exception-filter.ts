@@ -3,7 +3,7 @@ import { ExceptionFilter } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Request, Response, NextFunction } from 'express';
-import { BaseUserException } from '../../libs/rest/errors/index.js';
+import { BaseAuthException } from '../../libs/rest/errors/index.js';
 
 @injectable()
 export class AuthExceptionFilter implements ExceptionFilter {
@@ -14,15 +14,15 @@ export class AuthExceptionFilter implements ExceptionFilter {
   }
 
   public catch(error: unknown, _req: Request, res: Response, next: NextFunction): void {
-    if (! (error instanceof BaseUserException)) {
+    if (!(error instanceof BaseAuthException)) {
       return next(error);
     }
 
     this.logger.error(`[AuthModule] ${error.message}`, error);
     res.status(error.httpStatusCode)
       .json({
-        type: 'AUTHORIZATION',
         error: error.message,
+        type: 'AUTHORIZATION',
       });
   }
 }
