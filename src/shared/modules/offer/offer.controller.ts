@@ -1,33 +1,68 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, FavoritesListMiddleware, HttpError, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
 import { fillDTO } from '../../helpers/common.js';
 import { UpdateOfferDTO, CreateOfferDTO, OfferRdo, OfferService } from './index.js';
+import { OfferAccessMiddleware } from '../../libs/rest/middleware/offer-access.middleware.js';
+import { UserService } from '../user/user-service.interface.js';
+
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.UserService) private readonly userService: UserService,
   ) {
     super(logger);
     this.logger.info('Register routes for OfferController...');
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [
+        new FavoritesListMiddleware(this.userService)
+      ]
+    });
     this.addRoute({
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOfferDTO),
+        new FavoritesListMiddleware(this.userService)
+      ]
+    });
+    this.addRoute({
+      path: '/premium/:city',
+      method: HttpMethod.Get,
+      handler: this.getPremium,
+      middlewares: [
+        new FavoritesListMiddleware(this.userService)
+      ]
+    });
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Get,
+      handler: this.getFavorites,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new FavoritesListMiddleware(this.userService)
+      ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
+        new FavoritesListMiddleware(this.userService),
+        new OfferAccessMiddleware(this.offerService),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
@@ -38,6 +73,9 @@ export class OfferController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware,
+        new FavoritesListMiddleware(this.userService),
+        new OfferAccessMiddleware(this.offerService),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
     });
@@ -47,16 +85,17 @@ export class OfferController extends BaseController {
       handler: this.show,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new FavoritesListMiddleware(this.userService)
       ]
     });
-    this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
-    this.addRoute({path: '/favorites', method: HttpMethod.Get, handler: this.getFavorites});
+
 
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find('c.brooks@mymail.com');
+  public async index({favoritesList}: Request, res: Response): Promise<void> {
+
+    const offers = await this.offerService.find(favoritesList!);
 
     if (!offers) {
       throw new HttpError(
@@ -68,7 +107,36 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
-  public async create({body}: CreateOfferRequestType, res: Response): Promise<void> {
+  public async getFavorites({favoritesList}: Request, res: Response): Promise<void> {
+    const favoriteOffers = await this.offerService.findFavorites(favoritesList!);
+
+    if (!favoriteOffers) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        'Favorite offers not found',
+        'OfferController'
+      );
+    }
+    this.ok(res, fillDTO(OfferRdo, favoriteOffers));
+  }
+
+  public async show({params, favoritesList}: Request<ParamOfferType>, res: Response): Promise<void> {
+    const {offerId} = params;
+
+    if (!offerId) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Bad request. Offer id not found in query parameters',
+        'OfferController'
+      );
+    }
+
+    const offer = await this.offerService.findById(favoritesList!, offerId);
+
+    this.ok(res, fillDTO(OfferRdo, offer));
+  }
+
+  public async create({body, favoritesList, tokenPayload}: CreateOfferRequestType, res: Response): Promise<void> {
 
     if (!body) {
       throw new HttpError(
@@ -78,13 +146,31 @@ export class OfferController extends BaseController {
       );
     }
 
-    const result = await this.offerService.create(body);
-    const offer = await this.offerService.findById('c.brooks@mymail.com', result.id);
+    if (!tokenPayload) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorised user. Only authorized users may create new offers.',
+        'CommentController'
+      );
+    }
+
+    const result = await this.offerService.create({...body, hostId: tokenPayload.id});
+    const offer = await this.offerService.findById(favoritesList!, result.id);
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
-  public async update({body, params}: Request<ParamOfferType, unknown, UpdateOfferDTO>, res: Response): Promise<void> {
+  public async update({body, params: {offerId}}: Request<ParamOfferType, unknown, UpdateOfferDTO>, res: Response): Promise<void> {
+
+    if (offerId) {
+      const updateOffer = await this.offerService.updateById(offerId, body);
+      this.ok(res, fillDTO(OfferRdo, updateOffer));
+    }
+
+  }
+
+  public async delete({params, tokenPayload, favoritesList}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {offerId} = params;
+
     if (!offerId) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
@@ -93,44 +179,25 @@ export class OfferController extends BaseController {
       );
     }
 
-    const updateOffer = await this.offerService.updateById(offerId, body);
-
-    this.ok(res, fillDTO(OfferRdo, updateOffer));
-  }
-
-  public async delete({params}: Request<ParamOfferType>, res: Response): Promise<void> {
-    const {offerId} = params;
-
-    if (!offerId) {
+    if (!tokenPayload) {
       throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        'Bad request. Offer id not found in query parameters',
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorised user. Only authorized users may update offers.',
         'OfferController'
       );
     }
 
     const offer = await this.offerService.deleteById(offerId);
+    const isOfferInFavorites = Boolean(favoritesList!.filter((favorites) => favorites._id.toString() === offerId).length);
+    if (isOfferInFavorites) {
+      favoritesList = favoritesList!.filter((favorites) => favorites._id.toString() !== offerId);
+      await this.userService.updateById(tokenPayload!.id, {favoritesList});
+    }
 
     this.noContent(res, offer);
   }
 
-  public async show({params}: Request<ParamOfferType>, res: Response): Promise<void> {
-    const {offerId} = params;
-
-    if (!offerId) {
-      throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        'Bad request. Offer id not found in query parameters',
-        'OfferController'
-      );
-    }
-
-    const offer = await this.offerService.findById('c.brooks@mymail.com', offerId);
-
-    this.ok(res, fillDTO(OfferRdo, offer));
-  }
-
-  public async getPremium({params}: Request<ParamOfferType>, res: Response): Promise<void> {
+  public async getPremium({params, favoritesList}: Request<ParamOfferType>, res: Response): Promise<void> {
     const {city} = params;
 
     if (!city) {
@@ -141,7 +208,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    const premiumOffers = await this.offerService.findPremium(city);
+    const premiumOffers = await this.offerService.findPremium(favoritesList!, city);
 
     if (!premiumOffers) {
       throw new HttpError(
@@ -151,19 +218,6 @@ export class OfferController extends BaseController {
       );
     }
     this.ok(res, fillDTO(OfferRdo, premiumOffers));
-  }
-
-  public async getFavorites(_req: Request, res: Response): Promise<void> {
-    const favoriteOffers = await this.offerService.findFavorites('c.brooks@mymail.com');
-
-    if (!favoriteOffers) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        'Favorite offers not found',
-        'OfferController'
-      );
-    }
-    this.ok(res, fillDTO(OfferRdo, favoriteOffers));
   }
 
 }
