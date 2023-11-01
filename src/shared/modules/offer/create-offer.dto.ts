@@ -1,14 +1,16 @@
-import {IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, Min, Max, IsArray, Length, IsMongoId, IsNumber, IsBoolean, IsMimeType, IsInt, ArrayUnique, ValidateNested, IsLatitude, IsLongitude, IsObject } from 'class-validator';
+import {IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, Min, Max, IsArray, Length, IsMongoId, IsNumber, IsBoolean, IsInt, ArrayUnique, ValidateNested, IsLatitude, IsLongitude, IsObject, Matches } from 'class-validator';
 import { LocationType, LodgingType, GoodsType } from '../../types/index.js';
 import { OfferValidationMessage, Goods, Location, LodgingKind } from '../../../const.js';
 import { Type } from 'class-transformer';
 
 export class Coordinates {
 
+  @Type(() => Number)
   @IsNumber({}, {message: OfferValidationMessage.latitude.invalidFormat})
   @IsLatitude({message: OfferValidationMessage.latitude.invalidFormat})
     latitude!: number;
 
+  @Type(() => Number)
   @IsNumber({}, {message: OfferValidationMessage.longitude.invalidFormat})
   @IsLongitude({message: OfferValidationMessage.longitude.invalidFormat})
     longitude!: number;
@@ -27,18 +29,20 @@ export class CreateOfferDTO {
   @IsEnum(Location, {message: OfferValidationMessage.city.invalidValue})
   public city!: LocationType;
 
-  @IsMimeType({message: OfferValidationMessage.previewImageURL.invalidFormat})
+  @Matches(/(.png$|.jpg$)/i, {message: OfferValidationMessage.previewImageURL.invalidFormat})
   public previewImageURL!: string;
 
   @IsArray()
   @ArrayMinSize(6, {message: OfferValidationMessage.images.invalidCount})
   @ArrayMaxSize(6, {message: OfferValidationMessage.images.invalidCount})
-  @IsMimeType({each: true, message: OfferValidationMessage.images.invalidFormat})
+  @Matches(/(.png$|.jpg$)/i, {each: true, message: OfferValidationMessage.images.invalidFormat})
   public images!: string[];
 
+  @Type(() => Boolean)
   @IsBoolean({message: OfferValidationMessage.isPremium.invalidFormat})
   public isPremium!: boolean;
 
+  @Type(() => Number)
   @Min(1, {message: OfferValidationMessage.rating.invalidValue})
   @Max(5, {message: OfferValidationMessage.rating.invalidValue})
   @IsNumber({}, {message: OfferValidationMessage.rating.invalidFormat})
@@ -47,18 +51,21 @@ export class CreateOfferDTO {
   @IsEnum(LodgingKind, {message: OfferValidationMessage.type.invalidValue})
   public type!: LodgingType;
 
+  @Type(() => Number)
   @Min(1, {message: OfferValidationMessage.bedrooms.invalidValue})
   @Max(8, {message: OfferValidationMessage.bedrooms.invalidValue})
   @IsInt({message: OfferValidationMessage.bedrooms.invalidFormat})
   @IsNumber({}, {message: OfferValidationMessage.bedrooms.invalidFormat})
   public bedrooms!: number;
 
+  @Type(() => Number)
   @Min(1, {message: OfferValidationMessage.maxAdults.invalidValue})
   @Max(10, {message: OfferValidationMessage.maxAdults.invalidValue})
   @IsInt({message: OfferValidationMessage.maxAdults.invalidFormat})
   @IsNumber({}, {message: OfferValidationMessage.maxAdults.invalidFormat})
   public maxAdults!: number;
 
+  @Type(() => Number)
   @Min(100, {message: OfferValidationMessage.price.invalidValue})
   @Max(100000, {message: OfferValidationMessage.price.invalidValue})
   @IsInt({message: OfferValidationMessage.price.invalidFormat})

@@ -1,6 +1,7 @@
-import { IsString, Matches, Length, IsEnum, IsOptional, IsMimeType } from 'class-validator';
+import { IsString, Matches, Length, IsEnum, IsOptional, IsMimeType, IsArray, IsObject } from 'class-validator';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserValidationMessage, UserLevel } from '../../../const.js';
+import { FavoritesListType } from '../../types/favorites-list.type.js';
 
 export class UpdateUserDTO {
 
@@ -16,6 +17,11 @@ export class UpdateUserDTO {
   public name?: string;
 
   @IsOptional()
-  @IsEnum(UserLevel, {message: UserValidationMessage.userType.invalideValue})
+  @IsEnum(UserLevel, {message: UserValidationMessage.userType.invalidValue})
   public userType?: UserLevelType;
+
+  @IsOptional()
+  @IsArray({message: UserValidationMessage.favoritesList.invalidValue})
+  @IsObject({each: true, message: UserValidationMessage.favoritesList.invalidValue})
+  public favoritesList?: FavoritesListType;
 }

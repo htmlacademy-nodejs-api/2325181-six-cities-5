@@ -1,4 +1,5 @@
 import { IsNumber, IsString, Length, Min, Max, IsMongoId, IsInt } from 'class-validator';
+import { Type } from 'class-transformer';
 import { CommentValidationMessage } from '../../../const.js';
 
 export class CreateCommentDTO {
@@ -7,6 +8,7 @@ export class CreateCommentDTO {
   @Length(5, 1024, {message: CommentValidationMessage.text.invalidLength})
   public text!: string;
 
+  @Type(() => Number)
   @IsNumber({}, {message: CommentValidationMessage.rating.invalidFormat})
   @IsInt({message: CommentValidationMessage.rating.invalidFormat})
   @Min(1, {message: CommentValidationMessage.rating.invalidValue})

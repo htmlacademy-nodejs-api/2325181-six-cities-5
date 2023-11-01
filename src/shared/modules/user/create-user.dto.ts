@@ -1,5 +1,5 @@
 import { Ref } from '@typegoose/typegoose';
-import { IsArray, IsEmail, IsEnum, IsString, Length, Matches } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserValidationMessage, UserLevel } from '../../../const.js';
 import { UserEntity } from './user.entity.js';
@@ -21,9 +21,10 @@ export class CreateUserDTO {
   @Length(6, 12, {message: UserValidationMessage.password.invalidLength})
   public password!: string;
 
-  @IsEnum(UserLevel, {message: UserValidationMessage.userType.invalideValue})
+  @IsEnum(UserLevel, {message: UserValidationMessage.userType.invalidValue})
   public userType!: UserLevelType;
 
+  @IsOptional()
   @IsArray({message: UserValidationMessage.favoritesList.invalidValue})
-  public favoritesList!: Ref<UserEntity>[];
+  public favoritesList?: Ref<UserEntity>[];
 }
