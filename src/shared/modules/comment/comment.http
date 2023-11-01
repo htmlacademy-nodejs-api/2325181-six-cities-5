@@ -1,13 +1,13 @@
 # Комментарии
 ## Добавить новый комментарий для предложения
 
-POST http://localhost:4000/comments/65200c3b1ae0b45c54921567 HTTP 1.1
+POST http://localhost:4000/comments/ HTTP/1.1
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1haWxzQG1haWwuY29tIiwibmFtZSI6IkhlbGxvIiwiaWQiOiI2NTNiY2RhNWVlZmExOGQyNmZmMGRkM2QiLCJpYXQiOjE2OTg2Nzg0OTQsImV4cCI6MTY5ODg1MTI5NH0.912eoomEUaRj4wbraFU9hBkw9ROkLqHIULoP800i404
 Content-Type: application/json
 
 {
-  "text": "Perfect room for a student	The house is very cute, clean and tidy.",
-  "rating": "5",
-  "authorId": "652ce627380c9eb83344c7ab",
+  "text": "Test comment1. This is test comment.",
+  "rating": "3",
   "offerId": "65200c3b1ae0b45c5492156c"
 }
 
@@ -15,6 +15,6 @@ Content-Type: application/json
 
 ## Получить список комментариев для предложения
 
-GET http://localhost:4000/comments/65200c3b1ae0b45c54921567 HTTP 1.1
+GET http://localhost:4000/comments/65200c3b1ae0b45c5492156c HTTP/1.1
 
 ###
