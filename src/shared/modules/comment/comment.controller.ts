@@ -25,8 +25,7 @@ export default class CommentController extends BaseController {
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateDtoMiddleware(CreateCommentDTO),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+        new ValidateDtoMiddleware(CreateCommentDTO)
       ]
     });
     this.addRoute({
@@ -41,7 +40,6 @@ export default class CommentController extends BaseController {
   }
 
   public async create({body, tokenPayload}: CreateCommentRequestType, res: Response): Promise<void> {
-
     if (!body) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
@@ -50,7 +48,7 @@ export default class CommentController extends BaseController {
       );
     }
 
-    const comment = await this.commentService.create({...body, authorId: tokenPayload.id});
+    const comment = await this.commentService.create({...body, authorId: tokenPayload!.id});
     this.created(res, fillDTO(CommentRdo, comment));
   }
 
@@ -66,7 +64,7 @@ export default class CommentController extends BaseController {
       );
     }
 
-    const comments = this.commentService.findByOfferId(offerId);
+    const comments = await this.commentService.findByOfferId(offerId);
     this.ok(res, fillDTO(CommentRdo, comments));
   }
 
