@@ -1,7 +1,7 @@
 import { Request, Response} from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
-import { BaseController, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component, CreateUserRequestType, LoginUserRequestType, ParamUserType } from '../../types/index.js';
 import { HttpMethod } from '../../../const.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -9,9 +9,10 @@ import { UserService, UserRdo, CreateUserDTO, LoginUserDTO } from './index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { OfferService, OfferRdo } from '../offer/index.js';
-import { UploadFileMiddleware } from '../../libs/rest/middleware/upload-file.middleware.js';
+import { UploadFileMiddleware, PrivateRouteMiddleware, FavoritesListMiddleware } from '../../libs/rest/index.js';
 import { AuthService } from '../auth/auth-service.interface.js';
 import { LoggedUserRdo } from './logged-user.rdo.js';
+import { modifyFavoriteList } from '../../helpers/favorite-list.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -25,6 +26,17 @@ export class UserController extends BaseController {
     super(logger);
     this.logger.info('Register routes for UserController...');
     this.addRoute({
+      path: '/favorites/:offerId',
+      method: HttpMethod.Get,
+      handler: this.toggleFavorites,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new FavoritesListMiddleware(this.userService)
+      ]
+    });
+    this.addRoute({
       path: '/signin',
       method: HttpMethod.Post,
       handler: this.create,
@@ -36,22 +48,24 @@ export class UserController extends BaseController {
       handler: this.login,
       middlewares: [new ValidateDtoMiddleware(LoginUserDTO)]
     });
-    this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.auth});
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.auth,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
+    });
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({
-      path: '/:userId/avatar',
+      path: '/avatar',
       method: HttpMethod.Post,
       handler: this.loadAvatar,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
-    });
-    this.addRoute({
-      path: '/:userId/favorites/:offerId/status',
-      method: HttpMethod.Get,
-      handler: this.toggleFavorites,
-      middlewares: [new ValidateObjectIdMiddleware('userId'), new ValidateObjectIdMiddleware('offerId')]
     });
   }
 
@@ -72,36 +86,43 @@ export class UserController extends BaseController {
     this.created(res, fillDTO(UserRdo, result));
   }
 
-  public async auth() {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
-  }
+  public async auth({tokenPayload}: Request, res: Response) {
 
-  public async loadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
-  }
+    const currentUserEmail = tokenPayload!.email || null;
 
-  public async toggleFavorites({params}: Request<ParamUserType>, res: Response): Promise<void> {
-    const {offerId, userId, status} = params;
+    const foundedUser = this.userService.findByEmail(currentUserEmail);
 
-
-    if (!offerId || !userId || !status) {
-      const missingKey = Object.entries(params).filter((param) => param[1] === 'undefined')[0];
+    if (!foundedUser) {
       throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        `Bad request. ${missingKey} not found in query parameters`,
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
         'UserController'
       );
     }
 
-    const isSetFavorite = !!status;
-    await this.userService.addRemoveFavorites(userId, offerId, isSetFavorite);
-    const offer = await this.offerService.findById('', offerId);
+    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+  }
+
+  public async loadAvatar({file}: Request, res: Response) {
+    this.created(res, {
+      filepath: file?.path
+    });
+  }
+
+  public async toggleFavorites({params, tokenPayload, favoritesList}: Request<ParamUserType>, res: Response): Promise<void> {
+    const {offerId} = params;
+
+    if (!offerId) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        `Bad request. Offer id ${offerId} not found in query parameters`,
+        'UserController'
+      );
+    }
+    favoritesList = modifyFavoriteList(favoritesList!, offerId);
+    console.log(favoritesList);
+    await this.userService.updateById(tokenPayload!.id, {favoritesList});
+    const offer = await this.offerService.findById(favoritesList!, offerId);
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
@@ -119,6 +140,8 @@ export class UserController extends BaseController {
   }
 
   public async logout() {
+
+
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',
