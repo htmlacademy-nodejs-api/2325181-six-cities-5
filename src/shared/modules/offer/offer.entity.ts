@@ -95,9 +95,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   }) public hostId!: Ref<UserEntity>;
 
   @prop ({
-    type: () => [Number],
     required: false,
-    default: []
   }) public coordinates!: CoordinatesType;
 
 }
