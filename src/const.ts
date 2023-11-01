@@ -100,11 +100,11 @@ export const OfferValidationMessage = {
     invalidValue: 'Value must be one of 6 cities: Amsterdam, Dusseldorf, Paris, Hamburg, Brussels, Cologne'
   },
   previewImageURL: {
-    invalidFormat: 'The value must be a valid MIME type file'
+    invalidFormat: 'The value must be a valid .png, .jpg type file'
   },
   images: {
     invalidCount: 'Quantity of image photo should exaclty 6 items',
-    invalidFormat: 'The values must be a valid MIME type file'
+    invalidFormat: 'The values must be a valid .png, .jpg type file'
   },
   isPremium: {
     invalidFormat: 'The field value must be true or false'
@@ -161,11 +161,11 @@ export const UserValidationMessage = {
   },
   password: {
     invalidFormat: 'The field must be a string format',
-    invalidLength: 'The field length must be from 1 to 15 symbols',
+    invalidLength: 'The field length must be from 6 to 12 symbols',
 
   },
   userType: {
-    invalideValue: 'The value must be one of the following type: pro or standard'
+    invalidValue: 'The value must be one of the following type: pro or standard'
   },
   favoritesList: {
     invalidValue: 'The value must be a list of zero or more offer IDs'

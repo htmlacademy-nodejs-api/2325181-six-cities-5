@@ -12,4 +12,8 @@ export * from './middleware/document-exists.middleware.js';
 export * from './middleware/private-route.middleware.js';
 export * from './middleware/parse-token.middleware.js';
 export * from './middleware/upload-file.middleware.js';
+export * from './middleware/favorites-list.middleware.js';
+export * from './middleware/favorites-list.middleware.interface.js';
+export * from './middleware/offer-access.middleware.interface.js';
+export * from './middleware/offer-access.middleware.js';
 
