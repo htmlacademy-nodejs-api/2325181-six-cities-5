@@ -1,6 +1,8 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { ValidationError } from 'class-validator';
-import { ValidationErrorField } from '../types/index.js';
+import { ValidationErrorField, ApplicationErrorType } from '../types/index.js';
+
+
 
 const BOOLEAN_DELIMITER = 0.5;
 
@@ -31,9 +33,11 @@ export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
   return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true});
 }
 
-export function createErrorObject(message: string) {
+export function createErrorObject(errorType: ApplicationErrorType, error: string, details: ValidationErrorField[] = []) {
   return {
-    error: message,
+    errorType,
+    error,
+    details
   };
 }
 
@@ -44,4 +48,5 @@ export function reduceValidationErrors(errors: ValidationError[]): ValidationErr
     messages: constraints ? Object.values(constraints) : []
   }));
 }
+
 

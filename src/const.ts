@@ -192,3 +192,9 @@ export const CommentValidationMessage = {
 export const JWT_ALGORITHM = 'HS256';
 
 export const JWT_EXPIRED = '2d';
+
+export const ApplicationError = {
+  ValidationError: 'VALIDATION_ERROR',
+  CommonError: 'COMMON_ERROR',
+  ServiceError: 'SERVICE_ERROR',
+} as const;
