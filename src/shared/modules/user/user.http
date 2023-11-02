@@ -6,10 +6,10 @@ POST http://localhost:4000/users/signin HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "mail@mail.com",
+  "email": "newmail@mail.com",
   "avatarURL": "string.jpg",
   "name": "Hello",
-  "password": "World",
+  "password": "123456",
   "userType": "standard"
 }
 
@@ -21,8 +21,8 @@ POST http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "mail@mail.com",
-  "password": "World"
+  "email": "mymail@mail.com",
+  "password": "World!"
 }
 
 ###
@@ -30,20 +30,14 @@ Content-Type: application/json
 ## Проверить информацию об состоянии авторизации пользователя.
 
 GET http://localhost:4000/users/login HTTP/1.1
-
-###
-
-## Завершить пользовательский сеанс.
-
-POST http://localhost:4000/users/logout HTTP/1.1
-
-
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
 ###
 
 ## Загрузить изображение (аватар) пользователя в формате 'png' или 'jpg'.
 
 POST http://localhost:4000/users/65200c3b1ae0b45c54921565/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="avatar"; filename="Arrays.jpeg"
@@ -57,6 +51,6 @@ Content-Type: image/jpeg
 
 ## Добавить/удалить предложения в/из избранное.
 
-GET http://localhost:4000/users/{userId}/favorites/{offerId}/{status} HTTP/1.1
-
+GET http://localhost:4000/users/favorites/6542cee20eedd04a70eb8bea HTTP/1.1
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
 

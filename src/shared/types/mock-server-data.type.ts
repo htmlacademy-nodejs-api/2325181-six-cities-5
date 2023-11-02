@@ -1,6 +1,4 @@
-import { GoodsType } from './goods.type.js';
-import { LocationType } from './location.type.js';
-import { LodgingType } from './lodging.type.js';
+import { GoodsType, LocationType, LodgingType} from './index.js';
 
 export type MockServerDataType = {
   titles: string[];
@@ -13,5 +11,6 @@ export type MockServerDataType = {
   hostNames: string[];
   hostEmails: string[];
   hostAvatarURLs: string[];
-  coordinates: number[][];
+  latitude: string[];
+  longitude: string[];
 }

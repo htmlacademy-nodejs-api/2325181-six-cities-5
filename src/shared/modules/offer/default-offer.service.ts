@@ -1,11 +1,12 @@
 import { Types } from 'mongoose';
-import { types } from '@typegoose/typegoose';
+import { types} from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
 import { CreateOfferDTO, OfferEntity, OfferService } from './index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { UpdateOfferDTO } from './update-offer.dto.js';
 import { OFFER_COUNT, PREMIUM_OFFER_COUNT, SortOrder } from '../../../const.js';
+import { FavoritesListType } from '../../types/favorites-list.type.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -22,51 +23,38 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findById(token: string, offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
+  public async findById(favoritesList: FavoritesListType, offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     const aggregatedOffers = await this.offerModel.aggregate([
       {$match: {_id: new Types.ObjectId(offerId)}},
       {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
-      {$addFields: {id: {$toString:'$_id'}}},
       {$set: {reviews: {$size: '$comments'}}},
       {$unset: 'comments'},
-      {$lookup: {from: 'users', localField: 'hostId', foreignField: '_id', as: 'hostId'}},
-      {$unwind: '$hostId'},
-      {$lookup: {from: 'users', pipeline: [{$match: {email: token}}], as: 'currentUser'}},
-      {$addFields: {favorites: '$currentUser.favoritesList'}},
-      {$unwind: '$favorites'},
-      {$set: {isFavorite: {$in: ['$_id','$favorites']}}},
-      {$unset: ['currentUser', 'id', 'favorites']},
+      {$set: {isFavorite: {$in: ['$_id',favoritesList]}}},
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
     return aggregatedOffers[0];
   }
 
-  public async find(token: string, count: number = OFFER_COUNT):Promise<types.DocumentType<OfferEntity>[]> {
+  public async find(favoritesList: FavoritesListType, count: number = OFFER_COUNT):Promise<types.DocumentType<OfferEntity>[]> {
     return this.offerModel.aggregate([
       {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
       {$set: {reviews: {$size: '$comments'}}},
       {$unset: 'comments'},
-      {$lookup: {from: 'users', pipeline: [{$match: {email: token}}], as: 'currentUser'}},
-      {$addFields: {favorites: '$currentUser.favoritesList'}},
-      {$unwind: '$favorites'},
-      {$set: {isFavorite: {$in: ['$_id','$favorites']}}},
-      {$unset: ['currentUser', 'favorites', 'description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
+      {$set: {isFavorite: {$in: ['$_id',favoritesList]}}},
+      {$unset: ['description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
       {$limit: count },
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
   }
 
-  public async findFavorites(token: string):Promise<types.DocumentType<OfferEntity>[]> {
+  public async findFavorites(favoritesList: FavoritesListType):Promise<types.DocumentType<OfferEntity>[]> {
     return this.offerModel.aggregate([
       {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
       {$set: {reviews: {$size: '$comments'}}},
       {$unset: 'comments'},
-      {$lookup: {from: 'users', pipeline: [{$match: {email: token}}], as: 'currentUser'}},
-      {$addFields: {favorites: '$currentUser.favoritesList'}},
-      {$unwind: '$favorites'},
-      {$set: {isFavorite: {$in: ['$_id','$favorites']}}},
+      {$set: {isFavorite: {$in: ['$_id',favoritesList]}}},
       {$match: {isFavorite: true}},
-      {$unset: ['currentUser', 'favorites', 'description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
+      {$unset: ['description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
   }
@@ -81,13 +69,17 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async findPremium (city: string):Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel
-      .find({city, isPremium: true})
-      .limit(PREMIUM_OFFER_COUNT)
-      .sort({createdAt: SortOrder.Desc})
-      .populate('hostId')
-      .exec();
+  public async findPremium (favoritesList: FavoritesListType, city: string):Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel.aggregate([
+      {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
+      {$set: {reviews: {$size: '$comments'}}},
+      {$unset: 'comments'},
+      {$set: {isFavorite: {$in: ['$_id',favoritesList]}}},
+      {$match: {city, isPremium: true}},
+      {$unset: ['description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
+      {$limit: PREMIUM_OFFER_COUNT},
+      {$sort: {createdAt: SortOrder.Desc}},
+    ]).exec();
   }
 
   public async exists(offerId: string): Promise<boolean> {

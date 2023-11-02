@@ -27,7 +27,8 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
   const hostEmail = getRandomItem<string>(mockData.hostEmails);
   const hostAvatarURL = getRandomItem<string>(mockData.hostAvatarURLs);
   const hostType = getRandomItem<UserLevelType>(Object.values(UserLevel));
-  const coordinates = getRandomItem<number[]>(mockData.coordinates).join(';');
+  const latitude = getRandomItem<string>(mockData.latitude);
+  const longitude = getRandomItem<string>(mockData.longitude);
 
   return [
     title,
@@ -47,6 +48,7 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
     hostEmail,
     hostAvatarURL,
     hostType,
-    coordinates
+    latitude,
+    longitude
   ].join('\t');
 }

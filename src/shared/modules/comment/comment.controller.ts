@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { BaseController, ValidateDtoMiddleware, HttpError, ValidateObjectIdMiddleware, DocumentExistsMiddleware } from '../../libs/rest/index.js';
+import { BaseController, ValidateDtoMiddleware, HttpError, ValidateObjectIdMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { OfferService } from '../offer/index.js';
 import { HttpMethod } from '../../../const.js';
@@ -24,8 +24,9 @@ export default class CommentController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new ValidateDtoMiddleware(CreateCommentDTO),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+        new PrivateRouteMiddleware(),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new ValidateDtoMiddleware(CreateCommentDTO)
       ]
     });
     this.addRoute({
@@ -39,8 +40,7 @@ export default class CommentController extends BaseController {
     });
   }
 
-  public async create({body}: CreateCommentRequestType, res: Response): Promise<void> {
-
+  public async create({body, tokenPayload}: CreateCommentRequestType, res: Response): Promise<void> {
     if (!body) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
@@ -49,7 +49,7 @@ export default class CommentController extends BaseController {
       );
     }
 
-    const comment = await this.commentService.create(body);
+    const comment = await this.commentService.create({...body, authorId: tokenPayload!.id});
     this.created(res, fillDTO(CommentRdo, comment));
   }
 
@@ -65,7 +65,7 @@ export default class CommentController extends BaseController {
       );
     }
 
-    const comments = this.commentService.findByOfferId(offerId);
+    const comments = await this.commentService.findByOfferId(offerId);
     this.ok(res, fillDTO(CommentRdo, comments));
   }
 

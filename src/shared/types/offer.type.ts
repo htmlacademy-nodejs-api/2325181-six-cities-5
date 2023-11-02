@@ -1,3 +1,4 @@
+import { CoordinatesType } from './coordinates.type.js';
 import { GoodsType } from './goods.type.js';
 import { LocationType } from './location.type.js';
 import { LodgingType } from './lodging.type.js';
@@ -18,5 +19,5 @@ export type OfferType = {
   price: number;
   goods: GoodsType;
   host: UserType;
-  coordinates: number[];
+  coordinates: CoordinatesType;
 }

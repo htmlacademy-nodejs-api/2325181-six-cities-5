@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { inject, injectable } from 'inversify';
 import { UserService } from './user-service.interface.js';
 import { types } from '@typegoose/typegoose';
@@ -6,6 +5,7 @@ import { UserEntity } from './user.entity.js';
 import { CreateUserDTO, UpdateUserDTO, } from './index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
+
 
 @injectable()
 export class DefaultUserService implements UserService {
@@ -27,7 +27,7 @@ export class DefaultUserService implements UserService {
     return this.userModel.findById(userId).exec();
   }
 
-  public async findByEmail(email: string): Promise<types.DocumentType<UserEntity> | null> {
+  public async findByEmail(email: string | null): Promise<types.DocumentType<UserEntity> | null> {
     return this.userModel.findOne({email});
   }
 
@@ -43,16 +43,4 @@ export class DefaultUserService implements UserService {
     return this.userModel.findByIdAndUpdate(userId, dto, {new: true}).exec();
   }
 
-  public async addRemoveFavorites (userId: string, offerId: string, isSetFavorite: boolean): Promise<void> {
-    const currentUser = await this.userModel.findById(userId).exec();
-    const objectOfferid = new Types.ObjectId(offerId);
-    if (currentUser) {
-      const isOfferInFavorites = Boolean(currentUser.favoritesList.filter((favorites) => favorites._id.toString() === offerId).length);
-      if (isSetFavorite && !isOfferInFavorites) {
-        currentUser.favoritesList.push(objectOfferid);
-      } else if (isOfferInFavorites) {
-        currentUser.favoritesList = currentUser.favoritesList.filter((favorites) => favorites._id.toString() !== offerId);
-      }
-    }
-  }
 }

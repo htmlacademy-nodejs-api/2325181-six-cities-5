@@ -1,8 +1,9 @@
-import { Ref, prop, getModelForClass, defaultClasses, modelOptions, Severity } from '@typegoose/typegoose';
+import { prop, getModelForClass, defaultClasses, modelOptions, Severity } from '@typegoose/typegoose';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserType } from '../../types/user.type.js';
 import { createSHA256 } from '../../helpers/hash.js';
 import { OfferEntity } from '../offer/offer.entity.js';
+import { FavoritesListType } from '../../types/favorites-list.type.js';
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -49,7 +50,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
     ref: () => OfferEntity,
     _id: false,
     default: [],
-  }) public favoritesList: Ref<OfferEntity>[];
+  }) public favoritesList: FavoritesListType;
 
   constructor(userData: UserType) {
     super();
@@ -66,6 +67,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
 
   public getPassword () {
     return this.password;
+  }
+
+  public verifyPassword(password: string, salt: string) {
+    const hashPassword = createSHA256(password, salt);
+    return hashPassword === this.password;
   }
 }
 

@@ -190,20 +190,6 @@ paths:
         "404":
           description: 'Информация об авторизации недоступна: пользователь не существует.'
 
-  /users/logout:
-    post:
-      tags:
-        - users
-      summary: Выход из закрытой части приложения.
-      description: Завершает пользовательский сеанс.
-      responses:
-        "204":
-          description: Пользовательcкий сеанс завершен.
-        "400":
-          description: 'Пользовательский сеанс не может быть завершен: ошибка запроса.'
-        "401":
-          description: 'Пользовательский сеанс не может быть завершен: пользователь не авторизован.'
-
   /users/signin:
     post:
       tags:
@@ -231,7 +217,7 @@ paths:
         "401":
           description: 'Новый пользователь не может быть создан: пользователь уже авторизован.'
 
-  /users/{userId}/avatar:
+  /users/avatar:
     post:
       tags:
         - users
@@ -243,7 +229,7 @@ paths:
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
 
-  /users/{userId}/favorites/{offerId}/{status}:
+  /users/favorites/{offerId}:
     get:
       tags:
         - offers
