@@ -20,4 +20,8 @@ export * from './param-comment.type.js';
 export * from './param-offer.type.js';
 export * from './param-user.type.js';
 export * from './coordinates.type.js';
+export * from './favorites-list.type.js';
+export * from './tokenPayload.type.js';
+export * from './validation-error-field.type.js';
+
 

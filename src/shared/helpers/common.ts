@@ -1,4 +1,6 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { ValidationError } from 'class-validator';
+import { ValidationErrorField } from '../types/index.js';
 
 const BOOLEAN_DELIMITER = 0.5;
 
@@ -33,5 +35,13 @@ export function createErrorObject(message: string) {
   return {
     error: message,
   };
+}
+
+export function reduceValidationErrors(errors: ValidationError[]): ValidationErrorField[] {
+  return errors.map(({property, value, constraints}) => ({
+    property,
+    value,
+    messages: constraints ? Object.values(constraints) : []
+  }));
 }
 
