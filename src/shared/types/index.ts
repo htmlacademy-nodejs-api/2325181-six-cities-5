@@ -24,5 +24,6 @@ export * from './favorites-list.type.js';
 export * from './tokenPayload.type.js';
 export * from './validation-error-field.type.js';
 export * from './application-error.type.js';
+export * from './static-data.type.js';
 
 

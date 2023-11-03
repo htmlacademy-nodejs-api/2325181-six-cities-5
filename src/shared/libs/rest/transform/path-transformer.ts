@@ -4,8 +4,9 @@ import { Logger } from '../../logger/index.js';
 import { Config, RestSchemaType } from '../../config/index.js';
 import { DEFAULT_STATIC_IMAGES, STATIC_FILES_ROUTE, STATIC_RESOURCE_FIELDS, STATIC_UPLOAD_ROUTE } from '../../../../const.js';
 import { getFullServerPath } from '../../../helpers/index.js';
+import { StaticDataType } from '../../../types/static-data.type.js';
 
-function isObject(value: unknown): value is Record<string, object> {
+function isObjectValue(value: unknown): value is StaticDataType {
   return typeof value === 'object' && value !== null;
 }
 
@@ -27,7 +28,7 @@ export class PathTransformer {
     return STATIC_RESOURCE_FIELDS.includes(proterty);
   }
 
-  public execute(data: Record<string, unknown>): Record<string, unknown> {
+  public execute(data: StaticDataType): StaticDataType {
     const stack = [data];
     while (stack.length > 0) {
       const current = stack.pop();
@@ -36,7 +37,7 @@ export class PathTransformer {
         if (Object.hasOwn(current, key)) {
           const value = current[key];
 
-          if (isObject(value)) {
+          if (isObjectValue(value)) {
             stack.push(value);
             continue;
           }
