@@ -120,7 +120,6 @@ export class UserController extends BaseController {
       );
     }
     favoritesList = modifyFavoriteList(favoritesList!, offerId);
-    console.log(favoritesList);
     await this.userService.updateById(tokenPayload!.id, {favoritesList});
     const offer = await this.offerService.findById(favoritesList!, offerId);
     this.ok(res, fillDTO(OfferRdo, offer));

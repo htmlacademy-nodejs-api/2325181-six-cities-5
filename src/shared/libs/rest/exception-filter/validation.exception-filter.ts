@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { inject } from 'inversify';
-import { Logger } from '../../logger/index.js'
+import { inject, injectable } from 'inversify';
+import { Logger } from '../../logger/index.js';
 import { ExceptionFilter } from './exception-filter.interface.js';
 import { Component } from '../../../types/component.enum.js';
 import { ValidationError } from '../errors/index.js';
@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { createErrorObject } from '../../../helpers/index.js';
 import { ApplicationError } from '../../../../const.js';
 
+@injectable()
 export class ValidationExceptionFilter implements ExceptionFilter {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger
