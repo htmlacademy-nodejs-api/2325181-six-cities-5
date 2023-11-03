@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, FavoritesListMiddleware, HttpError, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, FavoritesListMiddleware, HttpError, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
@@ -9,6 +9,8 @@ import { fillDTO } from '../../helpers/common.js';
 import { UpdateOfferDTO, OfferRdo, OfferService, CreateOfferRequestDTO } from './index.js';
 import { OfferAccessMiddleware } from '../../libs/rest/middleware/offer-access.middleware.js';
 import { UserService } from '../user/user-service.interface.js';
+import { RestSchemaType, Config } from '../../libs/config/index.js';
+import { UploadImageRdo } from './upload-image.rdo.js';
 
 
 @injectable()
@@ -17,6 +19,7 @@ export class OfferController extends BaseController {
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
     @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.Config) private readonly configService: Config<RestSchemaType>,
   ) {
     super(logger);
     this.logger.info('Register routes for OfferController...');
@@ -89,8 +92,26 @@ export class OfferController extends BaseController {
         new FavoritesListMiddleware(this.userService)
       ]
     });
+    this.addRoute({
+      path: '/:offerId/image',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new FavoritesListMiddleware(this.userService),
+        new ValidateObjectIdMiddleware('offerId'),
+        new OfferAccessMiddleware(this.offerService),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image')
+      ]
+    });
 
+  }
 
+  public async uploadImage({params, file}: Request<ParamOfferType>, res: Response) {
+    const {offerId} = params;
+    const updateDto = {previewImageURL: file?.filename};
+    await this.offerService.updateById(offerId!, updateDto);
+    this.created(res, fillDTO(UploadImageRdo, updateDto));
   }
 
   public async index({favoritesList}: Request, res: Response): Promise<void> {

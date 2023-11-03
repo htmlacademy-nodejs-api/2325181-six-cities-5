@@ -19,7 +19,6 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm
   "description": "The location of the apartment was perfect - close to all of the major attractions, best shopping, and great restaurants. Public transit was easy from the hotel.",
   "offerDate": "2023-10-04T13:29:44.829Z",
   "city": "Hamburg",
-  "previewImageURL": "https://13.design.pages.academy/static/apartment/08.jpg",
   "images": ["img/house-03.jpg", "img/house-04.jpg", "img/house-05.jpg", "img/hotel-06.jpg", "img/room-07.jpg", "img/apartment-08.jpg"],
   "isPremium": "true",
   "rating": "5",
@@ -33,9 +32,23 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm
 
 ###
 
+## Загрузить изображение для предложения
+POST http://localhost:4000/offers/6544e3cfd80130f711929dba/image HTTP/1.1
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk4OTk2MjcwLCJleHAiOjE2OTkxNjkwNzB9.DPzAhpF1meFmWplwBo-iajxfBxfpHQidxslT7PL16SE
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="default-avatar.png"
+Content-Type: image/png
+
+< /Users/asus/OneDrive/Рабочий стол/default-avatar.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
 ## Получение детальной информации о предложении по идентификатору
 
-GET http://localhost:4000/offers/6542cee20eedd04a70eb8bea HTTP/1.1
+GET http://localhost:4000/offers/6544e3cfd80130f711929dba HTTP/1.1
 Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk4OTk2MjcwLCJleHAiOjE2OTkxNjkwNzB9.DPzAhpF1meFmWplwBo-iajxfBxfpHQidxslT7PL16SE
 
 ###

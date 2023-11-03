@@ -117,6 +117,26 @@ paths:
         "400":
           description: 'Детальная информация о предложении недоступна: ошибка запроса.'
 
+  /offers/{offerId}/image:
+    post:
+      tags:
+        - offers
+      summary: Загрузка изображения для объявления
+      description: Загружает изображение для объявления
+      responses:
+        "201":
+          description: Изображение загружено. Объект со ссылкой на файл изображения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uploadImage'
+        "400":
+            description: 'Изображение не может быть загружено: ошибка запроса.'
+        "403":
+          description: 'Изображение не может быть загружено: у пользователя нет права доступа к объекту.'
+        "401":
+          description: 'Изображение не может быть загружено: пользователь не авторизован.'
+
   /offers/premium/:city:
     get:
       tags:
@@ -449,6 +469,12 @@ components:
         email:
           type: string
           example: keks@keks.com
+    uploadImage:
+      type: object
+      properties:
+        previewImageURL:
+          type: string
+          example: 'https://www.domain.com/image.png'
     offer:
       type: object
       properties:

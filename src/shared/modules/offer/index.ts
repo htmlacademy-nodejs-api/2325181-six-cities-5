@@ -6,3 +6,4 @@ export * from './offer.container.js';
 export * from './default-offer.service.js';
 export * from './update-offer.dto.js';
 export * from './offer.rdo.js';
+export * from './upload-image.rdo.js';

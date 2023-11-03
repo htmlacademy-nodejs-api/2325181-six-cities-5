@@ -13,10 +13,10 @@ import { StaticDataType } from '../../../types/static-data.type.js';
 @injectable()
 export abstract class BaseController implements Controller {
   private readonly _router: Router;
+  @inject(Component.PathTransformer) private pathTransformer: PathTransformer;
 
   constructor(
     protected readonly logger: Logger,
-    @inject(Component.PathTransformer) private pathTransformer: PathTransformer
   ) {
     this._router = Router();
   }

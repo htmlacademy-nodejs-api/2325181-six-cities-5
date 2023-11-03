@@ -29,9 +29,6 @@ export class CreateOfferDTO {
   @IsEnum(Location, {message: OfferValidationMessage.city.invalidValue})
   public city!: LocationType;
 
-  @Matches(/(.png$|.jpg$)/i, {message: OfferValidationMessage.previewImageURL.invalidFormat})
-  public previewImageURL!: string;
-
   @IsArray()
   @ArrayMinSize(6, {message: OfferValidationMessage.images.invalidCount})
   @ArrayMaxSize(6, {message: OfferValidationMessage.images.invalidCount})
