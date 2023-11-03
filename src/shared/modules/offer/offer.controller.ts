@@ -6,7 +6,7 @@ import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/i
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
 import { fillDTO } from '../../helpers/common.js';
-import { UpdateOfferDTO, CreateOfferDTO, OfferRdo, OfferService } from './index.js';
+import { UpdateOfferDTO, OfferRdo, OfferService, CreateOfferRequestDTO } from './index.js';
 import { OfferAccessMiddleware } from '../../libs/rest/middleware/offer-access.middleware.js';
 import { UserService } from '../user/user-service.interface.js';
 
@@ -34,7 +34,7 @@ export class OfferController extends BaseController {
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateDtoMiddleware(CreateOfferDTO),
+        new ValidateDtoMiddleware(CreateOfferRequestDTO),
         new FavoritesListMiddleware(this.userService)
       ]
     });
@@ -132,7 +132,6 @@ export class OfferController extends BaseController {
     }
 
     const offer = await this.offerService.findById(favoritesList!, offerId);
-
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
@@ -153,7 +152,6 @@ export class OfferController extends BaseController {
         'CommentController'
       );
     }
-
     const result = await this.offerService.create({...body, hostId: tokenPayload.id});
     const offer = await this.offerService.findById(favoritesList!, result.id);
     this.created(res, fillDTO(OfferRdo, offer));

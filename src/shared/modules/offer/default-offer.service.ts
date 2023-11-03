@@ -29,6 +29,8 @@ export class DefaultOfferService implements OfferService {
       {$lookup: {from: 'comments', localField: '_id', foreignField:'offerId', as: 'comments'}},
       {$set: {reviews: {$size: '$comments'}}},
       {$unset: 'comments'},
+      {$lookup: {from: 'users', localField: 'hostId', foreignField: '_id', as: 'hostId'}},
+      {$unwind: '$hostId'},
       {$set: {isFavorite: {$in: ['$_id',favoritesList]}}},
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
@@ -41,7 +43,7 @@ export class DefaultOfferService implements OfferService {
       {$set: {reviews: {$size: '$comments'}}},
       {$unset: 'comments'},
       {$set: {isFavorite: {$in: ['$_id',favoritesList]}}},
-      {$unset: ['description', 'images', 'bedrooms', 'maxAdults', 'goods', 'hostId', 'coordinates']},
+      {$unset: ['description', 'images', 'hostId', 'bedrooms', 'maxAdults', 'goods', 'coordinates']},
       {$limit: count },
       {$sort: {createdAt: SortOrder.Desc}},
     ]).exec();
