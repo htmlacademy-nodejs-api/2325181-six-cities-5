@@ -3,7 +3,6 @@ import { ValidationError } from 'class-validator';
 import { ValidationErrorField, ApplicationErrorType } from '../types/index.js';
 
 
-
 const BOOLEAN_DELIMITER = 0.5;
 
 export function generateRandomValue(min: number, max: number, numAfterDigit = 0) {
@@ -49,4 +48,6 @@ export function reduceValidationErrors(errors: ValidationError[]): ValidationErr
   }));
 }
 
-
+export function getFullServerPath(host: string, port: number) {
+  return `http://${host}:${port}`;
+}

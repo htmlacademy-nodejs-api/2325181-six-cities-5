@@ -13,6 +13,7 @@ export type RestSchemaType = {
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
   JWT_SECRET: string;
+  HOST: string;
 }
 
 export const configRestSchema = convict<RestSchemaType>({
@@ -69,5 +70,11 @@ export const configRestSchema = convict<RestSchemaType>({
     format: String,
     env: 'JWT_SECRET',
     default: null
+  },
+  HOST: {
+    doc: 'Host where service started',
+    format: String,
+    env: 'HOST',
+    default: 'localhost'
   },
 });

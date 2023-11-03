@@ -8,6 +8,7 @@ import { getMongoURI } from '../shared/helpers/database.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
 import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
+import { getFullServerPath } from '../shared/helpers/index.js';
 
 
 @injectable()
@@ -46,7 +47,7 @@ export class RestApplication {
     this.logger.info('Exception filters have been initialized');
     this.logger.info('Try to init server...');
     await this._initServer();
-    this.logger.info(`Server launched on http://localhost:${this.config.get('PORT')}`);
+    this.logger.info(`Server launched on ${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}`);
 
     this.server.get('/', (_req, res) => {
       res.send('Hello world');
