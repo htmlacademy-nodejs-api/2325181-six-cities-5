@@ -7,7 +7,7 @@ import { OfferService } from '../offer/index.js';
 import { HttpMethod } from '../../../const.js';
 import { CreateCommentRequestType, ParamCommentType, Component } from '../../types/index.js';
 import { fillDTO } from '../../helpers/common.js';
-import { CommentRdo, CreateCommentDTO, CommentService } from './index.js';
+import { CommentRdo, CommentService, CreateCommentRequestDTO } from './index.js';
 
 
 @injectable()
@@ -26,7 +26,7 @@ export default class CommentController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
-        new ValidateDtoMiddleware(CreateCommentDTO)
+        new ValidateDtoMiddleware(CreateCommentRequestDTO)
       ]
     });
     this.addRoute({
