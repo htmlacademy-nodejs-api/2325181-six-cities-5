@@ -13,6 +13,7 @@ import { UploadFileMiddleware, PrivateRouteMiddleware, FavoritesListMiddleware }
 import { AuthService } from '../auth/auth-service.interface.js';
 import { LoggedUserRdo } from './logged-user.rdo.js';
 import { modifyFavoriteList } from '../../helpers/favorite-list.js';
+import { UploadUserAvatarRdo } from './upload-avatar.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -56,14 +57,12 @@ export class UserController extends BaseController {
         new PrivateRouteMiddleware(),
       ]
     });
-    this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({
       path: '/avatar',
       method: HttpMethod.Post,
       handler: this.loadAvatar,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
     });
@@ -90,8 +89,8 @@ export class UserController extends BaseController {
 
     const currentUserEmail = tokenPayload!.email || null;
 
-    const foundedUser = this.userService.findByEmail(currentUserEmail);
-
+    const foundedUser = await this.userService.findByEmail(currentUserEmail);
+    console.log(foundedUser);
     if (!foundedUser) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
@@ -103,10 +102,11 @@ export class UserController extends BaseController {
     this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
 
-  public async loadAvatar({file}: Request, res: Response) {
-    this.created(res, {
-      filepath: file?.path
-    });
+  public async loadAvatar({file, tokenPayload}: Request, res: Response) {
+    const userId = tokenPayload?.id;
+    const uploadFile = {avatarURL: file?.filename};
+    await this.userService.updateById(userId!, uploadFile);
+    this.created(res, fillDTO(UploadUserAvatarRdo, {filepath: uploadFile.avatarURL}));
   }
 
   public async toggleFavorites({params, tokenPayload, favoritesList}: Request<ParamUserType>, res: Response): Promise<void> {
@@ -132,15 +132,5 @@ export class UserController extends BaseController {
     const token = await this.authService.authenticate(user);
     const responseData = fillDTO(LoggedUserRdo, user);
     this.ok(res, Object.assign(responseData, {token}));
-  }
-
-  public async logout() {
-
-
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
   }
 }
