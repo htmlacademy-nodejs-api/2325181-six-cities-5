@@ -198,3 +198,5 @@ export const ApplicationError = {
   CommonError: 'COMMON_ERROR',
   ServiceError: 'SERVICE_ERROR',
 } as const;
+
+export const DEFAULT_AVATAR_FILE_NAME = 'default-avatar.jpg';
