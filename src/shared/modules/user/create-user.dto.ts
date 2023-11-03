@@ -1,5 +1,5 @@
 import { Ref } from '@typegoose/typegoose';
-import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserValidationMessage, UserLevel } from '../../../const.js';
 import { UserEntity } from './user.entity.js';
@@ -8,10 +8,6 @@ export class CreateUserDTO {
 
   @IsEmail({}, {message: UserValidationMessage.email.invalidFormat})
   public email!: string;
-
-  @IsString({message: UserValidationMessage.avatarURL.invalidFormat})
-  @Matches(/(.png$|.jpg$|^$)/i, {message: UserValidationMessage.avatarURL.invalidExtension})
-  public avatarURL!: string;
 
   @IsString({message: UserValidationMessage.name.invalidFormat})
   @Length(1, 15, {message: UserValidationMessage.name.invalidLength})
