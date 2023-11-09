@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { generateRandomValue, getRandomBoolean, getRandomItem, getRandomItems } from '../helpers/common.js';
 import { LocationType } from '../types/location.type.js';
 import { LodgingType } from '../types/lodging.type.js';
@@ -10,14 +9,10 @@ import { UserLevelType } from '../types/user-level.type.js';
 export function generateTSVOffer(mockData: MockServerDataType):string {
   const title = getRandomItem<string>(mockData.titles);
   const description = getRandomItem<string>(mockData.descriptions);
-  const offerDate = dayjs()
-    .subtract(generateRandomValue(EdgePoints.Minimal.Weekday, EdgePoints.Maximal.Weekday), 'day')
-    .toISOString();
   const city = getRandomItem<LocationType>(mockData.cities).toString();
   const previewImageURL = getRandomItem<string>(mockData.previewImageURL);
   const images = getRandomItems<string>(mockData.images).join(';');
   const isPremium = getRandomBoolean().toString();
-  const rating = generateRandomValue(EdgePoints.Minimal.Rating, EdgePoints.Maximal.Rating, 1).toString();
   const type = getRandomItem<LodgingType>(mockData.lodgingTypes).toString();
   const bedrooms = generateRandomValue(EdgePoints.Minimal.Bedrooms, EdgePoints.Maximal.Bedrooms).toString();
   const maxAdults = generateRandomValue(EdgePoints.Minimal.Adults, EdgePoints.Maximal.Adults).toString();
@@ -33,12 +28,10 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
   return [
     title,
     description,
-    offerDate,
     city,
     previewImageURL,
     images,
     isPremium,
-    rating,
     type,
     bedrooms,
     maxAdults,
