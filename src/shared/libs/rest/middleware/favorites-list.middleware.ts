@@ -9,8 +9,7 @@ export class FavoritesListMiddleware implements Middleware {
 
   public async execute(req: Request,_res: Response, next: NextFunction): Promise<void> {
     const userId = req.tokenPayload?.id;
-    const favoriteOffers = (await this.service.findById(userId!))?.favoritesList || [];
-    req.favoritesList = favoriteOffers;
+    req.favoritesList = (await this.service.findById(userId!))?.favoritesList || [];
     next();
   }
 }
