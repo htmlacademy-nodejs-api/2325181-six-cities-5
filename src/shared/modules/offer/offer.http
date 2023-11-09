@@ -4,57 +4,69 @@
 
 GET http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk4OTk2MjcwLCJleHAiOjE2OTkxNjkwNzB9.DPzAhpF1meFmWplwBo-iajxfBxfpHQidxslT7PL16SE
+
 ###
 
 ## Создать новое предложение
 
 POST http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk5NDQyNzc4LCJleHAiOjE2OTk2MTU1Nzh9.jWYeiqYt-SfOGU8WRnJfN31cdhRM-tsW3-ofu7xDMzo
 
 {
-  "title": "This is a test7 offer",
+  "title": "This is a test19 offer",
   "description": "The location of the apartment was perfect - close to all of the major attractions, best shopping, and great restaurants. Public transit was easy from the hotel.",
-  "offerDate": "2023-10-04T13:29:44.829Z",
   "city": "Hamburg",
-  "previewImageURL": "https://13.design.pages.academy/static/apartment/08.jpg",
+  "previewImageURL": "domain.com/image.jpeg",
   "images": ["img/house-03.jpg", "img/house-04.jpg", "img/house-05.jpg", "img/hotel-06.jpg", "img/room-07.jpg", "img/apartment-08.jpg"],
   "isPremium": "true",
-  "rating": "5",
   "type": "house",
   "bedrooms": "7",
   "maxAdults": "10",
   "price": "11111",
   "goods": ["Towels", "Fridge"],
-  "hostId": "6540ac46b18391b6de9e0405",
   "coordinates": {"latitude": "51.225402", "longitude": "6.776314"}
 }
 
 ###
 
+## Загрузить изображение для предложения
+POST http://localhost:4000/offers/6544e3cfd80130f711929dba/image HTTP/1.1
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk4OTk2MjcwLCJleHAiOjE2OTkxNjkwNzB9.DPzAhpF1meFmWplwBo-iajxfBxfpHQidxslT7PL16SE
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="default-avatar.png"
+Content-Type: image/png
+
+< /Users/asus/OneDrive/Рабочий стол/default-avatar.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
 ## Получение детальной информации о предложении по идентификатору
 
-GET http://localhost:4000/offers/6542cee20eedd04a70eb8bea HTTP/1.1
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
+GET http://localhost:4000/offers/654b8169a502d3da7d45d8da HTTP/1.1
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk5NDQyNzc4LCJleHAiOjE2OTk2MTU1Nzh9.jWYeiqYt-SfOGU8WRnJfN31cdhRM-tsW3-ofu7xDMzo
 
 ###
 
 ## Удалить предложение по идентификатору
 
 DELETE http://localhost:4000/offers/6542cdff0eedd04a70eb8bc3 HTTP/1.1
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk4OTk2MjcwLCJleHAiOjE2OTkxNjkwNzB9.DPzAhpF1meFmWplwBo-iajxfBxfpHQidxslT7PL16SE
 
 ###
 
 ## Редактировать предложение по идентификаторы
 
-PATCH http://localhost:4000/offers/6542cee20eedd04a70eb8bea HTTP/1.1
+PATCH http://localhost:4000/offers/6544e3cfd80130f711929dba HTTP/1.1
 Content-Type: application/json
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk5MzQ2MzI0LCJleHAiOjE2OTk1MTkxMjR9.E8ez03VrN4msGEet-JBygzGDnJYrx1H4G-X8ijyEZGQ
 
 {
-  "title": "This is a new offer title for test8"
+  "price": "12345"
 }
 
 ###
@@ -68,6 +80,6 @@ GET http://localhost:4000/offers/premium/Amsterdam HTTP/1.1
 ## Получить список избранных предложений
 
 GET http://localhost:4000/offers/favorites HTTP/1.1
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWxAbWFpbC5jb20iLCJuYW1lIjoiSGVsbG8iLCJpZCI6IjY1NDFmYmVlMjE4ZTc3N2NmN2YyODQyNyIsImlhdCI6MTY5ODgyMzI3NywiZXhwIjoxNjk4OTk2MDc3fQ.XfNNykJ3FobqM3NApsLRWSbgfzo67NymJ4cAn3ELATA
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk4OTk2MjcwLCJleHAiOjE2OTkxNjkwNzB9.DPzAhpF1meFmWplwBo-iajxfBxfpHQidxslT7PL16SE
 
 ###

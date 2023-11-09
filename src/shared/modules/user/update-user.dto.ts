@@ -1,4 +1,4 @@
-import { IsString, Matches, Length, IsEnum, IsOptional, IsMimeType, IsArray, IsObject } from 'class-validator';
+import { IsEmail, IsString, Matches, Length, IsEnum, IsOptional, IsArray, IsObject } from 'class-validator';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserValidationMessage, UserLevel } from '../../../const.js';
 import { FavoritesListType } from '../../types/favorites-list.type.js';
@@ -6,22 +6,25 @@ import { FavoritesListType } from '../../types/favorites-list.type.js';
 export class UpdateUserDTO {
 
   @IsOptional()
-  @IsString({message: UserValidationMessage.avatarURL.invalidFormat})
-  @Matches(/(.png$|.jpg$|^$)/i, {message: UserValidationMessage.avatarURL.invalidExtension})
-  @IsMimeType({message: UserValidationMessage.avatarURL.invalidExtension})
+  @IsEmail({}, {message: UserValidationMessage.Email.InvalidFormat})
+  public email?: string;
+
+  @IsOptional()
+  @IsString({message: UserValidationMessage.AvatarURL.InvalidFormat})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {message: UserValidationMessage.AvatarURL.InvalidExtension})
   public avatarURL?: string;
 
   @IsOptional()
-  @IsString({message: UserValidationMessage.name.invalidFormat})
-  @Length(1, 15, {message: UserValidationMessage.name.invalidLength})
+  @IsString({message: UserValidationMessage.Name.InvalidFormat})
+  @Length(1, 15, {message: UserValidationMessage.Name.InvalidLength})
   public name?: string;
 
   @IsOptional()
-  @IsEnum(UserLevel, {message: UserValidationMessage.userType.invalidValue})
+  @IsEnum(UserLevel, {message: UserValidationMessage.UserType.InvalidValue})
   public userType?: UserLevelType;
 
   @IsOptional()
-  @IsArray({message: UserValidationMessage.favoritesList.invalidValue})
-  @IsObject({each: true, message: UserValidationMessage.favoritesList.invalidValue})
+  @IsArray({message: UserValidationMessage.FavoritesList.InvalidValue})
+  @IsObject({each: true, message: UserValidationMessage.FavoritesList.InvalidValue})
   public favoritesList?: FavoritesListType;
 }

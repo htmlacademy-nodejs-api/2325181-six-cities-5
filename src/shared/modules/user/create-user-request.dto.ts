@@ -1,7 +1,8 @@
-import { Matches, IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { Ref } from '@typegoose/typegoose';
+import { IsEmail, IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserValidationMessage, UserLevel } from '../../../const.js';
-import { FavoritesListType } from '../../types/index.js';
+import { UserEntity } from './user.entity.js';
 
 export class CreateUserDTO {
 
@@ -20,11 +21,7 @@ export class CreateUserDTO {
   public userType!: UserLevelType;
 
   @IsOptional()
-  @IsArray({message: UserValidationMessage.FavoritesList.InvalidValue})
-  public favoritesList!: FavoritesListType;
-
-  @IsOptional()
   @IsString({message: UserValidationMessage.AvatarURL.InvalidFormat})
   @Matches(/(.png$|.jpg$|.jpeg$)/i, {message: UserValidationMessage.AvatarURL.InvalidExtension})
-  public avatarURL!: string;
+  public avatarURL?: Ref<UserEntity>[];
 }

@@ -7,12 +7,10 @@ import { UserType } from './user.type.js';
 export type OfferType = {
   title: string;
   description: string;
-  offerDate: Date;
   city: LocationType;
   previewImageURL: string;
   images: string[];
   isPremium: boolean;
-  rating: number;
   type: LodgingType;
   bedrooms: number;
   maxAdults: number;

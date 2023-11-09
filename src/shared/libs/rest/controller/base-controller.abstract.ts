@@ -1,18 +1,22 @@
 import asyncHandler from 'express-async-handler';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import { Router, Response } from 'express';
 import { Logger } from '../../logger/index.js';
 import { Controller } from './controller.interface.js';
 import { Route } from '../route/route.interface.js';
 import { DEFAULT_CONTENT_TYPE } from '../../../../const.js';
 import { StatusCodes } from 'http-status-codes';
+import { Component } from '../../../types/component.enum.js';
+import { PathTransformer } from '../transform/path-transformer.js';
+import { StaticDataType } from '../../../types/static-data.type.js';
 
 @injectable()
 export abstract class BaseController implements Controller {
   private readonly _router: Router;
+  @inject(Component.PathTransformer) private pathTransformer: PathTransformer;
 
   constructor(
-    protected readonly logger: Logger
+    protected readonly logger: Logger,
   ) {
     this._router = Router();
   }
@@ -34,7 +38,8 @@ export abstract class BaseController implements Controller {
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
-    res.type(DEFAULT_CONTENT_TYPE).status(statusCode).json(data);
+    const modifiedData = this.pathTransformer.execute(data as StaticDataType);
+    res.type(DEFAULT_CONTENT_TYPE).status(statusCode).json(modifiedData);
   }
 
   public ok<T>(res: Response, data: T): void {

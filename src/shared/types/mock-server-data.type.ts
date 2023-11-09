@@ -5,12 +5,12 @@ export type MockServerDataType = {
   descriptions: string[];
   cities: LocationType[];
   images: string[];
-  previewImageURL: string[];
+  previewImageURLs: string[];
   lodgingTypes: LodgingType[];
   goods: GoodsType[];
   hostNames: string[];
   hostEmails: string[];
   hostAvatarURLs: string[];
-  latitude: string[];
-  longitude: string[];
+  latitudes: string[];
+  longitudes: string[];
 }

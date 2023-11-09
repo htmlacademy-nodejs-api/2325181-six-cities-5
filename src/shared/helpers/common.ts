@@ -1,4 +1,7 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { ValidationError } from 'class-validator';
+import { ValidationErrorField, ApplicationErrorType } from '../types/index.js';
+
 
 const BOOLEAN_DELIMITER = 0.5;
 
@@ -29,9 +32,26 @@ export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
   return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true});
 }
 
-export function createErrorObject(message: string) {
+export function createErrorObject(errorType: ApplicationErrorType, error: string, details: ValidationErrorField[] = []) {
   return {
-    error: message,
+    errorType,
+    error,
+    details
   };
 }
 
+export function reduceValidationErrors(errors: ValidationError[]): ValidationErrorField[] {
+  return errors.map(({property, value, constraints}) => ({
+    property,
+    value,
+    messages: constraints ? Object.values(constraints) : []
+  }));
+}
+
+export function getFullServerPath(host: string, port: number) {
+  return `http://${host}:${port}`;
+}
+
+export function getCapitalized (string: string) {
+  return string[0].toUpperCase().concat(string.slice(1).toLowerCase());
+}

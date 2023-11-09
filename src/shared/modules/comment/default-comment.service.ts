@@ -4,6 +4,7 @@ import {CommentEntity, CommentService, CreateCommentDTO} from './index.js';
 import { Component } from '../../types/component.enum.js';
 import { OfferEntity } from '../offer/offer.entity.js';
 import { ReviewStatisticsType } from '../../types/review-statistics.type.js';
+import { COMMENT_COUNT, SortOrder } from '../../../const.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
@@ -16,7 +17,7 @@ export class DefaultCommentService implements CommentService {
   public async create(dto: CreateCommentDTO): Promise<DocumentType<CommentEntity>> {
     const result = (await this.commentModel.create(dto)).populate('authorId');
     const {rating} = await this.calculateAverageRatingByOfferId(dto.offerId);
-    this.offerModel
+    await this.offerModel
       .findByIdAndUpdate(dto.offerId, {
         '$set': {rating}
       }, {new: true}).exec();
@@ -39,8 +40,8 @@ export class DefaultCommentService implements CommentService {
     return averageRatingList[0];
   }
 
-  public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
-    return this.commentModel.find({offerId}).populate('authorId');
+  public async findByOfferId(offerId: string,): Promise<DocumentType<CommentEntity>[]> {
+    return this.commentModel.find({offerId}).limit(COMMENT_COUNT).sort({ commentDate: SortOrder.Desc }).populate('authorId').exec();
   }
 
   public async deleteByOfferId(offerId: string): Promise<number | null> {

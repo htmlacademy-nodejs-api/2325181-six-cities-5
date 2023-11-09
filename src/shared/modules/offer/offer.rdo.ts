@@ -6,7 +6,8 @@ import { UserRdo } from '../user/user.rdo.js';
 import { CoordinatesType } from '../../types/coordinates.type.js';
 
 export class OfferRdo {
-  @Expose()
+  @Expose({name: '_id'})
+  @Type(() => String)
   public id: string;
 
   @Expose()
@@ -15,7 +16,7 @@ export class OfferRdo {
   @Expose()
   public description: string;
 
-  @Expose()
+  @Expose({name: 'createdAt'})
   public offerDate: Date;
 
   @Expose()

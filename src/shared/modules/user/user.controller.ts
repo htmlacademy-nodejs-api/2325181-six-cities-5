@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { BaseController, DocumentExistsMiddleware, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component, CreateUserRequestType, LoginUserRequestType, ParamUserType } from '../../types/index.js';
-import { HttpMethod } from '../../../const.js';
+import { DEFAULT_AVATAR_FILE_NAME, HttpMethod } from '../../../const.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UserService, UserRdo, CreateUserDTO, LoginUserDTO } from './index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
@@ -13,6 +13,7 @@ import { UploadFileMiddleware, PrivateRouteMiddleware, FavoritesListMiddleware }
 import { AuthService } from '../auth/auth-service.interface.js';
 import { LoggedUserRdo } from './logged-user.rdo.js';
 import { modifyFavoriteList } from '../../helpers/favorite-list.js';
+import { UploadUserAvatarRdo } from './upload-avatar.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -56,21 +57,19 @@ export class UserController extends BaseController {
         new PrivateRouteMiddleware(),
       ]
     });
-    this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({
       path: '/avatar',
       method: HttpMethod.Post,
       handler: this.loadAvatar,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
     });
   }
 
   public async create(
-    {body}: CreateUserRequestType, res: Response
+    {body, tokenPayload}: CreateUserRequestType, res: Response
   ): Promise<void> {
     const existUser = await this.userService.findByEmail(body.email);
 
@@ -82,7 +81,16 @@ export class UserController extends BaseController {
       );
     }
 
-    const result = await this.userService.create(body, this.configService.get('SALT'));
+    if (tokenPayload) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Only unauthorized users may create new user accounts.',
+        'UserController'
+      );
+    }
+
+    const avatarFileName = body.avatarURL || DEFAULT_AVATAR_FILE_NAME;
+    const result = await this.userService.create({...body, favoritesList: [], avatarURL: avatarFileName}, this.configService.get('SALT'));
     this.created(res, fillDTO(UserRdo, result));
   }
 
@@ -90,8 +98,8 @@ export class UserController extends BaseController {
 
     const currentUserEmail = tokenPayload!.email || null;
 
-    const foundedUser = this.userService.findByEmail(currentUserEmail);
-
+    const foundedUser = await this.userService.findByEmail(currentUserEmail);
+    console.log(foundedUser);
     if (!foundedUser) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
@@ -100,13 +108,14 @@ export class UserController extends BaseController {
       );
     }
 
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    this.ok(res, fillDTO(UserRdo, foundedUser));
   }
 
-  public async loadAvatar({file}: Request, res: Response) {
-    this.created(res, {
-      filepath: file?.path
-    });
+  public async loadAvatar({file, tokenPayload}: Request, res: Response) {
+    const userId = tokenPayload?.id;
+    const uploadFile = {avatarURL: file?.filename};
+    await this.userService.updateById(userId!, uploadFile);
+    this.created(res, fillDTO(UploadUserAvatarRdo, {filepath: uploadFile.avatarURL}));
   }
 
   public async toggleFavorites({params, tokenPayload, favoritesList}: Request<ParamUserType>, res: Response): Promise<void> {
@@ -120,7 +129,6 @@ export class UserController extends BaseController {
       );
     }
     favoritesList = modifyFavoriteList(favoritesList!, offerId);
-    console.log(favoritesList);
     await this.userService.updateById(tokenPayload!.id, {favoritesList});
     const offer = await this.offerService.findById(favoritesList!, offerId);
     this.ok(res, fillDTO(OfferRdo, offer));
@@ -131,21 +139,7 @@ export class UserController extends BaseController {
   ): Promise<void> {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
-    const responseData = fillDTO(LoggedUserRdo, {
-      email: user.email,
-      token,
-    });
-    this.ok(res, responseData);
-
-  }
-
-  public async logout() {
-
-
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+    const responseData = fillDTO(LoggedUserRdo, user);
+    this.ok(res, Object.assign(responseData, {token}));
   }
 }

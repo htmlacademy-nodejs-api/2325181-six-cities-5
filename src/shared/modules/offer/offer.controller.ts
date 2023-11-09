@@ -1,14 +1,17 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, FavoritesListMiddleware, HttpError, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, FavoritesListMiddleware, HttpError, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
-import { fillDTO } from '../../helpers/common.js';
-import { UpdateOfferDTO, CreateOfferDTO, OfferRdo, OfferService } from './index.js';
+import { fillDTO, getCapitalized } from '../../helpers/common.js';
+import { UpdateOfferDTO, OfferRdo, OfferService, CreateOfferRequestDTO } from './index.js';
 import { OfferAccessMiddleware } from '../../libs/rest/middleware/offer-access.middleware.js';
 import { UserService } from '../user/user-service.interface.js';
+import { RestSchemaType, Config } from '../../libs/config/index.js';
+import { UploadImageRdo } from './upload-image.rdo.js';
+import { CommentService } from '../comment/comment-service.interface.js';
 
 
 @injectable()
@@ -17,6 +20,8 @@ export class OfferController extends BaseController {
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
     @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.CommentService) private readonly commentService: CommentService,
+    @inject(Component.Config) private readonly configService: Config<RestSchemaType>,
   ) {
     super(logger);
     this.logger.info('Register routes for OfferController...');
@@ -34,7 +39,7 @@ export class OfferController extends BaseController {
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateDtoMiddleware(CreateOfferDTO),
+        new ValidateDtoMiddleware(CreateOfferRequestDTO),
         new FavoritesListMiddleware(this.userService)
       ]
     });
@@ -89,8 +94,26 @@ export class OfferController extends BaseController {
         new FavoritesListMiddleware(this.userService)
       ]
     });
+    this.addRoute({
+      path: '/image/:offerId',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new FavoritesListMiddleware(this.userService),
+        new ValidateObjectIdMiddleware('offerId'),
+        new OfferAccessMiddleware(this.offerService),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image')
+      ]
+    });
 
+  }
 
+  public async uploadImage({params, file}: Request<ParamOfferType>, res: Response) {
+    const {offerId} = params;
+    const updateDto = {previewImageURL: file?.filename};
+    await this.offerService.updateById(offerId!, updateDto);
+    this.created(res, fillDTO(UploadImageRdo, updateDto));
   }
 
   public async index({favoritesList}: Request, res: Response): Promise<void> {
@@ -132,7 +155,6 @@ export class OfferController extends BaseController {
     }
 
     const offer = await this.offerService.findById(favoritesList!, offerId);
-
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
@@ -153,7 +175,6 @@ export class OfferController extends BaseController {
         'CommentController'
       );
     }
-
     const result = await this.offerService.create({...body, hostId: tokenPayload.id});
     const offer = await this.offerService.findById(favoritesList!, result.id);
     this.created(res, fillDTO(OfferRdo, offer));
@@ -188,6 +209,8 @@ export class OfferController extends BaseController {
     }
 
     const offer = await this.offerService.deleteById(offerId);
+    await this.commentService.deleteByOfferId(offerId);
+
     const isOfferInFavorites = Boolean(favoritesList!.filter((favorites) => favorites._id.toString() === offerId).length);
     if (isOfferInFavorites) {
       favoritesList = favoritesList!.filter((favorites) => favorites._id.toString() !== offerId);
@@ -208,7 +231,9 @@ export class OfferController extends BaseController {
       );
     }
 
-    const premiumOffers = await this.offerService.findPremium(favoritesList!, city);
+    const cityCapitalized = getCapitalized(city);
+
+    const premiumOffers = await this.offerService.findPremium(favoritesList!, cityCapitalized);
 
     if (!premiumOffers) {
       throw new HttpError(

@@ -46,12 +46,10 @@ export class ImportCommand implements Command {
     await this.offerService.create({
       title: offer.title,
       description: offer.description,
-      offerDate: offer.offerDate,
       city: offer.city,
       previewImageURL: offer.previewImageURL,
       images: offer.images,
       isPremium: offer.isPremium,
-      rating: offer.rating,
       type: offer.type,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
@@ -64,7 +62,7 @@ export class ImportCommand implements Command {
   }
 
 
-  private onCompleteImport(count: number) {
+  private onCompleteImport(count: number): void {
     console.info(`${count} rows imported.`);
     this.databaseClient.disconnect();
   }
@@ -78,7 +76,7 @@ export class ImportCommand implements Command {
     fileReader.on('end', this.onCompleteImport);
 
     try {
-      fileReader.read();
+      await fileReader.read();
     } catch (err) {
       console.error(`${chalk.italic.bgRedBright('Cannot import data from the file:')} ${chalk.underline.redBright(filename)}`);
       console.error(`${chalk.bold.bgRedBright('Details:')} ${chalk.underline.redBright(getErrorMessage(err))}`);

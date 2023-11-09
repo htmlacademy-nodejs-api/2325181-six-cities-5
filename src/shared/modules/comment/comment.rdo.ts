@@ -3,9 +3,6 @@ import { UserRdo } from '../user/user.rdo.js';
 
 export class CommentRdo {
   @Expose()
-  public id: string;
-
-  @Expose()
   public text: string;
 
   @Expose()

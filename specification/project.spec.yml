@@ -24,6 +24,13 @@ paths:
         - offers
       summary: Получение списка предложений по аренде
       description: Получает список предложений по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: Получение списка предложений.
@@ -39,6 +46,13 @@ paths:
         - offers
       summary: Создание нового предложения
       description: Создает новое предложение по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Информация для создания нового предложения
         content:
@@ -57,8 +71,6 @@ paths:
           description: 'Предложение не может быть создано: пользователь не авторизован.'
         "400":
           description: 'Предложение не может быть создано: ошибка валидации.'
-        "409":
-          description: Предложение уже существует.
 
   /offers/{offerId}:
     patch:
@@ -66,6 +78,19 @@ paths:
         - offers
       summary: Редактирование предложения
       description: Редактирует предложение по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Информация для редактирования предложения
         content:
@@ -92,6 +117,19 @@ paths:
         - offers
       summary: Удаление предложения
       description: Удаляет предложение по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Предложение успешно удалено.
@@ -107,6 +145,19 @@ paths:
         - offers
       summary: Получение детальной информации о предложении
       description: Получает детальную информации о предложении по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Получение детальной информации о предложении.
@@ -117,12 +168,65 @@ paths:
         "400":
           description: 'Детальная информация о предложении недоступна: ошибка запроса.'
 
-  /offers/premium/:city:
+  /offers/image/{offerId}:
+    post:
+      tags:
+        - offers
+      summary: Загрузка изображения для объявления
+      description: Загружает изображение для объявления
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Изображение загружено. Объект со ссылкой на файл изображения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uploadImage'
+        "400":
+            description: 'Изображение не может быть загружено: ошибка запроса.'
+        "403":
+          description: 'Изображение не может быть загружено: у пользователя нет права доступа к объекту.'
+        "401":
+          description: 'Изображение не может быть загружено: пользователь не авторизован.'
+
+  /offers/premium/{city}:
     get:
       tags:
         - offers
       summary: Получение списка премиальных предложений по аренде для определенного города
       description: Получает список премиальных предложений по аренде для определенного города
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: city
+          description: the city name
+          required: true
+          schema:
+            enum:
+              - Amsterdam
+              - Paris
+              - Hamburg
+              - Cologne
+              - Dusseldorf
+              - Brussels
+            type: string
       responses:
         "200":
           description: Получение списка премиальных предложений для определенного города.
@@ -139,6 +243,13 @@ paths:
         - offers
       summary: Получение списка избранных предложений по аренде
       description: Получает список избранных предложений по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Получение списка избранных предложений.
@@ -148,6 +259,8 @@ paths:
                 $ref: '#/components/schemas/offersList'
         "400":
           description: 'Список избранных предложений недоступен: ошибка запроса.'
+        "401":
+          description: 'Список избранных предложений недоступен: пользователь не авторизован.'
 
   /users/login:
     post:
@@ -168,9 +281,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/userToken'
+                $ref: '#/components/schemas/loggedUser'
         "400":
-          description: 'Информация об авторизации недоступна: ошибка запроса.'
+          description: 'Информация об авторизации недоступна:ошибка запроса.'
         "401":
           description: 'Информация об авторизации недоступна: логин или пароль неверный или пользователь не существует.'
     get:
@@ -185,10 +298,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
-        "400":
-          description: 'Информация об авторизации недоступна: ошибка запроса.'
-        "404":
-          description: 'Информация об авторизации недоступна: пользователь не существует.'
+        "401":
+          description: 'Информация об авторизации недоступна: Пользователь не авторизован.'
 
   /users/signin:
     post:
@@ -223,11 +334,20 @@ paths:
         - users
       summary: Загрузка аватара пользователя.
       description: Загружает изображение (аватар) пользователя в формате 'png' или 'jpg'.
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Аватар пользователя успешно загружен.
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
+        "401":
+          description: 'Аватар не может быть загружен: пользователь не авторизован.'
 
   /users/favorites/{offerId}:
     get:
@@ -236,6 +356,19 @@ paths:
         - users
       summary: Добавление/удаление предложения в/из избранное.
       description: Добавляет/удаляет предложения в/из избранное.
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Предложение успешно добавлено/удалено в/из избранного.
@@ -254,6 +387,13 @@ paths:
         - comments
       summary: Получение списка комментариев для предложения
       description: Возвращает список комментариев для предложения
+      parameters:
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Получение списка комментариев.
@@ -264,12 +404,24 @@ paths:
         "400":
           description: 'Список предложений недоступен: ошибка запроса.'
 
-  /comments:
     post:
       tags:
         - comments
       summary: Добавление комментария для предложения
       description: Добавляет новый комментарий для предложения
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Информация для создания нового комментария
         content:
@@ -288,102 +440,132 @@ paths:
           description: 'Комментарий не может быть создан: пользователь не авторизован.'
         "400":
           description: 'Комментарий не может быть создан: ошибка валидации.'
-        "409":
-          description: Комментарий уже существует.
 
 components:
   schemas:
     createUser:
       type: object
+      required:
+        - email
+        - name
+        - password
+        - userType
       properties:
         email:
           type: string
+          pattern: name@domain.com
           example: keks@keks.com
-        avatarURL:
-          type: string
-          example: https://www.domain.com/image.png
         name:
           type: string
+          minLength: 1
+          maxLength: 15
           example: Keks
         password:
           type: string
+          minLength: 6
+          maxLength: 12
           example: 123456
+        avatarURL:
+          type: string
+          example: avatar.png
         userType:
           type: string
           enum: [pro, standard]
           example: standard
     createOffer:
       type: object
+      required:
+        - title
+        - description
+        - city
+        - previewImageURL
+        - images
+        - isPremium
+        - type
+        - bedrooms
+        - maxAdults
+        - price
+        - goods
+        - coordinates
       properties:
         title:
           type: string
+          minLength: 10
+          maxLength: 100
           example: Lorem ipsum dolor sit amet.
         description:
           type: string
+          minLength: 20
+          maxLength: 1024
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        offerDate:
-          type: string
-          format: date-time
-          example: 01/01/2023T12:23:34.843Z
         city:
           type: string
           enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
           example: Amsterdam
         previewImageURL:
           type: string
-          example: https://www.domain.com/image.png
+          example: 'https://www.domain.com/image.png'
         images:
           type: array
+          minItems: 6
+          maxItems: 6
           items:
             type: string
-          example: [https://www.domain.com/image1.png, https://www.domain.com/image.jpg', https://www.domain.com/image3.png]
+          example: [https://www.domain.com/image1.png, https://www.domain.com/image2.jpg', https://www.domain.com/image3.png, https://www.domain.com/image4.png, https://www.domain.com/image5.jpg', https://www.domain.com/image6.png]
         isPremium:
           type: boolean
           example: true
-        isFavorite:
-          type: boolean
-          example: false
-        rating:
-          type: number
-          example: 3
         type:
           type: string
           enum: [apartment, house, room, hotel]
           example: house
         bedrooms:
           type: number
+          minimum: 1
+          maximum: 8
           example: 1
         maxAdults:
           type: number
+          minimum: 1
+          maximum: 10
           example: 3
         price:
           type: number
+          minimum: 100
+          maximum: 100000
           example: 1000
         goods:
           type: array
+          minItems: 1
           items:
             type: string
             enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
           example: [Breakfast, Air conditioning]
-        hostId:
-          type: string
-          example: sdfsdf2343sdfsdfs
-        reviews:
-          type: number
-          example: 12
         coordinates:
-          type: array
-          items:
-            type: number
-          example: [52.370216, 4.895168]
+          type: object
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+              example: 52.370216
+            longitude:
+              type: number
+              minimum: 180
+              maximum: 180
+              example: 4.895168
     updateOffer:
       type: object
       properties:
         title:
           type: string
+          minLength: 10
+          maxLength: 100
           example: Lorem ipsum dolor sit amet.
         description:
           type: string
+          minLength: 20
+          maxLength: 1024
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         offerDate:
           type: string
@@ -398,15 +580,14 @@ components:
           example: https://www.domain.com/image.png
         images:
           type: array
+          minItems: 6
+          maxItems: 6
           items:
             type: string
           example: [https://www.domain.com/image1.png, https://www.domain.com/image.jpg', https://www.domain.com/image3.png]
         isPremium:
           type: boolean
           example: true
-        isFavorite:
-          type: boolean
-          example: false
         rating:
           type: number
           example: 3
@@ -416,15 +597,22 @@ components:
           example: house
         bedrooms:
           type: number
+          minimum: 1
+          maximum: 8
           example: 1
         maxAdults:
           type: number
+          minimum: 1
+          maximum: 10
           example: 3
         price:
           type: number
+          minimum: 100
+          maximum: 100000
           example: 1000
         goods:
           type: array
+          minItems: 1
           items:
             type: string
             enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
@@ -432,31 +620,81 @@ components:
         hostId:
           type: string
           example: sdfsdf2343sdfsdfs
-        reviews:
-          type: number
-          example: 12
         coordinates:
-          type: array
-          items:
-            type: number
-          example: [52.370216, 4.895168]
+          type: object
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+              example: 52.370216
+            longitude:
+              type: number
+              minimum: 180
+              maximum: 180
+              example: 4.895168
     user:
       type: object
+      required:
+        - email
+        - name
+        - avatarURL
+        - userType
       properties:
-        id:
-          type: string
-          example: saldf23lj34ljn67
         email:
           type: string
+          pattern: name@domain.com
           example: keks@keks.com
+        name:
+          type: string
+          minLength: 1
+          maxLength: 15
+          example: slfjsldfjsdf
+        avatarURL:
+          type: string
+          example: avatar.png
+        userType:
+          type: string
+          enum: [pro, standard]
+          example: standard
+    uploadImage:
+      type: object
+      required:
+        - previewImageURL
+      properties:
+        previewImageURL:
+          type: string
+          example: 'https://www.domain.com/image.png'
     offer:
       type: object
+      required:
+        - title
+        - description
+        - offerDate
+        - city
+        - previewImageURL
+        - images
+        - isPremium
+        - isFavorite
+        - rating
+        - type
+        - bedrooms
+        - maxAdults
+        - price
+        - goods
+        - host
+        - reviews
+        - coordinates
       properties:
         title:
           type: string
+          minLength: 10
+          maxLength: 100
           example: Lorem ipsum dolor sit amet.
         description:
           type: string
+          minLength: 20
+          maxLength: 1024
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         offerDate:
           type: string
@@ -471,6 +709,8 @@ components:
           example: 'https://www.domain.com/image.png'
         images:
           type: array
+          minItems: 6
+          maxItems: 6
           items:
             type: string
           example: [https://www.domain.com/image1.png, https://www.domain.com/image.jpg', https://www.domain.com/image3.png]
@@ -479,9 +719,11 @@ components:
           example: true
         isFavorite:
           type: boolean
-          example: false
+          example: true
         rating:
           type: number
+          minimum: 0
+          maximum: 5
           example: 3
         type:
           type: string
@@ -489,37 +731,86 @@ components:
           example: house
         bedrooms:
           type: number
+          minimum: 1
+          maximum: 8
           example: 1
         maxAdults:
           type: number
+          minimum: 1
+          maximum: 10
           example: 3
         price:
           type: number
+          minimum: 100
+          maximum: 100000
           example: 1000
         goods:
           type: array
+          minItems: 1
           items:
             type: string
             enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
           example: [Breakfast, Air conditioning]
-        hostId:
-          type: string
-          example: sdfsdf2343sdfsdfs
+        host:
+          type: object
+          required:
+          - email
+          - name
+          - avatarURL
+          - userType
+          properties:
+            email:
+              type: string
+              pattern: name@domain.com
+              example: keks@keks.com
+            name:
+              type: string
+              minLength: 1
+              maxLength: 15
+              example: slfjsldfjsdf
+            avatarURL:
+              type: string
+              example: avatar.png
+            userType:
+              type: string
+              enum: [pro, standard]
+              example: standard
         reviews:
           type: number
           example: 12
         coordinates:
-          type: array
-          items:
-            type: number
-          example: [52.370216, 4.895168]
+          type: object
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+              example: 52.370216
+            longitude:
+              type: number
+              minimum: 180
+              maximum: 180
+              example: 4.895168
     offersList:
       type: array
       items:
         type: object
+        required:
+          - title
+          - offerDate
+          - city
+          - previewImageURL
+          - isPremium
+          - isFavorite
+          - rating
+          - type
+          - price
+          - reviews
         properties:
           title:
             type: string
+            minLength: 10
+            maxLength: 100
             example: Lorem ipsum dolor sit amet.
           offerDate:
             type: string
@@ -540,6 +831,8 @@ components:
             example: true
           rating:
             type: number
+            minimum: 0
+            maximum: 5
             example: 3
           type:
             type: string
@@ -547,15 +840,24 @@ components:
             example: house
           price:
             type: number
+            minimum: 100
+            maximum: 100000
             example: 1000
           reviews:
             type: number
             example: 12
     comment:
       type: object
+      required:
+        - text
+        - commentDate
+        - rating
+        - authorId
       properties:
         text:
           type: string
+          minLength: 5
+          maxLength: 1024
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         commentDate:
           type: string
@@ -563,26 +865,49 @@ components:
           example: 01/01/2023T12:23:34.843Z
         rating:
           type: number
+          minimum: 1
+          maximum: 5
           example: 4
         authorId:
-          type: string
-          example: sdfsdf2343sdfsdfs
+          type: object
+          required:
+          - email
+          - name
+          - avatarURL
+          - userType
+          properties:
+            email:
+              type: string
+              pattern: name@domain.com
+              example: keks@keks.com
+            name:
+              type: string
+              minLength: 1
+              maxLength: 15
+              example: slfjsldfjsdf
+            avatarURL:
+              type: string
+              example: avatar.png
+            userType:
+              type: string
+              enum: [pro, standard]
+              example: standard
     createComment:
       type: object
+      required:
+        - text
+        - rating
       properties:
         text:
           type: string
+          minLength: 5
+          maxLength: 1024
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        commentDate:
-          type: string
-          format: date-time
-          example: 01/01/2023T12:23:34.843Z
         rating:
           type: number
+          minimum: 1
+          maximum: 5
           example: 4
-        authorId:
-          type: string
-          example: sdfsdf2343sdfsdfs
     commentsList:
       type: array
       items:
@@ -590,6 +915,8 @@ components:
       properties:
         text:
           type: string
+          minLength: 5
+          maxLength: 1024
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         commentDate:
           type: string
@@ -597,23 +924,65 @@ components:
           example: 01/01/2023T12:23:34.843Z
         rating:
           type: number
+          minimum: 1
+          maximum: 5
           example: 4
         authorId:
-          type: string
-          example: sdfsdf2343sdfsdfs
+          type: object
+          required:
+          - email
+          - name
+          - avatarURL
+          - userType
+          properties:
+            email:
+              type: string
+              pattern: name@domain.com
+              example: keks@keks.com
+            name:
+              type: string
+              minLength: 1
+              maxLength: 15
+              example: slfjsldfjsdf
+            avatarURL:
+              type: string
+              example: avatar.png
+            userType:
+              type: string
+              enum: [pro, standard]
+              example: standard
     loginUser:
       type: object
+      required:
+        - password
+        - email
       properties:
         password:
           type: string
+          minLength: 6
+          maxLength: 12
           example: saldf23lj34ljn67
         email:
           type: string
+          pattern: name@domain.com
           example: keks@keks.com
-    userToken:
-      type: string
-      example: saldf23lj34ljn67
-
+    loggedUser:
+      type: object
+      required:
+        - email
+        - avatarURL
+        - userToken
+      properties:
+        email:
+          type: string
+          pattern: name@domain.com
+          example: keks@keks.com
+        avatarURL:
+          type: string
+          example: avatar.png
+        userToken:
+          type: string
+          example: saldf23lj34ljn67
 
 
 
