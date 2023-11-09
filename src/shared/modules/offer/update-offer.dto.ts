@@ -1,4 +1,4 @@
-import { IsOptional, Length, IsDateString, IsBoolean, IsEnum, ArrayMinSize, ArrayMaxSize, Min, Max, IsArray, IsNumber, IsMongoId, IsMimeType, IsInt, ArrayUnique, IsObject, ValidateNested } from 'class-validator';
+import { Matches, IsOptional, Length, IsBoolean, IsEnum, ArrayMinSize, ArrayMaxSize, Min, Max, IsArray, IsNumber, IsMongoId, IsString, IsInt, ArrayUnique, IsObject, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LocationType, LodgingType, GoodsType} from '../../types/index.js';
 import { OfferValidationMessage, Location, LodgingKind, Goods } from '../../../const.js';
@@ -16,38 +16,31 @@ export class UpdateOfferDTO {
   public description?: string;
 
   @IsOptional()
-  @IsDateString({}, {message: OfferValidationMessage.offerDate.invalidFormat})
-  public offerDate?: Date;
-
-  @IsOptional()
   @IsEnum(Location, {message: OfferValidationMessage.city.invalidValue})
   public city?: LocationType;
 
   @IsOptional()
-  @IsMimeType({message: OfferValidationMessage.previewImageURL.invalidFormat})
+  @IsString()
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.previewImageURL.invalidFormat})
   public previewImageURL?: string;
 
   @IsOptional()
   @ArrayMinSize(6, {message: OfferValidationMessage.images.invalidCount})
   @ArrayMaxSize(6, {message: OfferValidationMessage.images.invalidCount})
-  @IsMimeType({each: true, message: OfferValidationMessage.images.invalidFormat})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.images.invalidFormat})
   public images?: string[];
 
   @IsOptional()
+  @Type(() => Boolean)
   @IsBoolean({message: OfferValidationMessage.isPremium.invalidFormat})
   public isPremium?: boolean;
-
-  @IsOptional()
-  @Min(1, {message: OfferValidationMessage.rating.invalidValue})
-  @Max(5, {message: OfferValidationMessage.rating.invalidValue})
-  @IsNumber({}, {message: OfferValidationMessage.rating.invalidFormat})
-  public rating?: number;
 
   @IsOptional()
   @IsEnum(LodgingKind, {message: OfferValidationMessage.type.invalidValue})
   public type?: LodgingType;
 
   @IsOptional()
+  @Type(() => Number)
   @Min(1, {message: OfferValidationMessage.bedrooms.invalidValue})
   @Max(8, {message: OfferValidationMessage.bedrooms.invalidValue})
   @IsInt({message: OfferValidationMessage.bedrooms.invalidFormat})
@@ -55,6 +48,7 @@ export class UpdateOfferDTO {
   public bedrooms?: number;
 
   @IsOptional()
+  @Type(() => Number)
   @Min(1, {message: OfferValidationMessage.maxAdults.invalidValue})
   @Max(10, {message: OfferValidationMessage.maxAdults.invalidValue})
   @IsInt({message: OfferValidationMessage.maxAdults.invalidFormat})
@@ -62,10 +56,10 @@ export class UpdateOfferDTO {
   public maxAdults?: number;
 
   @IsOptional()
+  @Type(() => Number)
   @Min(100, {message: OfferValidationMessage.price.invalidValue})
   @Max(100000, {message: OfferValidationMessage.price.invalidValue})
   @IsInt({message: OfferValidationMessage.price.invalidFormat})
-  @IsNumber({}, {message: OfferValidationMessage.price.invalidFormat})
   public price?: number;
 
   @IsOptional()

@@ -1,4 +1,4 @@
-import {IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, Min, Max, IsArray, Length, IsMongoId, IsNumber, IsBoolean, IsInt, ArrayUnique, ValidateNested, IsLatitude, IsLongitude, IsObject, Matches } from 'class-validator';
+import {IsString, IsEnum, ArrayMinSize, ArrayMaxSize, Min, Max, IsArray, Length, IsMongoId, IsNumber, IsBoolean, IsInt, ArrayUnique, ValidateNested, IsLatitude, IsLongitude, IsObject, Matches } from 'class-validator';
 import { LocationType, LodgingType, GoodsType } from '../../types/index.js';
 import { OfferValidationMessage, Goods, Location, LodgingKind } from '../../../const.js';
 import { Type } from 'class-transformer';
@@ -23,27 +23,22 @@ export class CreateOfferDTO {
   @Length(20, 1024, {message: OfferValidationMessage.title.invalidLength})
   public description!: string;
 
-  @IsDateString({}, {message: OfferValidationMessage.offerDate.invalidFormat})
-  public offerDate!: Date;
-
   @IsEnum(Location, {message: OfferValidationMessage.city.invalidValue})
   public city!: LocationType;
+
+  @IsString()
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.previewImageURL.invalidFormat})
+  public previewImageURL?: string;
 
   @IsArray()
   @ArrayMinSize(6, {message: OfferValidationMessage.images.invalidCount})
   @ArrayMaxSize(6, {message: OfferValidationMessage.images.invalidCount})
-  @Matches(/(.png$|.jpg$)/i, {each: true, message: OfferValidationMessage.images.invalidFormat})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.images.invalidFormat})
   public images!: string[];
 
   @Type(() => Boolean)
   @IsBoolean({message: OfferValidationMessage.isPremium.invalidFormat})
   public isPremium!: boolean;
-
-  @Type(() => Number)
-  @Min(1, {message: OfferValidationMessage.rating.invalidValue})
-  @Max(5, {message: OfferValidationMessage.rating.invalidValue})
-  @IsNumber({}, {message: OfferValidationMessage.rating.invalidFormat})
-  public rating!: number;
 
   @IsEnum(LodgingKind, {message: OfferValidationMessage.type.invalidValue})
   public type!: LodgingType;
