@@ -5,61 +5,61 @@ import { OfferValidationMessage, Goods, Location, LodgingKind } from '../../../c
 import { Coordinates } from './create-offer.dto.js';
 
 export class CreateOfferRequestDTO {
-  @Length(10, 100, {message: OfferValidationMessage.title.invalidLength})
+  @Length(10, 100, {message: OfferValidationMessage.Title.InvalidLength})
   public title!: string;
 
-  @Length(20, 1024, {message: OfferValidationMessage.title.invalidLength})
+  @Length(20, 1024, {message: OfferValidationMessage.Title.InvalidLength})
   public description!: string;
 
-  @IsEnum(Location, {message: OfferValidationMessage.city.invalidValue})
+  @IsEnum(Location, {message: OfferValidationMessage.City.InvalidValue})
   public city!: LocationType;
 
   @IsString()
-  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.previewImageURL.invalidFormat})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.PreviewImageURL.InvalidFormat})
   public previewImageURL?: string;
 
   @IsArray()
-  @ArrayMinSize(6, {message: OfferValidationMessage.images.invalidCount})
-  @ArrayMaxSize(6, {message: OfferValidationMessage.images.invalidCount})
-  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.images.invalidFormat})
+  @ArrayMinSize(6, {message: OfferValidationMessage.Images.InvalidCount})
+  @ArrayMaxSize(6, {message: OfferValidationMessage.Images.InvalidCount})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.Images.InvalidFormat})
   public images!: string[];
 
   @Type(() => Boolean)
-  @IsBoolean({message: OfferValidationMessage.isPremium.invalidFormat})
+  @IsBoolean({message: OfferValidationMessage.IsPremium.InvalidFormat})
   public isPremium!: boolean;
 
-  @IsEnum(LodgingKind, {message: OfferValidationMessage.type.invalidValue})
+  @IsEnum(LodgingKind, {message: OfferValidationMessage.Type.InvalidValue})
   public type!: LodgingType;
 
   @Type(() => Number)
-  @Min(1, {message: OfferValidationMessage.bedrooms.invalidValue})
-  @Max(8, {message: OfferValidationMessage.bedrooms.invalidValue})
-  @IsInt({message: OfferValidationMessage.bedrooms.invalidFormat})
-  @IsNumber({}, {message: OfferValidationMessage.bedrooms.invalidFormat})
+  @Min(1, {message: OfferValidationMessage.Bedrooms.InvalidValue})
+  @Max(8, {message: OfferValidationMessage.Bedrooms.InvalidValue})
+  @IsInt({message: OfferValidationMessage.Bedrooms.InvalidFormat})
+  @IsNumber({}, {message: OfferValidationMessage.Bedrooms.InvalidFormat})
   public bedrooms!: number;
 
   @Type(() => Number)
-  @Min(1, {message: OfferValidationMessage.maxAdults.invalidValue})
-  @Max(10, {message: OfferValidationMessage.maxAdults.invalidValue})
-  @IsInt({message: OfferValidationMessage.maxAdults.invalidFormat})
-  @IsNumber({}, {message: OfferValidationMessage.maxAdults.invalidFormat})
+  @Min(1, {message: OfferValidationMessage.MaxAdults.InvalidValue})
+  @Max(10, {message: OfferValidationMessage.MaxAdults.InvalidValue})
+  @IsInt({message: OfferValidationMessage.MaxAdults.InvalidFormat})
+  @IsNumber({}, {message: OfferValidationMessage.MaxAdults.InvalidFormat})
   public maxAdults!: number;
 
   @Type(() => Number)
-  @Min(100, {message: OfferValidationMessage.price.invalidValue})
-  @Max(100000, {message: OfferValidationMessage.price.invalidValue})
-  @IsInt({message: OfferValidationMessage.price.invalidFormat})
-  @IsNumber({}, {message: OfferValidationMessage.price.invalidFormat})
+  @Min(100, {message: OfferValidationMessage.Price.InvalidValue})
+  @Max(100000, {message: OfferValidationMessage.Price.InvalidValue})
+  @IsInt({message: OfferValidationMessage.Price.InvalidFormat})
+  @IsNumber({}, {message: OfferValidationMessage.Price.InvalidFormat})
   public price!: number;
 
-  @IsArray({message: OfferValidationMessage.goods.invalidValue})
-  @IsEnum(Goods, {each: true, message: OfferValidationMessage.goods.invalidValue})
-  @ArrayMinSize(1, {message: OfferValidationMessage.goods.emptyArray})
-  @ArrayUnique({message: OfferValidationMessage.goods.uniqueValues})
+  @IsArray({message: OfferValidationMessage.Goods.InvalidValue})
+  @IsEnum(Goods, {each: true, message: OfferValidationMessage.Goods.InvalidValue})
+  @ArrayMinSize(1, {message: OfferValidationMessage.Goods.EmptyArray})
+  @ArrayUnique({message: OfferValidationMessage.Goods.UniqueValues})
   public goods!: GoodsType;
 
-  @IsObject({message: OfferValidationMessage.coordinates.invalidValue})
-  @ValidateNested({message: OfferValidationMessage.coordinates.invalidValue})
+  @IsObject({message: OfferValidationMessage.Coordinates.InvalidValue})
+  @ValidateNested({message: OfferValidationMessage.Coordinates.InvalidValue})
   @Type(() => Coordinates)
   public coordinates!: Coordinates;
 }

@@ -51,3 +51,7 @@ export function reduceValidationErrors(errors: ValidationError[]): ValidationErr
 export function getFullServerPath(host: string, port: number) {
   return `http://${host}:${port}`;
 }
+
+export function getCapitalized (string: string) {
+  return string[0].toUpperCase().concat(string.slice(1).toLowerCase());
+}

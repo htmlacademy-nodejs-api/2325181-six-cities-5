@@ -5,12 +5,13 @@ import { BaseController, DocumentExistsMiddleware, FavoritesListMiddleware, Http
 import { CreateOfferRequestType, ParamOfferType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { HttpMethod } from '../../../const.js';
-import { fillDTO } from '../../helpers/common.js';
+import { fillDTO, getCapitalized } from '../../helpers/common.js';
 import { UpdateOfferDTO, OfferRdo, OfferService, CreateOfferRequestDTO } from './index.js';
 import { OfferAccessMiddleware } from '../../libs/rest/middleware/offer-access.middleware.js';
 import { UserService } from '../user/user-service.interface.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
 import { UploadImageRdo } from './upload-image.rdo.js';
+import { CommentService } from '../comment/comment-service.interface.js';
 
 
 @injectable()
@@ -19,6 +20,7 @@ export class OfferController extends BaseController {
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
     @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.CommentService) private readonly commentService: CommentService,
     @inject(Component.Config) private readonly configService: Config<RestSchemaType>,
   ) {
     super(logger);
@@ -93,7 +95,7 @@ export class OfferController extends BaseController {
       ]
     });
     this.addRoute({
-      path: '/:offerId/image',
+      path: '/image/:offerId',
       method: HttpMethod.Post,
       handler: this.uploadImage,
       middlewares: [
@@ -207,6 +209,8 @@ export class OfferController extends BaseController {
     }
 
     const offer = await this.offerService.deleteById(offerId);
+    await this.commentService.deleteByOfferId(offerId);
+
     const isOfferInFavorites = Boolean(favoritesList!.filter((favorites) => favorites._id.toString() === offerId).length);
     if (isOfferInFavorites) {
       favoritesList = favoritesList!.filter((favorites) => favorites._id.toString() !== offerId);
@@ -227,7 +231,9 @@ export class OfferController extends BaseController {
       );
     }
 
-    const premiumOffers = await this.offerService.findPremium(favoritesList!, city);
+    const cityCapitalized = getCapitalized(city);
+
+    const premiumOffers = await this.offerService.findPremium(favoritesList!, cityCapitalized);
 
     if (!premiumOffers) {
       throw new HttpError(

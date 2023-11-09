@@ -39,7 +39,7 @@
       "img/room-07.jpg",
       "img/apartment-08.jpg"
     ],
-    "previewImageURL": [
+    "previewImageURLs": [
       "https://13.design.pages.academy/static/hotel/01.jpg",
       "https://13.design.pages.academy/static/house/02.jpg",
       "https://13.design.pages.academy/static/room/03.jpg",
@@ -94,7 +94,7 @@
       "image_avatar.png",
       "avatar_officia.jpg"
     ],
-    "latitude": [
+    "latitudes": [
       "48.85661",
       "50.938361",
       "50.846557",
@@ -102,7 +102,7 @@
       "53.550341",
       "51.225402"
     ],
-    "longitude": [
+    "longitudes": [
       "2.351499",
       "6.959974",
       "4.351697",

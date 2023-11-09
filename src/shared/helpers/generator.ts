@@ -10,7 +10,7 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
   const title = getRandomItem<string>(mockData.titles);
   const description = getRandomItem<string>(mockData.descriptions);
   const city = getRandomItem<LocationType>(mockData.cities).toString();
-  const previewImageURL = getRandomItem<string>(mockData.previewImageURL);
+  const previewImageURL = getRandomItem<string>(mockData.previewImageURLs);
   const images = getRandomItems<string>(mockData.images).join(';');
   const isPremium = getRandomBoolean().toString();
   const type = getRandomItem<LodgingType>(mockData.lodgingTypes).toString();
@@ -22,8 +22,8 @@ export function generateTSVOffer(mockData: MockServerDataType):string {
   const hostEmail = getRandomItem<string>(mockData.hostEmails);
   const hostAvatarURL = getRandomItem<string>(mockData.hostAvatarURLs);
   const hostType = getRandomItem<UserLevelType>(Object.values(UserLevel));
-  const latitude = getRandomItem<string>(mockData.latitude);
-  const longitude = getRandomItem<string>(mockData.longitude);
+  const latitude = getRandomItem<string>(mockData.latitudes);
+  const longitude = getRandomItem<string>(mockData.longitudes);
 
   return [
     title,

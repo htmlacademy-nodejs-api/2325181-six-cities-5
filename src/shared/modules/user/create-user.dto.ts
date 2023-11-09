@@ -5,26 +5,26 @@ import { FavoritesListType } from '../../types/index.js';
 
 export class CreateUserDTO {
 
-  @IsEmail({}, {message: UserValidationMessage.email.invalidFormat})
+  @IsEmail({}, {message: UserValidationMessage.Email.InvalidFormat})
   public email!: string;
 
-  @IsString({message: UserValidationMessage.name.invalidFormat})
-  @Length(1, 15, {message: UserValidationMessage.name.invalidLength})
+  @IsString({message: UserValidationMessage.Name.InvalidFormat})
+  @Length(1, 15, {message: UserValidationMessage.Name.InvalidLength})
   public name!: string;
 
-  @IsString({message: UserValidationMessage.password.invalidFormat})
-  @Length(6, 12, {message: UserValidationMessage.password.invalidLength})
+  @IsString({message: UserValidationMessage.Password.InvalidFormat})
+  @Length(6, 12, {message: UserValidationMessage.Password.InvalidLength})
   public password!: string;
 
-  @IsEnum(UserLevel, {message: UserValidationMessage.userType.invalidValue})
+  @IsEnum(UserLevel, {message: UserValidationMessage.UserType.InvalidValue})
   public userType!: UserLevelType;
 
   @IsOptional()
-  @IsArray({message: UserValidationMessage.favoritesList.invalidValue})
+  @IsArray({message: UserValidationMessage.FavoritesList.InvalidValue})
   public favoritesList!: FavoritesListType;
 
   @IsOptional()
-  @IsString({message: UserValidationMessage.avatarURL.invalidFormat})
-  @Matches(/(.png$|.jpg$|.jpeg$)/i, {message: UserValidationMessage.avatarURL.invalidExtension})
+  @IsString({message: UserValidationMessage.AvatarURL.InvalidFormat})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {message: UserValidationMessage.AvatarURL.InvalidExtension})
   public avatarURL!: string;
 }

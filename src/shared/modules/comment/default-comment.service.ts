@@ -4,7 +4,7 @@ import {CommentEntity, CommentService, CreateCommentDTO} from './index.js';
 import { Component } from '../../types/component.enum.js';
 import { OfferEntity } from '../offer/offer.entity.js';
 import { ReviewStatisticsType } from '../../types/review-statistics.type.js';
-import { COMMENT_COUNT } from '../../../const.js';
+import { COMMENT_COUNT, SortOrder } from '../../../const.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
@@ -41,7 +41,7 @@ export class DefaultCommentService implements CommentService {
   }
 
   public async findByOfferId(offerId: string,): Promise<DocumentType<CommentEntity>[]> {
-    return this.commentModel.find({offerId}).limit(COMMENT_COUNT).sort('commentDate').populate('authorId').exec();
+    return this.commentModel.find({offerId}).limit(COMMENT_COUNT).sort({ commentDate: SortOrder.Desc }).populate('authorId').exec();
   }
 
   public async deleteByOfferId(offerId: string): Promise<number | null> {

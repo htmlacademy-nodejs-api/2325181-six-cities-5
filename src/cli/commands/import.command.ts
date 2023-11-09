@@ -62,7 +62,7 @@ export class ImportCommand implements Command {
   }
 
 
-  private onCompleteImport(count: number) {
+  private onCompleteImport(count: number): void {
     console.info(`${count} rows imported.`);
     this.databaseClient.disconnect();
   }

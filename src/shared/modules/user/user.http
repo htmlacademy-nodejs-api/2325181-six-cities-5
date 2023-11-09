@@ -8,7 +8,7 @@ Content-Type: application/json
 {
   "email": "newmail@mailc.com",
   "name": "Hello",
-  "password": "123456",
+  "password": "12345",
   "userType": "standard",
   "avatarURL": "6W8dwf0KFP79B0PM3OEEU.png"
 }

@@ -69,7 +69,7 @@ export class UserController extends BaseController {
   }
 
   public async create(
-    {body}: CreateUserRequestType, res: Response
+    {body, tokenPayload}: CreateUserRequestType, res: Response
   ): Promise<void> {
     const existUser = await this.userService.findByEmail(body.email);
 
@@ -80,6 +80,15 @@ export class UserController extends BaseController {
         'UserController'
       );
     }
+
+    if (tokenPayload) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Only unauthorized users may create new user accounts.',
+        'UserController'
+      );
+    }
+
     const avatarFileName = body.avatarURL || DEFAULT_AVATAR_FILE_NAME;
     const result = await this.userService.create({...body, favoritesList: [], avatarURL: avatarFileName}, this.configService.get('SALT'));
     this.created(res, fillDTO(UserRdo, result));

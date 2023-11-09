@@ -4,14 +4,14 @@ import { CommentValidationMessage } from '../../../const.js';
 
 export class CreateCommentRequestDTO {
 
-  @IsString({message: CommentValidationMessage.text.invalidFormat})
-  @Length(5, 1024, {message: CommentValidationMessage.text.invalidLength})
+  @IsString({message: CommentValidationMessage.Text.InvalidFormat})
+  @Length(5, 1024, {message: CommentValidationMessage.Text.InvalidLength})
   public text!: string;
 
   @Type(() => Number)
-  @IsNumber({}, {message: CommentValidationMessage.rating.invalidFormat})
-  @IsInt({message: CommentValidationMessage.rating.invalidFormat})
-  @Min(1, {message: CommentValidationMessage.rating.invalidValue})
-  @Max(5, {message: CommentValidationMessage.rating.invalidValue})
+  @IsNumber({}, {message: CommentValidationMessage.Rating.InvalidFormat})
+  @IsInt({message: CommentValidationMessage.Rating.InvalidFormat})
+  @Min(1, {message: CommentValidationMessage.Rating.InvalidValue})
+  @Max(5, {message: CommentValidationMessage.Rating.InvalidValue})
   public rating!: number;
 }

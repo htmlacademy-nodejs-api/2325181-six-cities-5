@@ -24,6 +24,13 @@ paths:
         - offers
       summary: Получение списка предложений по аренде
       description: Получает список предложений по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: Получение списка предложений.
@@ -39,6 +46,13 @@ paths:
         - offers
       summary: Создание нового предложения
       description: Создает новое предложение по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Информация для создания нового предложения
         content:
@@ -57,8 +71,6 @@ paths:
           description: 'Предложение не может быть создано: пользователь не авторизован.'
         "400":
           description: 'Предложение не может быть создано: ошибка валидации.'
-        "409":
-          description: Предложение уже существует.
 
   /offers/{offerId}:
     patch:
@@ -66,6 +78,19 @@ paths:
         - offers
       summary: Редактирование предложения
       description: Редактирует предложение по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Информация для редактирования предложения
         content:
@@ -92,6 +117,19 @@ paths:
         - offers
       summary: Удаление предложения
       description: Удаляет предложение по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Предложение успешно удалено.
@@ -107,6 +145,19 @@ paths:
         - offers
       summary: Получение детальной информации о предложении
       description: Получает детальную информации о предложении по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Получение детальной информации о предложении.
@@ -117,12 +168,25 @@ paths:
         "400":
           description: 'Детальная информация о предложении недоступна: ошибка запроса.'
 
-  /offers/{offerId}/image:
+  /offers/image/{offerId}:
     post:
       tags:
         - offers
       summary: Загрузка изображения для объявления
       description: Загружает изображение для объявления
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "201":
           description: Изображение загружено. Объект со ссылкой на файл изображения.
@@ -137,12 +201,32 @@ paths:
         "401":
           description: 'Изображение не может быть загружено: пользователь не авторизован.'
 
-  /offers/premium/:city:
+  /offers/premium/{city}:
     get:
       tags:
         - offers
       summary: Получение списка премиальных предложений по аренде для определенного города
       description: Получает список премиальных предложений по аренде для определенного города
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: city
+          description: the city name
+          required: true
+          schema:
+            enum:
+              - Amsterdam
+              - Paris
+              - Hamburg
+              - Cologne
+              - Dusseldorf
+              - Brussels
+            type: string
       responses:
         "200":
           description: Получение списка премиальных предложений для определенного города.
@@ -159,6 +243,13 @@ paths:
         - offers
       summary: Получение списка избранных предложений по аренде
       description: Получает список избранных предложений по аренде
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Получение списка избранных предложений.
@@ -168,6 +259,8 @@ paths:
                 $ref: '#/components/schemas/offersList'
         "400":
           description: 'Список избранных предложений недоступен: ошибка запроса.'
+        "401":
+          description: 'Список избранных предложений недоступен: пользователь не авторизован.'
 
   /users/login:
     post:
@@ -190,7 +283,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/loggedUser'
         "400":
-          description: 'Информация об авторизации недоступна: ошибка запроса.'
+          description: 'Информация об авторизации недоступна:ошибка запроса.'
         "401":
           description: 'Информация об авторизации недоступна: логин или пароль неверный или пользователь не существует.'
     get:
@@ -205,10 +298,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
-        "400":
-          description: 'Информация об авторизации недоступна: ошибка запроса.'
-        "404":
-          description: 'Информация об авторизации недоступна: пользователь не существует.'
+        "401":
+          description: 'Информация об авторизации недоступна: Пользователь не авторизован.'
 
   /users/signin:
     post:
@@ -243,11 +334,20 @@ paths:
         - users
       summary: Загрузка аватара пользователя.
       description: Загружает изображение (аватар) пользователя в формате 'png' или 'jpg'.
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Аватар пользователя успешно загружен.
         "400":
           description: 'Аватар не может быть загружен: ошибка запроса.'
+        "401":
+          description: 'Аватар не может быть загружен: пользователь не авторизован.'
 
   /users/favorites/{offerId}:
     get:
@@ -256,6 +356,19 @@ paths:
         - users
       summary: Добавление/удаление предложения в/из избранное.
       description: Добавляет/удаляет предложения в/из избранное.
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Предложение успешно добавлено/удалено в/из избранного.
@@ -274,6 +387,13 @@ paths:
         - comments
       summary: Получение списка комментариев для предложения
       description: Возвращает список комментариев для предложения
+      parameters:
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Получение списка комментариев.
@@ -289,6 +409,19 @@ paths:
         - comments
       summary: Добавление комментария для предложения
       description: Добавляет новый комментарий для предложения
+      parameters:
+        - in: header
+          name: token
+          description: JWT token bearer
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: offerId
+          description: the offer ID number
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Информация для создания нового комментария
         content:
@@ -307,8 +440,6 @@ paths:
           description: 'Комментарий не может быть создан: пользователь не авторизован.'
         "400":
           description: 'Комментарий не может быть создан: ошибка валидации.'
-        "409":
-          description: Комментарий уже существует.
 
 components:
   schemas:
