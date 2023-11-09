@@ -4,7 +4,6 @@ import { Logger } from '../../logger/index.js';
 import { ExceptionFilter } from './exception-filter.interface.js';
 import { Component } from '../../../types/component.enum.js';
 import { ValidationError } from '../errors/index.js';
-import { StatusCodes } from 'http-status-codes';
 import { createErrorObject } from '../../../helpers/index.js';
 import { ApplicationError } from '../../../../const.js';
 
@@ -17,10 +16,9 @@ export class ValidationExceptionFilter implements ExceptionFilter {
   }
 
   public catch(error: unknown, _req: Request, res: Response, next: NextFunction): void {
-    if (! (error instanceof ValidationError)) {
+    if (!(error instanceof ValidationError)) {
       return next(error);
     }
-
     this.logger.error(`[ValidationException]: ${error.message}`, error);
 
     error.details.forEach(
@@ -28,8 +26,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     );
 
     res
-      .status(StatusCodes.BAD_REQUEST)
+      .status(error.httpStatusCode)
       .json(createErrorObject(ApplicationError.ValidationError, error.message, error.details));
   }
-
 }

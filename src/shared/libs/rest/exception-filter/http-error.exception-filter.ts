@@ -3,7 +3,6 @@ import { inject, injectable } from 'inversify';
 import { ExceptionFilter } from './exception-filter.interface.js';
 import { Component } from '../../../types/component.enum.js';
 import { Logger } from '../../logger/index.js';
-import { StatusCodes } from 'http-status-codes';
 import { createErrorObject } from '../../../helpers/index.js';
 import { HttpError } from '../index.js';
 import { ApplicationError } from '../../../../const.js';
@@ -17,12 +16,12 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
   }
 
   public catch(error: Error, req: Request, res: Response, next: NextFunction): void {
-    if (error instanceof HttpError) {
+    if (!(error instanceof HttpError)) {
       return next(error);
     }
 
     this.logger.error(`[HttpErrorException]: ${req.path} # ${error.message}`, error);
 
-    res.status(StatusCodes.BAD_REQUEST).json(createErrorObject(ApplicationError.CommonError, error.message));
+    res.status(error.httpStatusCode).json(createErrorObject(ApplicationError.HttpError, error.message));
   }
 }

@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
+import cors from 'cors';
 import { Logger } from '../shared/libs/logger/logger.interface.js';
 import { ApplicationMessages, STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from '../const.js';
 import { Config, RestSchemaType } from '../shared/libs/config/index.js';
@@ -48,11 +49,6 @@ export class RestApplication {
     this.logger.info('Try to init server...');
     await this._initServer();
     this.logger.info(`Server launched on ${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}`);
-
-    this.server.get('/', (_req, res) => {
-      res.send('Hello world');
-    });
-
   }
 
   private async _initServer() {
@@ -83,12 +79,13 @@ export class RestApplication {
     this.server.use(STATIC_UPLOAD_ROUTE, express.static(this.config.get('UPLOAD_DIRECTORY')));
     this.server.use(STATIC_FILES_ROUTE, express.static(this.config.get('STATIC_DIRECTORY_PATH')));
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this.server.use(cors());
   }
 
   private async _initExceptionFilters() {
-    this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
+    this.server.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
     this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
     this.server.use(this.httpExceptionFilter.catch.bind(this.httpExceptionFilter));
-    this.server.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
+    this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 }
