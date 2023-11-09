@@ -19,7 +19,7 @@ export class CLIApplication {
     });
   }
 
-  public getDefaultCommant (): Command | never {
+  public getDefaultCommand (): Command | never {
     if(!this.commands[this.defaultCommand]) {
       throw new Error(`The default command ${this.defaultCommand} has been not registered.`);
     }
@@ -27,7 +27,7 @@ export class CLIApplication {
   }
 
   public getCommand(commandName: string): Command {
-    return this.commands[commandName] ?? this.getDefaultCommant();
+    return this.commands[commandName] ?? this.getDefaultCommand();
   }
 
   public processCommand(parameters: string[]): void {
