@@ -41,12 +41,12 @@ export class UserEntity extends defaultClasses.TimeStamps implements UserType {
   }) private password?: string;
 
   @prop({
-    require: true,
+    required: true,
     default: '',
   }) public userType: UserLevelType;
 
   @prop({
-    require: true,
+    required: true,
     ref: () => OfferEntity,
     _id: false,
     default: [],

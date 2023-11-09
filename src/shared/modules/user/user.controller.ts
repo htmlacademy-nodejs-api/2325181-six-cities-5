@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { BaseController, DocumentExistsMiddleware, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component, CreateUserRequestType, LoginUserRequestType, ParamUserType } from '../../types/index.js';
-import { HttpMethod } from '../../../const.js';
+import { DEFAULT_AVATAR_FILE_NAME, HttpMethod } from '../../../const.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UserService, UserRdo, CreateUserDTO, LoginUserDTO } from './index.js';
 import { RestSchemaType, Config } from '../../libs/config/index.js';
@@ -80,8 +80,8 @@ export class UserController extends BaseController {
         'UserController'
       );
     }
-
-    const result = await this.userService.create(body, this.configService.get('SALT'));
+    const avatarFileName = body.avatarURL || DEFAULT_AVATAR_FILE_NAME;
+    const result = await this.userService.create({...body, favoritesList: [], avatarURL: avatarFileName}, this.configService.get('SALT'));
     this.created(res, fillDTO(UserRdo, result));
   }
 
@@ -99,7 +99,7 @@ export class UserController extends BaseController {
       );
     }
 
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    this.ok(res, fillDTO(UserRdo, foundedUser));
   }
 
   public async loadAvatar({file, tokenPayload}: Request, res: Response) {

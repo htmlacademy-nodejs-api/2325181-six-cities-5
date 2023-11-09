@@ -24,8 +24,8 @@ export class PathTransformer {
     return DEFAULT_STATIC_IMAGES.includes(value);
   }
 
-  private isStaticProperty(proterty: string) {
-    return STATIC_RESOURCE_FIELDS.includes(proterty);
+  private isStaticProperty(property: string) {
+    return STATIC_RESOURCE_FIELDS.includes(property);
   }
 
   public execute(data: StaticDataType): StaticDataType {
@@ -36,7 +36,6 @@ export class PathTransformer {
       for (const key in current) {
         if (Object.hasOwn(current, key)) {
           const value = current[key];
-
           if (isObjectValue(value)) {
             stack.push(value);
             continue;

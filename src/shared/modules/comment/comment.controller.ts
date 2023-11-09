@@ -20,11 +20,12 @@ export default class CommentController extends BaseController {
     super(logger);
     this.logger.info('Register routes for CommentController...');
     this.addRoute({
-      path: '/',
+      path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
         new ValidateDtoMiddleware(CreateCommentRequestDTO)
       ]
@@ -40,7 +41,7 @@ export default class CommentController extends BaseController {
     });
   }
 
-  public async create({body, tokenPayload}: CreateCommentRequestType, res: Response): Promise<void> {
+  public async create({body, tokenPayload, params}: CreateCommentRequestType, res: Response): Promise<void> {
     if (!body) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
@@ -49,7 +50,17 @@ export default class CommentController extends BaseController {
       );
     }
 
-    const comment = await this.commentService.create({...body, authorId: tokenPayload!.id});
+    const {offerId} = params;
+
+    if (!offerId) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Bad request. OfferId not found in query parameters',
+        'CommentController'
+      );
+    }
+
+    const comment = await this.commentService.create({...body, authorId: tokenPayload!.id, offerId});
     this.created(res, fillDTO(CommentRdo, comment));
   }
 
