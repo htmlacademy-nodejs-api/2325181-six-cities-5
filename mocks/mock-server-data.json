@@ -50,10 +50,10 @@
       "https://13.design.pages.academy/static/apartment/08.jpg"
     ],
     "lodgingTypes": [
-      "Room",
-      "Apartment",
-      "House",
-      "Hotel"
+      "room",
+      "apartment",
+      "house",
+      "hotel"
     ],
     "goods": [
       "Breakfast",
