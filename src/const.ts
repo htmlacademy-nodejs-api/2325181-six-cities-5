@@ -70,6 +70,8 @@ export const PREMIUM_OFFER_COUNT = 3;
 
 export const OFFER_COUNT = 60;
 
+export const COMMENT_COUNT = 50;
+
 export const SortOrder = {
   Asc: 1,
   Desc: -1
@@ -103,7 +105,7 @@ export const OfferValidationMessage = {
     invalidFormat: 'The value must be a valid .png, .jpg type file'
   },
   images: {
-    invalidCount: 'Quantity of image photo should exaclty 6 items',
+    invalidCount: 'Quantity of image photo should exactly 6 items',
     invalidFormat: 'The values must be a valid .png, .jpg type file'
   },
   isPremium: {
@@ -195,17 +197,17 @@ export const JWT_EXPIRED = '2d';
 
 export const ApplicationError = {
   ValidationError: 'VALIDATION_ERROR',
-  CommonError: 'COMMON_ERROR',
+  HttpError: 'HTTP_ERROR',
   ServiceError: 'SERVICE_ERROR',
 } as const;
 
-export const DEFAULT_AVATAR_FILE_NAME = 'default-avatar.jpg';
+export const DEFAULT_AVATAR_FILE_NAME = 'default-avatar.png';
 
 export const STATIC_UPLOAD_ROUTE = '/upload';
 
 export const STATIC_FILES_ROUTE = '/static';
 
-export const DEFAULT_STATIC_IMAGES = ['default-avatar.jpg'];
+export const DEFAULT_STATIC_IMAGES = ['default-avatar.png'];
 
 export const STATIC_RESOURCE_FIELDS = [
   'avatarURL',
