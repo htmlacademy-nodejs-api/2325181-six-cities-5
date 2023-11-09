@@ -1,4 +1,4 @@
-import { IsString, Matches, Length, IsEnum, IsOptional, IsMimeType, IsArray, IsObject } from 'class-validator';
+import { IsEmail, IsString, Matches, Length, IsEnum, IsOptional, IsArray, IsObject } from 'class-validator';
 import { UserLevelType } from '../../types/user-level.type.js';
 import { UserValidationMessage, UserLevel } from '../../../const.js';
 import { FavoritesListType } from '../../types/favorites-list.type.js';
@@ -6,9 +6,12 @@ import { FavoritesListType } from '../../types/favorites-list.type.js';
 export class UpdateUserDTO {
 
   @IsOptional()
+  @IsEmail({}, {message: UserValidationMessage.email.invalidFormat})
+  public email?: string;
+
+  @IsOptional()
   @IsString({message: UserValidationMessage.avatarURL.invalidFormat})
-  @Matches(/(.png$|.jpg$|^$)/i, {message: UserValidationMessage.avatarURL.invalidExtension})
-  @IsMimeType({message: UserValidationMessage.avatarURL.invalidExtension})
+  @Matches(/(.png$|.jpg$|.jpeg$)/i, {message: UserValidationMessage.avatarURL.invalidExtension})
   public avatarURL?: string;
 
   @IsOptional()
