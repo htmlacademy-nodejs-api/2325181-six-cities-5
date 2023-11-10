@@ -48,7 +48,7 @@ export const ChunkSize = {
 
 export const UserLevel = {
   Pro: 'pro',
-  Standard: 'standard'
+  Regular: 'regular'
 } as const;
 
 export const LOG_FILE_PATH = '../../../logs/rest.log';
