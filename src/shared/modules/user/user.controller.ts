@@ -28,7 +28,7 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for UserController...');
     this.addRoute({
       path: '/favorites/:offerId',
-      method: HttpMethod.Get,
+      method: HttpMethod.Post,
       handler: this.toggleFavorites,
       middlewares: [
         new PrivateRouteMiddleware(),

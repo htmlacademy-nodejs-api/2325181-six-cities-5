@@ -350,7 +350,7 @@ paths:
           description: 'Аватар не может быть загружен: пользователь не авторизован.'
 
   /users/favorites/{offerId}:
-    get:
+    post:
       tags:
         - offers
         - users
@@ -470,8 +470,8 @@ components:
           example: avatar.png
         userType:
           type: string
-          enum: [pro, standard]
-          example: standard
+          enum: [pro, regular]
+          example: regular
     createOffer:
       type: object
       required:
@@ -655,8 +655,8 @@ components:
           example: avatar.png
         userType:
           type: string
-          enum: [pro, standard]
-          example: standard
+          enum: [pro, regular]
+          example: regular
     uploadImage:
       type: object
       required:
@@ -773,8 +773,8 @@ components:
               example: avatar.png
             userType:
               type: string
-              enum: [pro, standard]
-              example: standard
+              enum: [pro, regular]
+              example: regular
         reviews:
           type: number
           example: 12
@@ -890,8 +890,8 @@ components:
               example: avatar.png
             userType:
               type: string
-              enum: [pro, standard]
-              example: standard
+              enum: [pro, regular]
+              example: regular
     createComment:
       type: object
       required:
@@ -949,8 +949,8 @@ components:
               example: avatar.png
             userType:
               type: string
-              enum: [pro, standard]
-              example: standard
+              enum: [pro, regular]
+              example: regular
     loginUser:
       type: object
       required:

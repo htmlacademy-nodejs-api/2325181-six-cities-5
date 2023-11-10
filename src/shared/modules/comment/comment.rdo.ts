@@ -2,6 +2,11 @@ import { Expose, Type } from 'class-transformer';
 import { UserRdo } from '../user/user.rdo.js';
 
 export class CommentRdo {
+
+  @Expose({name: '_id'})
+  @Type(() => String)
+  public id: string;
+
   @Expose()
   public text: string;
 

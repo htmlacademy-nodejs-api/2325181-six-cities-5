@@ -14,8 +14,8 @@ export class HelpCommand implements Command {
           ${chalk.magenta.underline('Команды:')}
               ${chalk.white.italic('--version:')}                   ${chalk.bgGreen('# выводит номер версии')}
               ${chalk.white.italic('--help:')}                      ${chalk.bgMagenta('# печатает этот текст')}
-              ${chalk.white.italic('--import <path>:')}             ${chalk.bgCyan('# импортирует данные из TSV')}
-              ${chalk.white.italic('--generate <n> <path> <url>:')}  ${chalk.bgGray('# генерирует произвольное количество тестовых данных')}
+              ${chalk.white.italic('--import <path> <login> <password> <host> <dbname> <salt>:')}             ${chalk.bgCyan('# импортирует данные из TSV файла по пути <path>, в базу данных <dbname>. Доступ к базе по имени пользователя <login> и паролю <password>. Адрес хоста базы <host>, соль для проверки пароля <salt>.')}
+              ${chalk.white.italic('--generate <n> <path> <JSONServerUrl>:')}  ${chalk.bgGray('# генерирует <n> тестовых предложений, записывает в файл по пути <path>, источник данных JSON server по адресу <JSONServerUrl>')}
     `);
   }
 }

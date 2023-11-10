@@ -16,7 +16,7 @@ export class CreateOfferRequestDTO {
 
   @IsString()
   @Matches(/(.png$|.jpg$|.jpeg$)/i, {each: true, message: OfferValidationMessage.PreviewImageURL.InvalidFormat})
-  public previewImageURL?: string;
+  public previewImageURL!: string;
 
   @IsArray()
   @ArrayMinSize(6, {message: OfferValidationMessage.Images.InvalidCount})
