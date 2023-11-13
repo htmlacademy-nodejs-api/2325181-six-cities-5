@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { jwtVerify} from 'jose';
-import { Middleware } from './middleware.interface.js';
-import { createSecretKey } from 'node:crypto';
-import { TokenPayloadType } from '../../../types/tokenPayload.type.js';
-import { HttpError } from '../index.js';
 import { StatusCodes } from 'http-status-codes';
+import { createSecretKey } from 'node:crypto';
+import { TokenPayloadType, HttpError, Middleware } from '../../../index.js';
 
 function isTokenPayload (payload: unknown): payload is TokenPayloadType {
   return (

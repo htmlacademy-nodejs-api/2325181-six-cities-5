@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { FavoritesListType } from '../types/favorites-list.type.js';
+import { FavoritesListType } from '../types/index.js';
 
 
 export function modifyFavoriteList(favoritesList: FavoritesListType, offerId: string): FavoritesListType {

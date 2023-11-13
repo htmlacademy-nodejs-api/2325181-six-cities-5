@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
-import { ExceptionFilter } from './exception-filter.interface.js';
-import { Component } from '../../../types/component.enum.js';
-import { Logger } from '../../logger/index.js';
-import { createErrorObject } from '../../../helpers/index.js';
-import { HttpError } from '../index.js';
+import { createErrorObject, Logger, Component, ExceptionFilter, HttpError } from '../../../index.js';
 import { ApplicationError } from '../../../../const.js';
 
 @injectable()

@@ -1,12 +1,7 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { RestConfig, Config, RestSchemaType } from '../shared/libs/config/index.js';
-import { PinoLogger, Logger } from '../shared/libs/logger/index.js';
-import { DatabaseClient, MongoDatabaseClient } from '../shared/libs/database-client/index.js';
-import { Component } from '../shared/types/component.enum.js';
-import { RestApplication } from './rest.application.js';
-import { AppExceptionFilter, ExceptionFilter, HttpErrorExceptionFilter, ValidationExceptionFilter } from '../shared/libs/rest/index.js';
-import { PathTransformer } from '../shared/libs/rest/transform/path-transformer.js';
+import { RestConfig, Config, RestSchemaType, PinoLogger, Logger, DatabaseClient, MongoDatabaseClient, Component, AppExceptionFilter, ExceptionFilter, HttpErrorExceptionFilter, ValidationExceptionFilter, PathTransformer } from '../shared/index.js';
+import { RestApplication } from './index.js';
 
 export function createRestApplicationContainer() {
   const container = new Container();

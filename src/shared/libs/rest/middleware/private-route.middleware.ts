@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { Middleware } from './middleware.interface.js';
-import { HttpError } from '../index.js';
+import { HttpError, Middleware } from '../index.js';
 
 export class PrivateRouteMiddleware implements Middleware {
   public async execute({tokenPayload}: Request, _res: Response, next: NextFunction): Promise<void> {

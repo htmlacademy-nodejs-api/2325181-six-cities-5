@@ -1,9 +1,7 @@
 import * as Mongoose from 'mongoose';
 import { injectable, inject } from 'inversify';
 import { setTimeout } from 'node:timers/promises';
-import { DatabaseClient } from './database-client.interface.js';
-import { Logger } from '../logger/logger.interface.js';
-import { Component } from '../../types/component.enum.js';
+import { DatabaseClient, Logger, Component } from '../../index.js';
 import { RETRY_COUNT, RETRY_TIMEOUT } from '../../../const.js';
 
 @injectable()

@@ -1,9 +1,4 @@
-
-import { MockServerDataType } from '../../types/mock-server-data.type.js';
-import { OfferGenerator } from './offer-generator.interface.js';
-
-
-import { generateTSVOffer } from '../../helpers/generator.js';
+import { MockServerDataType, OfferGenerator, generateTSVOffer } from '../../index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerDataType) {}

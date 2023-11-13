@@ -1,12 +1,6 @@
 import chalk from 'chalk';
-import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
+import { TSVFileReader, DatabaseClient, MongoDatabaseClient, Logger, ConsoleLogger, DefaultUserService, UserModel, UserService, OfferService, DefaultOfferService, OfferModel, OfferType, getErrorMessage, createOffer, getMongoURI } from '../../shared/index.js';
 import { Command, DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './index.js';
-import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
-import { Logger, ConsoleLogger } from '../../shared/libs/logger/index.js';
-import { DefaultUserService, UserModel, UserService } from '../../shared/modules/user/index.js';
-import { OfferService, DefaultOfferService, OfferModel } from '../../shared/modules/offer/index.js';
-import { OfferType } from '../../shared/types/offer.type.js';
-import { getErrorMessage, createOffer, getMongoURI } from '../../shared/helpers/index.js';
 
 export class ImportCommand implements Command {
   private userService: UserService;

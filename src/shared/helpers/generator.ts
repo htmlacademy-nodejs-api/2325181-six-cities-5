@@ -1,10 +1,7 @@
-import { generateRandomValue, getRandomBoolean, getRandomItem, getRandomItems } from '../helpers/common.js';
-import { LocationType } from '../types/location.type.js';
-import { LodgingType } from '../types/lodging.type.js';
+import { generateRandomValue, getRandomBoolean, getRandomItem, getRandomItems } from './index.js';
+import { LocationType, LodgingType, GoodsType, MockServerDataType, UserLevelType } from '../types/index.js';
 import { EdgePoints, UserLevel } from '../../const.js';
-import { GoodsType } from '../types/goods.type.js';
-import { MockServerDataType } from '../types/mock-server-data.type.js';
-import { UserLevelType } from '../types/user-level.type.js';
+
 
 export function generateTSVOffer(mockData: MockServerDataType):string {
   const title = getRandomItem<string>(mockData.titles);

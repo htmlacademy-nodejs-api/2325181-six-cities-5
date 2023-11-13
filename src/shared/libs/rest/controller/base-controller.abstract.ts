@@ -1,14 +1,10 @@
 import asyncHandler from 'express-async-handler';
 import { injectable, inject } from 'inversify';
 import { Router, Response } from 'express';
-import { Logger } from '../../logger/index.js';
-import { Controller } from './controller.interface.js';
-import { Route } from '../route/route.interface.js';
-import { DEFAULT_CONTENT_TYPE } from '../../../../const.js';
 import { StatusCodes } from 'http-status-codes';
-import { Component } from '../../../types/component.enum.js';
+import { DEFAULT_CONTENT_TYPE } from '../../../../const.js';
+import { StaticDataType, Component, Route, Controller, Logger } from '../../../index.js';
 import { PathTransformer } from '../transform/path-transformer.js';
-import { StaticDataType } from '../../../types/static-data.type.js';
 
 @injectable()
 export abstract class BaseController implements Controller {

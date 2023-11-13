@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Middleware } from './middleware.interface.js';
-import { FavoritesList } from './favorites-list.middleware.interface.js';
+import { Middleware, FavoritesList } from './index.js';
 
 export class FavoritesListMiddleware implements Middleware {
   constructor (

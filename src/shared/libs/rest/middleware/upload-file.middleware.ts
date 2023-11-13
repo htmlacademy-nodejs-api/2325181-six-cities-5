@@ -1,8 +1,8 @@
 import multer, { diskStorage } from 'multer';
+import { Request, Response, NextFunction } from 'express';
 import { nanoid } from 'nanoid';
 import { extension } from 'mime-types';
-import { Request, Response, NextFunction } from 'express';
-import { Middleware } from './middleware.interface.js';
+import { Middleware } from './index.js';
 
 export class UploadFileMiddleware implements Middleware {
   constructor(
