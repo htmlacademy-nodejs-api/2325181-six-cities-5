@@ -214,3 +214,85 @@ export const STATIC_RESOURCE_FIELDS = [
   'image'
 ];
 
+export const UserValidationParameters = {
+  Password: {
+    Length: {
+      Minimum: 6,
+      Maximum: 12,
+    }
+  },
+  Name: {
+    Length: {
+      Minimum: 1,
+      Maximum: 15,
+    }
+  },
+  AvatarURL: {
+    MatchRegex: RegExp(/(.png$|.jpg$|.jpeg$)/i),
+  }
+};
+
+export const OfferValidationParameters = {
+  Title: {
+    Length: {
+      Minimum: 10,
+      Maximum: 100,
+    }
+  },
+  Description: {
+    Length: {
+      Minimum: 20,
+      Maximum: 1024
+    }
+  },
+  PreviewImageURL: {
+    MatchRegex: RegExp(/(.png$|.jpg$|.jpeg$)/i),
+  },
+  Images: {
+    MatchRegex: RegExp(/(.png$|.jpg$|.jpeg$)/i),
+    ListLength: {
+      Minimum: 6,
+      Maximum: 6
+    }
+  },
+  Bedrooms: {
+    Value: {
+      Minimum: 1,
+      Maximum: 8
+    }
+  },
+  MaxAdults: {
+    Value: {
+      Minimum: 1,
+      Maximum: 10
+    }
+  },
+  Price: {
+    Value: {
+      Minimum: 100,
+      Maximum: 100000
+    }
+  },
+  Goods: {
+    ListLength: {
+      Minimum: 1,
+    }
+  }
+
+};
+
+export const CommentValidationParameters = {
+  Text: {
+    Length: {
+      Minimum: 5,
+      Maximum: 1024
+    }
+  },
+  Rating: {
+    Value: {
+      Minimum: 1,
+      Maximum: 5
+    }
+  }
+};
+
