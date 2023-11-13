@@ -6,9 +6,9 @@ POST http://localhost:4000/users/signin HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "newmail@mailc.com",
+  "email": "newmailw@mailc.com",
   "name": "Hello",
-  "password": "12345",
+  "password": "123456",
   "userType": "regular",
   "avatarURL": "6W8dwf0KFP79B0PM3OEEU.png"
 }
@@ -21,8 +21,8 @@ POST http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "mymail@mail.com",
-  "password": "World!"
+  "email": "newmailw@mailc.com",
+  "password": "123456"
 }
 
 ###

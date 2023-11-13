@@ -1,4 +1,4 @@
-import { TransportOptionsType } from '../types/transport-options.type.js';
+import { TransportOptionsType } from '../types/index.js';
 
 export const getTransportOptions = (level: string, destination?: string): TransportOptionsType => ({
   target: 'pino/file',

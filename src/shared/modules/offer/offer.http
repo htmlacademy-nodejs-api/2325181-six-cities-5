@@ -12,17 +12,17 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm
 
 POST http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im15bWFpbEBtYWlsLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU0MGFjNDZiMTgzOTFiNmRlOWUwNDA1IiwiaWF0IjoxNjk5NDQyNzc4LCJleHAiOjE2OTk2MTU1Nzh9.jWYeiqYt-SfOGU8WRnJfN31cdhRM-tsW3-ofu7xDMzo
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im5ld21haWx3QG1haWxjLmNvbSIsIm5hbWUiOiJIZWxsbyIsImlkIjoiNjU1MjljOGE2YTk0YTY5MjY1ZTg3NThlIiwiaWF0IjoxNjk5OTEyODg1LCJleHAiOjE3MDAwODU2ODV9.eb9aX-0eorWGEQS0NJ4gBHcaxhhr5EqqL-4yDq9XHwA
 
 {
-  "title": "This is a test19 offer",
+  "title": "This is a test21 offer",
   "description": "The location of the apartment was perfect - close to all of the major attractions, best shopping, and great restaurants. Public transit was easy from the hotel.",
   "city": "Hamburg",
-  "previewImageURL": "domain.com/image.jpeg",
+  "previewImageURL": "domain.com/image.jpg",
   "images": ["img/house-03.jpg", "img/house-04.jpg", "img/house-05.jpg", "img/hotel-06.jpg", "img/room-07.jpg", "img/apartment-08.jpg"],
   "isPremium": "true",
   "type": "house",
-  "bedrooms": "7",
+  "bedrooms": "2",
   "maxAdults": "10",
   "price": "11111",
   "goods": ["Towels", "Fridge"],

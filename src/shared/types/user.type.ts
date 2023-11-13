@@ -1,4 +1,4 @@
-import { UserLevelType } from './user-level.type.js';
+import { UserLevelType } from './index.js';
 
 export type UserType = {
   name: string;

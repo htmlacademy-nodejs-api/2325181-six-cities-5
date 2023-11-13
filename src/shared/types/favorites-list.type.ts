@@ -1,4 +1,4 @@
 import { Ref } from '@typegoose/typegoose';
-import { OfferEntity } from '../modules/offer/index.js';
+import { OfferEntity } from '../index.js';
 
 export type FavoritesListType = Ref<OfferEntity>[];

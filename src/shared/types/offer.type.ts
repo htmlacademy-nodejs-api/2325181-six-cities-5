@@ -1,8 +1,5 @@
-import { CoordinatesType } from './coordinates.type.js';
-import { GoodsType } from './goods.type.js';
-import { LocationType } from './location.type.js';
-import { LodgingType } from './lodging.type.js';
-import { UserType } from './user.type.js';
+import { CoordinatesType, GoodsType, LocationType, LodgingType, UserType } from './index.js';
+
 
 export type OfferType = {
   title: string;

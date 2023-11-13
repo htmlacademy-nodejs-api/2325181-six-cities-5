@@ -1,10 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { Component } from '../../../types/component.enum.js';
-import { Logger } from '../../logger/index.js';
-import { Config, RestSchemaType } from '../../config/index.js';
+import { Component, Logger, Config, RestSchemaType, getFullServerPath, StaticDataType } from '../../../index.js';
 import { DEFAULT_STATIC_IMAGES, STATIC_FILES_ROUTE, STATIC_RESOURCE_FIELDS, STATIC_UPLOAD_ROUTE } from '../../../../const.js';
-import { getFullServerPath } from '../../../helpers/index.js';
-import { StaticDataType } from '../../../types/static-data.type.js';
 
 function isObjectValue(value: unknown): value is StaticDataType {
   return typeof value === 'object' && value !== null;

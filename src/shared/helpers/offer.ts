@@ -1,10 +1,4 @@
-import { OfferType } from '../types/offer.type.js';
-import { LocationType } from '../types/location.type.js';
-import { LodgingType } from '../types/lodging.type.js';
-import { GoodsType } from '../types/goods.type.js';
-import { UserType } from '../types/user.type.js';
-import { UserLevelType } from '../types/user-level.type.js';
-import { CoordinatesType } from '../types/coordinates.type.js';
+import { OfferType, LocationType, LodgingType, GoodsType, UserType, UserLevelType, CoordinatesType } from '../types/index.js';
 
 export function createOffer(offerData: string): OfferType {
 

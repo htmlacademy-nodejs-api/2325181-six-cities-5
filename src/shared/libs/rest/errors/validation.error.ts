@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { ValidationErrorField } from '../../../types/validation-error-field.type.js';
-import { HttpError } from './http-error.js';
+import { ValidationErrorField, HttpError } from '../../../index.js';
 
 export class ValidationError extends HttpError {
   public details: ValidationErrorField[] = [];

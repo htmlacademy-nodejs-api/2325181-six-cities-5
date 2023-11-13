@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpMethod } from '../../../../const.js';
-import { ValuesType } from '../../../types/values.type.js';
-import { Middleware } from '../middleware/middleware.interface.js';
+import { ValuesType, Middleware } from '../../../index.js';
 
 export interface Route {
   path: string;

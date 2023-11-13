@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { BaseAuthException } from './base-auth-exception.js';
+import { BaseAuthException } from './index.js';
 
 export class UserNotFoundException extends BaseAuthException {
   constructor () {

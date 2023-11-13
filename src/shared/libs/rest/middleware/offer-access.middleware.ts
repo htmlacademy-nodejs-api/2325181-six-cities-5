@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { Middleware } from './middleware.interface.js';
-import { OfferAccess } from './offer-access.middleware.interface.js';
-import { HttpError } from '../index.js';
 import { StatusCodes } from 'http-status-codes';
+import { HttpError, Middleware, OfferAccess } from '../index.js';
 
 export class OfferAccessMiddleware implements Middleware {
   constructor(

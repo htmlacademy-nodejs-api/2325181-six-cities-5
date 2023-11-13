@@ -1,5 +1,4 @@
 import { Request} from 'express';
-import { RequestBody, RequestParams } from './index.js';
-import { CreateUserDTO } from '../modules/user/create-user.dto.js';
+import { RequestBody, RequestParams, CreateUserDTO} from '../index.js';
 
 export type CreateUserRequestType = Request<RequestParams, RequestBody, CreateUserDTO>;
